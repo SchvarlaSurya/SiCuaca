@@ -6,4 +6,6 @@ use Illuminate\Support\Facades\Schedule;
 // Server: cron `* * * * * php /path/ke/artisan schedule:run`.
 Schedule::command('sicuaca:cek-gempa')
     ->everyMinute()
-    ->withoutOverlapping();
+    ->withoutOverlapping()
+    // Hasil tiap menit bisa dipantau di storage/logs/cek-gempa.log.
+    ->appendOutputTo(storage_path('logs/cek-gempa.log'));
