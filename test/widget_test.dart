@@ -413,4 +413,45 @@ void main() {
       expect(find.text(Str.cobaLagi), findsWidgets);
     });
   });
+
+  testWidgets('ketukan notifikasi membuka detail dari payload walau offline', (
+    tester,
+  ) async {
+    final notif = _FakeNotif();
+    await tester.pumpWidget(
+      _app(
+        gps: const HasilGps(StatusGps.berhasil, lat: -6.2088, lon: 106.8456),
+        offline: true,
+        notif: notif,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    notif.pembuka.tanganiData(const {
+      'jenis': 'gempa',
+      'gempa_key': '2026-11-13T04:49:34+00:00|-8.22,116.77',
+      'magnitudo': '4.9',
+      'wilayah': 'Pusat gempa berada di laut 29 km Barat Laut PULAUPANJANG',
+      'kedalaman': '17 km',
+      'waktu': '2026-11-13T04:49:34+00:00',
+      'tanggal': '13 Nov 2026',
+      'jam': '11:49:34 WIB',
+      'koordinat': '-8.22,116.77',
+      'shakemap': '20261113114934.mmi.jpg',
+      'potensi': '',
+      'dirasakan': 'IV Kab. Lombok Timur',
+    }, sumber: 'uji');
+    await tester.pumpAndSettle();
+
+    expect(find.text(Str.gempaDetailJudul), findsOneWidget);
+    expect(find.text('4.9'), findsWidgets);
+    final gulir = find.byType(Scrollable).last;
+    await tester.scrollUntilVisible(
+      find.text(Str.jarakDariAnda),
+      200,
+      scrollable: gulir,
+    );
+    // Jakarta ke pusat gempa Lombok sekitar 1.117 km.
+    expect(find.text(Str.jarakKm('1.117')), findsOneWidget);
+  });
 }

@@ -7,6 +7,7 @@ import 'package:app/core/format.dart';
 import 'package:app/core/geo.dart';
 import 'package:app/core/strings.dart';
 import 'package:app/models/gempa.dart';
+import 'package:app/services/notifikasi_service.dart';
 
 Map<String, dynamic> _json(String nama) =>
     jsonDecode(File('test/fixtures/$nama').readAsStringSync())
@@ -141,6 +142,71 @@ void main() {
       expect(Format.zonaPerangkat(const Duration(hours: 7)), 'WIB');
       expect(Format.zonaPerangkat(const Duration(hours: 9)), 'WIT');
       expect(Format.zonaPerangkat(const Duration(hours: -5)), 'UTC-5');
+    });
+  });
+
+  group('Payload notifikasi', () {
+    // Sama dengan contoh di sicuaca-backend/README.md.
+    const payload = <String, dynamic>{
+      'jenis': 'gempa',
+      'uji': '0',
+      'gempa_key': '2026-11-13T07:31:39+00:00|-5.56,102.24',
+      'magnitudo': '4.1',
+      'wilayah': 'Pusat gempa berada di laut 24 km selatan Enggano',
+      'kedalaman': '24 km',
+      'waktu': '2026-11-13T07:31:39+00:00',
+      'tanggal': '13 Nov 2026',
+      'jam': '14:31:39 WIB',
+      'koordinat': '-5.56,102.24',
+      'shakemap': '',
+      'potensi': 'Gempa ini dirasakan untuk diteruskan pada masyarakat',
+      'dirasakan': 'II - III Enggano',
+    };
+
+    test('payload lengkap menjadi Gempa', () {
+      final g = Gempa.dariPayload(payload)!;
+      expect(g.magnitudoAngka, 4.1);
+      expect(g.lat, -5.56);
+      expect(g.lon, 102.24);
+      expect(g.waktuUtc, DateTime.utc(2026, 11, 13, 7, 31, 39));
+      expect(g.dirasakan, 'II - III Enggano');
+      // shakemap kosong: diturunkan dari tanggal + jam.
+      expect(g.shakemapUrl, endsWith('20261113143139.mmi.jpg'));
+    });
+
+    test('payload rusak, kosong, atau bukan gempa diabaikan', () {
+      expect(Gempa.dariPayload(null), isNull);
+      expect(Gempa.dariPayload(const {}), isNull);
+      expect(Gempa.dariPayload({...payload, 'jenis': 'uji'}), isNull);
+      expect(Gempa.dariPayload({...payload, 'gempa_key': ''}), isNull);
+      expect(Gempa.dariPayload({...payload, 'waktu': 'kemarin'}), isNull);
+      expect(Gempa.dariPayload({...payload, 'koordinat': 'x'}), isNull);
+    });
+
+    test('pembuka menunda sampai dipasang, lalu membuka langsung', () {
+      final pembuka = PembukaNotifikasi();
+      final dibuka = <Gempa>[];
+
+      pembuka.tanganiData(payload, sumber: 'tertutup');
+      expect(dibuka, isEmpty);
+      pembuka.pasang(dibuka.add);
+      expect(dibuka, hasLength(1));
+
+      pembuka.tanganiPayloadLokal(jsonEncode(payload), sumber: 'lokal');
+      expect(dibuka, hasLength(2));
+    });
+
+    test('pembuka mengabaikan payload rusak tanpa crash', () {
+      final pembuka = PembukaNotifikasi();
+      final dibuka = <Gempa>[];
+      pembuka.pasang(dibuka.add);
+
+      pembuka.tanganiData(const {'jenis': 'gempa'}, sumber: 'latar');
+      pembuka.tanganiData(null, sumber: 'latar');
+      pembuka.tanganiPayloadLokal('bukan json', sumber: 'lokal');
+      pembuka.tanganiPayloadLokal('[1,2]', sumber: 'lokal');
+      pembuka.tanganiPayloadLokal(null, sumber: 'lokal');
+      expect(dibuka, isEmpty);
     });
   });
 }

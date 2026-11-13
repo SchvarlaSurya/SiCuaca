@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/format.dart';
+import '../core/navigasi.dart';
 import '../core/strings.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
-import '../screens/gempa_detail_screen.dart';
 import 'badge_magnitudo.dart';
 
 /// Satu baris gempa di daftar. Diketuk membuka halaman detail.
@@ -30,7 +30,7 @@ class GempaItem extends StatelessWidget {
         : Icons.groups_outlined;
 
     return InkWell(
-      onTap: () => bukaDetailGempa(context, gempa),
+      onTap: () => Navigasi.bukaDetailGempa(gempa),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

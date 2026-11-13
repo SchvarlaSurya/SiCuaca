@@ -2,18 +2,20 @@
 
 namespace App\Console\Commands;
 
-use App\Services\PengirimNotifikasi;
+use App\Services\BmkgGempaClient;
+use App\Services\PengirimGempa;
+use App\Support\BmkgTidakMerespons;
+use App\Support\DataGempa;
+use App\Support\FormatBmkgTidakDikenal;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Throwable;
 
 #[Signature('sicuaca:tes-notif {topic : gempa_m4, gempa_m5, atau gempa_m6}')]
-#[Description('Kirim notifikasi uji ke satu topic FCM tanpa menunggu gempa asli')]
+#[Description('Kirim notifikasi uji (berisi data gempa terbaru BMKG) ke satu topic FCM')]
 class TesNotif extends Command
 {
-    public function handle(PengirimNotifikasi $pengirim): int
+    public function handle(BmkgGempaClient $bmkg, PengirimGempa $pengirim): int
     {
         $topik = (string) $this->argument('topic');
         $dikenal = array_keys(config('sicuaca.topik'));
@@ -24,24 +26,39 @@ class TesNotif extends Command
             return self::INVALID;
         }
 
-        $jam = now()->format('H:i:s');
-
+        // Payload memakai gempa terbaru yang asli supaya ketukan notifikasi
+        // membuka detail sungguhan; bila BMKG gagal, pakai contoh tetap.
         try {
-            $pengirim->kirimKeTopik(
-                $topik,
-                'Uji notifikasi SiCuaca',
-                "Ini pesan uji untuk topic {$topik} ({$jam}). Bukan gempa sungguhan.",
-                ['jenis' => 'uji', 'topic' => $topik],
-            );
-        } catch (Throwable $e) {
-            Log::error('sicuaca:tes-notif gagal', ['topic' => $topik, 'alasan' => $e->getMessage()]);
-            $this->error("Gagal mengirim: {$e->getMessage()}");
+            $gempa = $bmkg->gempaTerbaru();
+        } catch (BmkgTidakMerespons|FormatBmkgTidakDikenal $e) {
+            $this->warn("BMKG tidak bisa dibaca ({$e->getMessage()}), memakai contoh gempa.");
+            $gempa = self::contoh();
+        }
+
+        $hasil = $pengirim->kirim($gempa, [$topik], "Uji SiCuaca: {$gempa->judulNotifikasi()}", uji: true);
+
+        if ($hasil['terkirim'] === []) {
+            $this->error("Gagal mengirim ke {$topik}. Lihat storage/logs/laravel.log.");
 
             return self::FAILURE;
         }
 
-        $this->info("Notifikasi uji terkirim ke topic {$topik}.");
+        $this->info("Notifikasi uji terkirim ke {$topik} (gempa {$gempa->kunci()}).");
 
         return self::SUCCESS;
+    }
+
+    public static function contoh(): DataGempa
+    {
+        return new DataGempa(
+            dateTime: '2026-11-13T04:49:34+00:00',
+            koordinat: '-8.22,116.77',
+            magnitudo: 4.9,
+            wilayah: 'Pusat gempa berada di laut 29 km Barat Laut PULAUPANJANG',
+            kedalaman: '17 km',
+            tanggal: '13 Nov 2026',
+            jam: '11:49:34 WIB',
+            potensi: 'Gempa ini dirasakan untuk diteruskan pada masyarakat',
+        );
     }
 }

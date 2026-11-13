@@ -9,13 +9,10 @@ import '../widgets/ajak_lokasi.dart';
 import '../widgets/badge_magnitudo.dart';
 import '../widgets/sumber_bmkg.dart';
 
-/// Membuka halaman detail gempa.
-Future<void> bukaDetailGempa(BuildContext context, Gempa gempa) {
-  return Navigator.of(context).push(
-    MaterialPageRoute<void>(builder: (_) => GempaDetailScreen(gempa: gempa)),
-  );
-}
-
+/// Halaman detail gempa. Dibuka lewat [Navigasi.bukaDetailGempa] (dari
+/// daftar, kartu Beranda, maupun ketukan notifikasi). Semua isi dibangun
+/// dari objek [Gempa] yang diberikan, tanpa memanggil API, sehingga tetap
+/// tampil walau internet mati.
 class GempaDetailScreen extends StatelessWidget {
   const GempaDetailScreen({super.key, required this.gempa});
 

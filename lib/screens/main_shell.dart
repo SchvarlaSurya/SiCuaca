@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import '../core/navigasi.dart';
 import '../core/strings.dart';
+import '../services/notifikasi_service.dart';
 import 'beranda_screen.dart';
 import 'cuaca_screen.dart';
 import 'gempa_screen.dart';
@@ -20,6 +24,20 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _indeks = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Navigator sudah ada setelah frame pertama; ketukan notifikasi yang
+    // terjadi sebelumnya (aplikasi diluncurkan dari notifikasi) dibuka saat
+    // pembuka dipasang.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<NotifikasiService>().pembuka.pasang(
+        Navigasi.bukaDetailGempa,
+      );
+    });
+  }
 
   static const List<Widget> _halaman = [
     BerandaScreen(),

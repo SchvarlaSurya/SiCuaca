@@ -1,17 +1,37 @@
 # SiCuaca
 
-A new Flutter project.
+Aplikasi Android (Flutter) untuk prakiraan cuaca dan info gempa bumi
+Indonesia, final project RPL. Data dari API terbuka BMKG.
 
-## Getting Started
+**Sumber data: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika).
+SiCuaca bukan aplikasi resmi BMKG.**
 
-This project is a starting point for a Flutter application.
+## Isi repositori
 
-A few resources to get you started if this is your first Flutter project:
+| Folder | Isi |
+|---|---|
+| `lib/` | Aplikasi Flutter (Provider, dio, geolocator, Firebase Messaging) |
+| `assets/data/` | Dataset kode wilayah Kepmendagri + titik tengah desa (lihat `LICENSE-wilayah.txt`) |
+| `tool/build_wilayah.py` | Skrip pembangun dataset wilayah |
+| `sicuaca-backend/` | Backend Laravel pengirim notifikasi gempa ([README](sicuaca-backend/README.md)) |
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Menjalankan aplikasi
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter pub get
+flutter run
+```
+
+Notifikasi gempa butuh `android/app/google-services.json` dari proyek Firebase
+(package name `com.sicuaca.app`). Berkas ini tidak ikut Git; tanpa berkas itu
+aplikasi tetap jalan dengan notifikasi nonaktif.
+
+## Notifikasi gempa
+
+- Pengguna memilih ambang di tab Peringatan (M 4+, M 5+, M 6+, atau mati);
+  aplikasi subscribe ke satu topic FCM (`gempa_m4`/`gempa_m5`/`gempa_m6`).
+- Mengetuk notifikasi membuka halaman detail gempa, baik saat aplikasi
+  terbuka, di latar belakang, maupun tertutup. Detail dibangun dari data
+  payload, jadi tetap tampil walau internet mati.
+- Format payload FCM: lihat
+  [sicuaca-backend/README.md](sicuaca-backend/README.md#format-payload-fcm).

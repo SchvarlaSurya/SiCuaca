@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import '../core/constants.dart';
 import '../core/strings.dart';
 import '../models/ambang_gempa.dart';
+import '../models/gempa.dart';
 
 /// Handler pesan FCM saat aplikasi di latar belakang atau tertutup.
 ///
@@ -19,6 +22,55 @@ Future<void> tanganiPesanLatarBelakang(RemoteMessage message) async {
   debugPrint('FCM latar belakang: ${message.messageId}');
 }
 
+/// Mengubah data notifikasi menjadi [Gempa] lalu membukanya lewat fungsi
+/// pembuka yang dipasang aplikasi. Bila ketukan terjadi sebelum aplikasi
+/// siap (diluncurkan dari notifikasi), gempa disimpan dulu lalu dibuka saat
+/// pembuka dipasang. Data rusak diabaikan dan dicatat di log, tanpa crash.
+class PembukaNotifikasi {
+  void Function(Gempa gempa)? _buka;
+  Gempa? _tertunda;
+
+  /// Dipanggil sekali setelah navigator siap.
+  void pasang(void Function(Gempa gempa) buka) {
+    _buka = buka;
+    final tertunda = _tertunda;
+    _tertunda = null;
+    if (tertunda != null) buka(tertunda);
+  }
+
+  /// Data FCM (`RemoteMessage.data`).
+  void tanganiData(Map<String, dynamic>? data, {required String sumber}) {
+    final gempa = Gempa.dariPayload(data);
+    if (gempa == null) {
+      debugPrint('Notifikasi ($sumber) diabaikan: payload bukan gempa/rusak');
+      return;
+    }
+    final buka = _buka;
+    if (buka == null) {
+      _tertunda = gempa;
+    } else {
+      buka(gempa);
+    }
+  }
+
+  /// Payload notifikasi lokal: JSON dari data FCM.
+  void tanganiPayloadLokal(String? payload, {required String sumber}) {
+    if (payload == null || payload.isEmpty) {
+      debugPrint('Notifikasi lokal ($sumber) tanpa payload, diabaikan');
+      return;
+    }
+    try {
+      final data = jsonDecode(payload);
+      tanganiData(
+        data is Map ? Map<String, dynamic>.from(data) : null,
+        sumber: sumber,
+      );
+    } on FormatException {
+      debugPrint('Notifikasi lokal ($sumber): payload bukan JSON, diabaikan');
+    }
+  }
+}
+
 /// Pembungkus Firebase Messaging + notifikasi lokal.
 ///
 /// Bila Firebase belum dikonfigurasi (google-services.json belum ada) atau
@@ -29,6 +81,9 @@ class NotifikasiService {
 
   bool _siap = false;
   bool get siap => _siap;
+
+  /// Penerus ketukan notifikasi ke halaman detail gempa.
+  final PembukaNotifikasi pembuka = PembukaNotifikasi();
 
   static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
     NotifikasiConstants.channelGempaId,
@@ -54,6 +109,9 @@ class NotifikasiService {
         settings: const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         ),
+        // Ketukan notifikasi lokal saat aplikasi masih hidup.
+        onDidReceiveNotificationResponse: (respons) =>
+            pembuka.tanganiPayloadLokal(respons.payload, sumber: 'lokal'),
       );
       await _lokal
           .resolvePlatformSpecificImplementation<
@@ -64,6 +122,25 @@ class NotifikasiService {
       // Saat aplikasi terbuka, Android tidak menampilkan notifikasi FCM
       // sendiri, jadi ditampilkan lewat notifikasi lokal.
       FirebaseMessaging.onMessage.listen(_tampilkanDiDepan);
+
+      // Ketukan notifikasi sistem saat aplikasi di latar belakang.
+      FirebaseMessaging.onMessageOpenedApp.listen(
+        (m) => pembuka.tanganiData(m.data, sumber: 'latar belakang'),
+      );
+
+      // Aplikasi diluncurkan dari notifikasi sistem (sebelumnya tertutup).
+      final awal = await FirebaseMessaging.instance.getInitialMessage();
+      if (awal != null) pembuka.tanganiData(awal.data, sumber: 'tertutup');
+
+      // Aplikasi diluncurkan dari notifikasi lokal (tampil saat aplikasi
+      // terbuka, lalu aplikasi ditutup sebelum notifikasi diketuk).
+      final peluncuran = await _lokal.getNotificationAppLaunchDetails();
+      if (peluncuran?.didNotificationLaunchApp ?? false) {
+        pembuka.tanganiPayloadLokal(
+          peluncuran!.notificationResponse?.payload,
+          sumber: 'lokal (peluncuran)',
+        );
+      }
       _siap = true;
     } catch (e) {
       debugPrint('Gagal menyiapkan notifikasi: $e');
@@ -78,6 +155,7 @@ class NotifikasiService {
         id: message.messageId?.hashCode ?? DateTime.now().millisecond,
         title: notif.title,
         body: notif.body,
+        payload: jsonEncode(message.data),
         notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             _channel.id,

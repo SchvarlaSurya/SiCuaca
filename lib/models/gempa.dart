@@ -52,6 +52,29 @@ class Gempa {
     );
   }
 
+  /// Membaca data FCM dari backend SiCuaca (lihat sicuaca-backend/README.md).
+  /// Mengembalikan null bila bukan pesan gempa atau datanya tidak cukup
+  /// (tanpa kunci, waktu, atau koordinat).
+  static Gempa? dariPayload(Map<String, dynamic>? data) {
+    if (data == null || Baca.teks(data['jenis']) != 'gempa') return null;
+    if (Baca.teks(data['gempa_key']).isEmpty) return null;
+
+    final gempa = Gempa.fromJson({
+      'Tanggal': data['tanggal'],
+      'Jam': data['jam'],
+      'DateTime': data['waktu'],
+      'Coordinates': data['koordinat'],
+      'Magnitude': data['magnitudo'],
+      'Kedalaman': data['kedalaman'],
+      'Wilayah': data['wilayah'],
+      'Potensi': data['potensi'],
+      'Dirasakan': data['dirasakan'],
+      'Shakemap': data['shakemap'],
+    });
+    if (gempa.waktuUtc == null || !gempa.punyaKoordinat) return null;
+    return gempa;
+  }
+
   /// Membaca respons autogempa.json: `{"Infogempa": {"gempa": {...}}}`.
   ///
   /// Melempar [FormatException] bila kerangka `Infogempa.gempa` tidak ada.

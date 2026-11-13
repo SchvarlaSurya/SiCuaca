@@ -11,13 +11,14 @@ class DataGempaTest extends TestCase
 {
     private const AMBANG = ['gempa_m4' => 4.0, 'gempa_m5' => 5.0, 'gempa_m6' => 6.0];
 
-    private function gempa(string $magnitude): DataGempa
+    private function gempa(string $magnitude, array $tambahan = []): DataGempa
     {
-        return DataGempa::dariAutogempa(['Infogempa' => ['gempa' => [
+        return DataGempa::dariObjek([
             'DateTime' => '2026-11-13T04:49:34+00:00',
             'Coordinates' => '-8.22,116.77',
             'Magnitude' => $magnitude,
-        ]]]);
+            ...$tambahan,
+        ]);
     }
 
     /** @return array<string, array{string, list<string>}> */
@@ -43,9 +44,35 @@ class DataGempaTest extends TestCase
         $this->assertSame('2026-11-13T04:49:34+00:00|-8.22,116.77', $this->gempa('5.0')->kunci());
     }
 
-    public function test_magnitudo_bukan_angka_ditolak(): void
+    public function test_magnitudo_atau_waktu_tidak_terbaca_ditolak(): void
     {
         $this->expectException(FormatBmkgTidakDikenal::class);
         $this->gempa('besar');
+    }
+
+    public function test_daftar_terkini_melewati_elemen_rusak(): void
+    {
+        $dilewati = [];
+        $daftar = DataGempa::daftarDariTerkini(['Infogempa' => ['gempa' => [
+            ['DateTime' => '2026-11-13T04:49:34+00:00', 'Coordinates' => '1,2', 'Magnitude' => '5.0'],
+            ['DateTime' => 'bukan waktu', 'Coordinates' => '1,2', 'Magnitude' => '5.0'],
+            'teks',
+        ]]], $dilewati);
+
+        $this->assertCount(1, $daftar);
+        $this->assertCount(2, $dilewati);
+    }
+
+    public function test_payload_semua_string_dan_di_bawah_batas_fcm(): void
+    {
+        $payload = $this->gempa('5.0', [
+            'Wilayah' => str_repeat('Wilayah panjang ', 100),
+            'Dirasakan' => str_repeat('IV Kab. Contoh, ', 200),
+        ])->payload();
+
+        foreach ($payload as $nilai) {
+            $this->assertIsString($nilai);
+        }
+        $this->assertLessThan(4096, strlen(json_encode($payload)));
     }
 }

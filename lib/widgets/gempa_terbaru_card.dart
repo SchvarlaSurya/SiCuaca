@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/format.dart';
+import '../core/navigasi.dart';
 import '../core/strings.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
-import '../screens/gempa_detail_screen.dart';
 import 'badge_magnitudo.dart';
 import 'status_gempa.dart';
 import 'sumber_bmkg.dart';
@@ -39,7 +39,7 @@ class GempaTerbaruCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: gempa == null ? null : () => bukaDetailGempa(context, gempa),
+        onTap: gempa == null ? null : () => Navigasi.bukaDetailGempa(gempa),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
