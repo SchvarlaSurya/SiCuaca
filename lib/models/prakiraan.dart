@@ -8,6 +8,7 @@ class EntriPrakiraan {
     required this.waktuUtc,
     required this.kodeCuaca,
     required this.deskripsi,
+    this.deskripsiEn = '',
     required this.suhu,
     required this.kelembapan,
     required this.kecepatanAngin,
@@ -23,6 +24,7 @@ class EntriPrakiraan {
           Baca.waktuSetempat(json['utc_datetime']),
       kodeCuaca: Baca.bulat(json['weather']),
       deskripsi: Baca.teks(json['weather_desc']),
+      deskripsiEn: Baca.teks(json['weather_desc_en']),
       suhu: Baca.angka(json['t']),
       kelembapan: Baca.bulat(json['hu']),
       kecepatanAngin: Baca.angka(json['ws']),
@@ -41,6 +43,10 @@ class EntriPrakiraan {
 
   /// Teks kondisi (`weather_desc`), mis. "Cerah Berawan".
   final String deskripsi;
+
+  /// Versi Inggris dari BMKG (`weather_desc_en`), mis. "Partly Cloudy".
+  /// Kosong bila tidak dikirim.
+  final String deskripsiEn;
 
   /// Suhu udara, °C.
   final double? suhu;

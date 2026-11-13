@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/navigasi.dart';
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../services/notifikasi_service.dart';
 import 'beranda_screen.dart';
 import 'cuaca_screen.dart';
@@ -54,27 +54,30 @@ class _MainShellState extends State<MainShell> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _indeks,
         onDestinationSelected: (i) => setState(() => _indeks = i),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: Str.navBeranda,
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: context.l10n.navBeranda,
           ),
           NavigationDestination(
-            icon: Icon(Icons.wb_sunny_outlined),
-            selectedIcon: Icon(Icons.wb_sunny),
-            label: Str.navCuaca,
-          ),
-          NavigationDestination(icon: Icon(Icons.waves), label: Str.navGempa),
-          NavigationDestination(
-            icon: Icon(Icons.warning_amber_outlined),
-            selectedIcon: Icon(Icons.warning_amber),
-            label: Str.navPeringatan,
+            icon: const Icon(Icons.wb_sunny_outlined),
+            selectedIcon: const Icon(Icons.wb_sunny),
+            label: context.l10n.navCuaca,
           ),
           NavigationDestination(
-            icon: Icon(Icons.info_outline),
-            selectedIcon: Icon(Icons.info),
-            label: Str.navTentang,
+            icon: const Icon(Icons.waves),
+            label: context.l10n.navGempa,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.warning_amber_outlined),
+            selectedIcon: const Icon(Icons.warning_amber),
+            label: context.l10n.navPeringatan,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.info_outline),
+            selectedIcon: const Icon(Icons.info),
+            label: context.l10n.navTentang,
           ),
         ],
       ),

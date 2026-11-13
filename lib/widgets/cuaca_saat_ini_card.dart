@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/format.dart';
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
 import '../providers/weather_provider.dart';
 import 'ikon_cuaca.dart';
 import 'status_cuaca_view.dart';
+import 'status_data.dart';
 import 'sumber_bmkg.dart';
 import 'tombol_favorit.dart';
 
@@ -53,6 +54,10 @@ class _Isi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
+    final diperbarui = context.select<WeatherProvider, DateTime?>(
+      (c) => c.diperbarui,
+    );
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final redup = theme.textTheme.bodySmall?.copyWith(
@@ -69,7 +74,10 @@ class _Isi extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(Str.cuacaSaatIni, style: theme.textTheme.labelLarge),
+                  Text(
+                    context.l10n.cuacaSaatIni,
+                    style: theme.textTheme.labelLarge,
+                  ),
                   const SizedBox(height: 2),
                   Text(wilayah.desa, style: theme.textTheme.titleLarge),
                   Text(wilayah.labelInduk, style: redup),
@@ -95,7 +103,9 @@ class _Isi extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    entri.deskripsi.isEmpty ? Str.tandaKosong : entri.deskripsi,
+                    l.deskripsiCuaca(entri).isEmpty
+                        ? Format.tandaKosong
+                        : l.deskripsiCuaca(entri),
                     style: theme.textTheme.titleMedium,
                   ),
                 ],
@@ -106,23 +116,24 @@ class _Isi extends StatelessWidget {
         const SizedBox(height: 16),
         _Detail(
           ikon: Icons.water_drop_outlined,
-          label: Str.kelembapan,
+          label: context.l10n.kelembapan,
           nilai: Format.persen(entri.kelembapan),
         ),
         const SizedBox(height: 8),
         _Detail(
           ikon: Icons.air,
-          label: Str.angin,
-          nilai: Format.angin(entri.kecepatanAngin, entri.arahAngin),
+          label: context.l10n.angin,
+          nilai: Format.angin(l, entri.kecepatanAngin, entri.arahAngin),
         ),
         const SizedBox(height: 16),
         Row(
           children: [
             Expanded(
               child: Text(
-                Str.pukul(
-                  Format.jam(entri.waktuLokal),
-                  Format.zona(prakiraan.selisihZona),
+                l.pukul(
+                  '${Format.jam(entri.waktuLokal)} '
+                          '${Format.zona(prakiraan.selisihZona)}'
+                      .trim(),
                 ),
                 style: redup,
               ),
@@ -130,6 +141,8 @@ class _Isi extends StatelessWidget {
             const SumberBmkg(),
           ],
         ),
+        const SizedBox(height: 4),
+        LabelDiperbarui(waktu: diperbarui),
       ],
     );
   }

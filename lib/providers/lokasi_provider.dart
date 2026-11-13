@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 import '../core/constants.dart';
-import '../core/strings.dart';
 import '../models/lokasi.dart';
 import '../services/gps_service.dart';
 import '../services/wilayah_service.dart';
@@ -34,14 +33,11 @@ class LokasiProvider extends ChangeNotifier {
 
   bool get sedangMencari => _status == StatusLokasi.mencari;
 
-  /// Pesan untuk pengguna bila deteksi gagal; null bila tidak ada masalah.
-  String? get pesan => switch (_status) {
-    StatusLokasi.layananMati => Str.gpsLayananMati,
-    StatusLokasi.ditolak => Str.gpsDitolak,
-    StatusLokasi.ditolakPermanen => Str.gpsDitolakPermanen,
-    StatusLokasi.gagal => Str.gpsGagal,
-    StatusLokasi.diluarWilayah => Str.gpsDiluarWilayah,
-    StatusLokasi.idle || StatusLokasi.mencari || StatusLokasi.berhasil => null,
+  /// True bila deteksi terakhir gagal (teksnya dipilih widget lewat
+  /// `pesanLokasi`).
+  bool get gagal => switch (_status) {
+    StatusLokasi.idle || StatusLokasi.mencari || StatusLokasi.berhasil => false,
+    _ => true,
   };
 
   /// Mengembalikan desa terdekat, atau null bila gagal (lihat [status]).

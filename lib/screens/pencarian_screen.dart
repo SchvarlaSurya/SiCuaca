@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/constants.dart';
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/lokasi.dart';
 import '../providers/favorit_provider.dart';
 import '../providers/pencarian_provider.dart';
 import '../providers/weather_provider.dart';
 import '../services/wilayah_service.dart';
+import '../widgets/status_data.dart';
 import '../widgets/tombol_favorit.dart';
 
 /// Membuka layar pencarian wilayah.
@@ -48,8 +49,8 @@ class PencarianScreen extends StatelessWidget {
           autofocus: true,
           textInputAction: TextInputAction.search,
           onChanged: cari.ubahQuery,
-          decoration: const InputDecoration(
-            hintText: Str.cariHint,
+          decoration: InputDecoration(
+            hintText: context.l10n.cariHint,
             border: InputBorder.none,
           ),
         ),
@@ -60,17 +61,19 @@ class PencarianScreen extends StatelessWidget {
             const LinearProgressIndicator(),
           Expanded(
             child: switch (cari.status) {
-              StatusDataWilayah.gagal => const _Pesan(
-                Str.gagalMemuatDataWilayah,
+              StatusDataWilayah.gagal => KosongData(
+                pesan: context.l10n.gagalMemuatDataWilayah,
               ),
-              StatusDataWilayah.memuat when !terlaluPendek => const _Pesan(
-                Str.memuatDataWilayah,
+              StatusDataWilayah.memuat when !terlaluPendek => KosongData(
+                pesan: context.l10n.memuatDataWilayah,
               ),
               _ when terlaluPendek => _Awal(
                 onGps: () => _pakaiGps(context),
                 onPilih: (l) => _pilih(context, l),
               ),
-              _ when cari.hasil.isEmpty => const _Pesan(Str.cariTidakAdaHasil),
+              _ when cari.hasil.isEmpty => KosongData(
+                pesan: context.l10n.cariTidakAdaHasil,
+              ),
               _ => ListView.builder(
                 itemCount: cari.hasil.length,
                 itemBuilder: (context, i) => _BarisWilayah(
@@ -102,20 +105,20 @@ class _Awal extends StatelessWidget {
       children: [
         ListTile(
           leading: const Icon(Icons.my_location),
-          title: const Text(Str.gunakanLokasiSaya),
+          title: Text(context.l10n.gunakanLokasiSaya),
           onTap: onGps,
         ),
         const Divider(),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-          child: Text(Str.favorit, style: theme.textTheme.titleSmall),
+          child: Text(context.l10n.favorit, style: theme.textTheme.titleSmall),
         ),
         if (favorit.isEmpty)
-          const _Pesan(Str.belumAdaFavorit, rataTengah: false)
+          KosongData(pesan: context.l10n.belumAdaFavorit, rataTengah: false)
         else
           for (final l in favorit)
             _BarisWilayah(lokasi: l, onTap: () => onPilih(l)),
-        const _Pesan(Str.cariMinimal, rataTengah: false),
+        KosongData(pesan: context.l10n.cariMinimal, rataTengah: false),
       ],
     );
   }
@@ -142,28 +145,5 @@ class _BarisWilayah extends StatelessWidget {
       trailing: TombolFavorit(lokasi: lokasi),
       onTap: onTap,
     );
-  }
-}
-
-class _Pesan extends StatelessWidget {
-  const _Pesan(this.teks, {this.rataTengah = true});
-
-  final String teks;
-  final bool rataTengah;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isi = Padding(
-      padding: const EdgeInsets.all(16),
-      child: Text(
-        teks,
-        textAlign: rataTengah ? TextAlign.center : TextAlign.start,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-    return rataTengah ? Center(child: isi) : isi;
   }
 }

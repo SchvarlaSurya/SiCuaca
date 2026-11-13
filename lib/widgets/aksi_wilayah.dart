@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
 import '../screens/pencarian_screen.dart';
@@ -17,7 +17,7 @@ class AksiWilayah extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
-          tooltip: Str.gunakanLokasiSaya,
+          tooltip: context.l10n.gunakanLokasiSaya,
           onPressed: mencari
               ? null
               : context.read<WeatherProvider>().pakaiLokasiGps,
@@ -29,7 +29,7 @@ class AksiWilayah extends StatelessWidget {
               : const Icon(Icons.my_location),
         ),
         IconButton(
-          tooltip: Str.cariWilayah,
+          tooltip: context.l10n.cariWilayah,
           onPressed: () => bukaPencarian(context),
           icon: const Icon(Icons.search),
         ),

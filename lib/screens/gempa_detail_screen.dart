@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/format.dart';
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import '../widgets/ajak_lokasi.dart';
@@ -20,6 +20,7 @@ class GempaDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final theme = Theme.of(context);
     final redup = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
@@ -34,7 +35,7 @@ class GempaDetailScreen extends StatelessWidget {
     ].join(' ');
 
     return Scaffold(
-      appBar: AppBar(title: const Text(Str.gempaDetailJudul)),
+      appBar: AppBar(title: Text(l.gempaDetailJudul)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -52,12 +53,14 @@ class GempaDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      gempa.wilayah.isEmpty ? Str.tandaKosong : gempa.wilayah,
+                      gempa.wilayah.isEmpty
+                          ? Format.tandaKosong
+                          : gempa.wilayah,
                       style: theme.textTheme.titleMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      Format.waktuRelatif(gempa.waktuUtc, DateTime.now()),
+                      Format.waktuRelatif(l, gempa.waktuUtc, DateTime.now()),
                       style: redup,
                     ),
                   ],
@@ -70,42 +73,46 @@ class GempaDetailScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _Baris(
             ikon: Icons.schedule,
-            label: Str.waktuKejadian,
-            nilai: Format.waktuLengkap(gempa.waktuUtc),
+            label: context.l10n.waktuKejadian,
+            nilai: Format.waktuLengkap(l, gempa.waktuUtc),
           ),
           _Baris(
             ikon: Icons.place_outlined,
-            label: Str.pusatGempa,
+            label: context.l10n.pusatGempa,
             nilai: gempa.wilayah,
           ),
           _Baris(
             ikon: Icons.speed,
-            label: Str.magnitudo,
+            label: context.l10n.magnitudo,
             nilai: gempa.magnitudo,
           ),
           _Baris(
             ikon: Icons.vertical_align_bottom,
-            label: Str.kedalaman,
+            label: context.l10n.kedalaman,
             nilai: gempa.kedalaman,
           ),
           _Baris(
             ikon: Icons.my_location,
-            label: Str.koordinat,
+            label: context.l10n.koordinat,
             nilai: teksKoordinat,
           ),
           if (gempa.potensi.isNotEmpty)
-            _Baris(ikon: Icons.waves, label: Str.potensi, nilai: gempa.potensi),
+            _Baris(
+              ikon: Icons.waves,
+              label: context.l10n.potensi,
+              nilai: gempa.potensi,
+            ),
           if (gempa.dirasakan.isNotEmpty)
             _Baris(
               ikon: Icons.groups_outlined,
-              label: Str.dirasakanDi,
+              label: context.l10n.dirasakanDi,
               nilai: gempa.dirasakan,
             ),
           if (jarak != null)
             _Baris(
               ikon: Icons.near_me_outlined,
-              label: Str.jarakDariAnda,
-              nilai: Str.jarakKm(Format.jarak(jarak)),
+              label: context.l10n.jarakDariAnda,
+              nilai: context.l10n.jarakKm(Format.jarak(l, jarak)),
             )
           else if (gempa.punyaKoordinat)
             const Padding(
@@ -145,7 +152,7 @@ class _Shakemap extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            Str.shakemapTidakTersedia,
+            context.l10n.shakemapTidakTersedia,
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
               color: scheme.onSurfaceVariant,
@@ -158,7 +165,7 @@ class _Shakemap extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Str.shakemapJudul, style: theme.textTheme.titleSmall),
+        Text(context.l10n.shakemapJudul, style: theme.textTheme.titleSmall),
         const SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
@@ -168,7 +175,7 @@ class _Shakemap extends StatelessWidget {
                   url,
                   fit: BoxFit.contain,
                   width: double.infinity,
-                  semanticLabel: Str.shakemapJudul,
+                  semanticLabel: context.l10n.shakemapJudul,
                   loadingBuilder: (context, child, progres) {
                     if (progres == null) return child;
                     final total = progres.expectedTotalBytes;
@@ -220,7 +227,7 @@ class _Baris extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  nilai.isEmpty ? Str.tandaKosong : nilai,
+                  nilai.isEmpty ? Format.tandaKosong : nilai,
                   style: theme.textTheme.bodyMedium,
                 ),
               ],

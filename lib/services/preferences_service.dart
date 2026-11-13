@@ -69,6 +69,21 @@ class PreferencesService {
     } catch (_) {}
   }
 
+  /// Nilai mentah pengaturan teks (bahasa, tema); null bila belum ada.
+  Future<String?> bacaTeks(String kunci) async {
+    try {
+      return (await _prefs).getString(kunci);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> simpanTeks(String kunci, String nilai) async {
+    try {
+      await (await _prefs).setString(kunci, nilai);
+    } catch (_) {}
+  }
+
   Future<void> simpanFavorit(List<Lokasi> daftar) async {
     try {
       await (await _prefs).setStringList(PrefsKeys.wilayahFavorit, [

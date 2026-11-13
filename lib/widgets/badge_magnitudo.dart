@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/strings.dart';
+import '../core/format.dart';
+import '../core/l10n.dart';
 
 /// Kotak magnitudo dengan warna sesuai tingkat:
 /// < 4 hijau, 4–4.9 kuning, 5–5.9 oranye, ≥ 6 merah.
@@ -32,7 +33,7 @@ class BadgeMagnitudo extends StatelessWidget {
     final theme = Theme.of(context);
     final label = (teks?.isNotEmpty ?? false)
         ? teks!
-        : magnitudo?.toStringAsFixed(1) ?? Str.tandaKosong;
+        : magnitudo?.toStringAsFixed(1) ?? Format.tandaKosong;
 
     return Container(
       width: besar ? 84 : 56,
@@ -53,7 +54,7 @@ class BadgeMagnitudo extends StatelessWidget {
                     ?.copyWith(color: depan, fontWeight: FontWeight.w700),
           ),
           Text(
-            besar ? Str.magnitudo : 'M',
+            besar ? context.l10n.magnitudo : 'M',
             style: theme.textTheme.labelSmall?.copyWith(color: depan),
           ),
         ],

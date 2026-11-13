@@ -1,0 +1,860 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_en.dart';
+import 'app_localizations_id.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('id'),
+  ];
+
+  /// No description provided for @appName.
+  ///
+  /// In id, this message translates to:
+  /// **'SiCuaca'**
+  String get appName;
+
+  /// No description provided for @sumberBmkg.
+  ///
+  /// In id, this message translates to:
+  /// **'Sumber: BMKG'**
+  String get sumberBmkg;
+
+  /// No description provided for @cobaLagi.
+  ///
+  /// In id, this message translates to:
+  /// **'Coba lagi'**
+  String get cobaLagi;
+
+  /// No description provided for @navBeranda.
+  ///
+  /// In id, this message translates to:
+  /// **'Beranda'**
+  String get navBeranda;
+
+  /// No description provided for @navCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca'**
+  String get navCuaca;
+
+  /// No description provided for @navGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa'**
+  String get navGempa;
+
+  /// No description provided for @navPeringatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Peringatan'**
+  String get navPeringatan;
+
+  /// No description provided for @navTentang.
+  ///
+  /// In id, this message translates to:
+  /// **'Tentang'**
+  String get navTentang;
+
+  /// No description provided for @errTidakAdaInternet.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada koneksi internet. Periksa jaringan lalu coba lagi.'**
+  String get errTidakAdaInternet;
+
+  /// No description provided for @errTimeout.
+  ///
+  /// In id, this message translates to:
+  /// **'Server BMKG terlalu lama merespons. Coba lagi beberapa saat lagi.'**
+  String get errTimeout;
+
+  /// No description provided for @errStatusHttp.
+  ///
+  /// In id, this message translates to:
+  /// **'Server BMKG mengembalikan status HTTP {kode}.'**
+  String errStatusHttp(String kode);
+
+  /// No description provided for @errDataTidakAda.
+  ///
+  /// In id, this message translates to:
+  /// **'Data cuaca untuk wilayah ini belum tersedia di BMKG.'**
+  String get errDataTidakAda;
+
+  /// No description provided for @errFormat.
+  ///
+  /// In id, this message translates to:
+  /// **'Format data dari BMKG tidak dikenali.'**
+  String get errFormat;
+
+  /// No description provided for @errTakTerduga.
+  ///
+  /// In id, this message translates to:
+  /// **'Terjadi kesalahan tak terduga saat mengambil data.'**
+  String get errTakTerduga;
+
+  /// No description provided for @modeOffline.
+  ///
+  /// In id, this message translates to:
+  /// **'Mode offline: menampilkan data tersimpan.'**
+  String get modeOffline;
+
+  /// No description provided for @diperbarui.
+  ///
+  /// In id, this message translates to:
+  /// **'Diperbarui: {waktu}'**
+  String diperbarui(String waktu);
+
+  /// No description provided for @berandaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Beranda'**
+  String get berandaJudul;
+
+  /// No description provided for @berandaKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Prakiraan cuaca dan info gempa bumi Indonesia.'**
+  String get berandaKeterangan;
+
+  /// No description provided for @gempaTabTerbaru.
+  ///
+  /// In id, this message translates to:
+  /// **'Terbaru'**
+  String get gempaTabTerbaru;
+
+  /// No description provided for @gempaTabTerkini.
+  ///
+  /// In id, this message translates to:
+  /// **'M 5.0+'**
+  String get gempaTabTerkini;
+
+  /// No description provided for @gempaTabDirasakan.
+  ///
+  /// In id, this message translates to:
+  /// **'Dirasakan'**
+  String get gempaTabDirasakan;
+
+  /// No description provided for @gempaTerbaruJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa terbaru'**
+  String get gempaTerbaruJudul;
+
+  /// No description provided for @gempaTerbaruKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa terakhir yang dicatat BMKG.'**
+  String get gempaTerbaruKeterangan;
+
+  /// No description provided for @gempaTerkiniKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'15 gempa terakhir dengan magnitudo 5,0 ke atas.'**
+  String get gempaTerkiniKeterangan;
+
+  /// No description provided for @gempaDirasakanKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'15 gempa terakhir yang dirasakan masyarakat.'**
+  String get gempaDirasakanKeterangan;
+
+  /// No description provided for @memuatGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Memuat data gempa…'**
+  String get memuatGempa;
+
+  /// No description provided for @gempaKosong.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada data gempa.'**
+  String get gempaKosong;
+
+  /// No description provided for @gempaDetailJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Detail gempa'**
+  String get gempaDetailJudul;
+
+  /// No description provided for @magnitudo.
+  ///
+  /// In id, this message translates to:
+  /// **'Magnitudo'**
+  String get magnitudo;
+
+  /// No description provided for @kedalaman.
+  ///
+  /// In id, this message translates to:
+  /// **'Kedalaman'**
+  String get kedalaman;
+
+  /// No description provided for @waktuKejadian.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu'**
+  String get waktuKejadian;
+
+  /// No description provided for @koordinat.
+  ///
+  /// In id, this message translates to:
+  /// **'Koordinat'**
+  String get koordinat;
+
+  /// No description provided for @pusatGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Pusat gempa'**
+  String get pusatGempa;
+
+  /// No description provided for @potensi.
+  ///
+  /// In id, this message translates to:
+  /// **'Potensi'**
+  String get potensi;
+
+  /// No description provided for @dirasakanDi.
+  ///
+  /// In id, this message translates to:
+  /// **'Dirasakan di'**
+  String get dirasakanDi;
+
+  /// No description provided for @jarakDariAnda.
+  ///
+  /// In id, this message translates to:
+  /// **'Jarak dari Anda'**
+  String get jarakDariAnda;
+
+  /// No description provided for @shakemapJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Peta guncangan (shakemap)'**
+  String get shakemapJudul;
+
+  /// No description provided for @shakemapTidakTersedia.
+  ///
+  /// In id, this message translates to:
+  /// **'Peta guncangan tidak tersedia untuk gempa ini.'**
+  String get shakemapTidakTersedia;
+
+  /// No description provided for @jarakAjak.
+  ///
+  /// In id, this message translates to:
+  /// **'Aktifkan lokasi untuk melihat jarak gempa dari posisi Anda.'**
+  String get jarakAjak;
+
+  /// No description provided for @jarakKm.
+  ///
+  /// In id, this message translates to:
+  /// **'± {km} km dari Anda'**
+  String jarakKm(String km);
+
+  /// No description provided for @kedalamanSingkat.
+  ///
+  /// In id, this message translates to:
+  /// **'Kedalaman {nilai}'**
+  String kedalamanSingkat(String nilai);
+
+  /// No description provided for @baruSaja.
+  ///
+  /// In id, this message translates to:
+  /// **'Baru saja'**
+  String get baruSaja;
+
+  /// No description provided for @menitLalu.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} menit lalu'**
+  String menitLalu(int n);
+
+  /// No description provided for @jamLalu.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} jam lalu'**
+  String jamLalu(int n);
+
+  /// No description provided for @hariLalu.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} hari lalu'**
+  String hariLalu(int n);
+
+  /// No description provided for @cuacaSaatIni.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca saat ini'**
+  String get cuacaSaatIni;
+
+  /// No description provided for @memuatCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Memuat prakiraan cuaca…'**
+  String get memuatCuaca;
+
+  /// No description provided for @kelembapan.
+  ///
+  /// In id, this message translates to:
+  /// **'Kelembapan'**
+  String get kelembapan;
+
+  /// No description provided for @angin.
+  ///
+  /// In id, this message translates to:
+  /// **'Angin'**
+  String get angin;
+
+  /// No description provided for @waktuSetempat.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu setempat'**
+  String get waktuSetempat;
+
+  /// No description provided for @tidakAdaPrakiraan.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada data prakiraan.'**
+  String get tidakAdaPrakiraan;
+
+  /// No description provided for @pukul.
+  ///
+  /// In id, this message translates to:
+  /// **'Pukul {waktu}'**
+  String pukul(String waktu);
+
+  /// No description provided for @kecepatanAngin.
+  ///
+  /// In id, this message translates to:
+  /// **'{kecepatan} km/j dari {arah}'**
+  String kecepatanAngin(String kecepatan, String arah);
+
+  /// No description provided for @kecepatanAnginSaja.
+  ///
+  /// In id, this message translates to:
+  /// **'{kecepatan} km/j'**
+  String kecepatanAnginSaja(String kecepatan);
+
+  /// No description provided for @hariIni.
+  ///
+  /// In id, this message translates to:
+  /// **'Hari ini'**
+  String get hariIni;
+
+  /// No description provided for @besok.
+  ///
+  /// In id, this message translates to:
+  /// **'Besok'**
+  String get besok;
+
+  /// No description provided for @arahN.
+  ///
+  /// In id, this message translates to:
+  /// **'Utara'**
+  String get arahN;
+
+  /// No description provided for @arahNE.
+  ///
+  /// In id, this message translates to:
+  /// **'Timur Laut'**
+  String get arahNE;
+
+  /// No description provided for @arahE.
+  ///
+  /// In id, this message translates to:
+  /// **'Timur'**
+  String get arahE;
+
+  /// No description provided for @arahSE.
+  ///
+  /// In id, this message translates to:
+  /// **'Tenggara'**
+  String get arahSE;
+
+  /// No description provided for @arahS.
+  ///
+  /// In id, this message translates to:
+  /// **'Selatan'**
+  String get arahS;
+
+  /// No description provided for @arahSW.
+  ///
+  /// In id, this message translates to:
+  /// **'Barat Daya'**
+  String get arahSW;
+
+  /// No description provided for @arahW.
+  ///
+  /// In id, this message translates to:
+  /// **'Barat'**
+  String get arahW;
+
+  /// No description provided for @arahNW.
+  ///
+  /// In id, this message translates to:
+  /// **'Barat Laut'**
+  String get arahNW;
+
+  /// No description provided for @pilihWilayahJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih wilayah'**
+  String get pilihWilayahJudul;
+
+  /// No description provided for @pilihWilayahKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Izinkan akses lokasi atau cari desa/kelurahan untuk melihat prakiraan cuaca.'**
+  String get pilihWilayahKeterangan;
+
+  /// No description provided for @gunakanLokasiSaya.
+  ///
+  /// In id, this message translates to:
+  /// **'Gunakan lokasi saya'**
+  String get gunakanLokasiSaya;
+
+  /// No description provided for @cariWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari wilayah'**
+  String get cariWilayah;
+
+  /// No description provided for @gantiWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Ganti wilayah'**
+  String get gantiWilayah;
+
+  /// No description provided for @mencariLokasi.
+  ///
+  /// In id, this message translates to:
+  /// **'Mencari lokasi Anda…'**
+  String get mencariLokasi;
+
+  /// No description provided for @cariHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari desa, kelurahan, atau kecamatan'**
+  String get cariHint;
+
+  /// No description provided for @cariMinimal.
+  ///
+  /// In id, this message translates to:
+  /// **'Ketik minimal 3 huruf.'**
+  String get cariMinimal;
+
+  /// No description provided for @cariTidakAdaHasil.
+  ///
+  /// In id, this message translates to:
+  /// **'Wilayah tidak ditemukan.'**
+  String get cariTidakAdaHasil;
+
+  /// No description provided for @memuatDataWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Memuat data wilayah…'**
+  String get memuatDataWilayah;
+
+  /// No description provided for @gagalMemuatDataWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Data wilayah tidak bisa dimuat. Pasang ulang aplikasi bila masalah berlanjut.'**
+  String get gagalMemuatDataWilayah;
+
+  /// No description provided for @favorit.
+  ///
+  /// In id, this message translates to:
+  /// **'Favorit'**
+  String get favorit;
+
+  /// No description provided for @belumAdaFavorit.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada wilayah favorit. Ketuk ikon bintang untuk menyimpan.'**
+  String get belumAdaFavorit;
+
+  /// No description provided for @tambahFavorit.
+  ///
+  /// In id, this message translates to:
+  /// **'Tambah ke favorit'**
+  String get tambahFavorit;
+
+  /// No description provided for @hapusFavorit.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus dari favorit'**
+  String get hapusFavorit;
+
+  /// No description provided for @gpsLayananMati.
+  ///
+  /// In id, this message translates to:
+  /// **'Layanan lokasi (GPS) sedang mati. Nyalakan lalu coba lagi, atau cari wilayah secara manual.'**
+  String get gpsLayananMati;
+
+  /// No description provided for @gpsDitolak.
+  ///
+  /// In id, this message translates to:
+  /// **'Izin lokasi ditolak. Anda tetap bisa mencari wilayah secara manual.'**
+  String get gpsDitolak;
+
+  /// No description provided for @gpsDitolakPermanen.
+  ///
+  /// In id, this message translates to:
+  /// **'Izin lokasi ditolak permanen. Aktifkan lewat pengaturan aplikasi, atau cari wilayah secara manual.'**
+  String get gpsDitolakPermanen;
+
+  /// No description provided for @gpsGagal.
+  ///
+  /// In id, this message translates to:
+  /// **'Lokasi Anda tidak bisa ditentukan. Silakan pilih wilayah secara manual.'**
+  String get gpsGagal;
+
+  /// No description provided for @gpsDiluarWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Lokasi Anda tidak cocok dengan desa/kelurahan mana pun di Indonesia. Silakan pilih wilayah secara manual.'**
+  String get gpsDiluarWilayah;
+
+  /// No description provided for @bukaPengaturanAplikasi.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka pengaturan aplikasi'**
+  String get bukaPengaturanAplikasi;
+
+  /// No description provided for @bukaPengaturanLokasi.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka pengaturan lokasi'**
+  String get bukaPengaturanLokasi;
+
+  /// No description provided for @channelGempaNama.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa bumi'**
+  String get channelGempaNama;
+
+  /// No description provided for @channelGempaDeskripsi.
+  ///
+  /// In id, this message translates to:
+  /// **'Notifikasi gempa baru sesuai ambang magnitudo yang dipilih.'**
+  String get channelGempaDeskripsi;
+
+  /// No description provided for @notifJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Notifikasi gempa'**
+  String get notifJudul;
+
+  /// No description provided for @notifKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim notifikasi saat terjadi gempa dengan magnitudo minimal:'**
+  String get notifKeterangan;
+
+  /// No description provided for @notifMati.
+  ///
+  /// In id, this message translates to:
+  /// **'Mati'**
+  String get notifMati;
+
+  /// No description provided for @notifMatiKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak menerima notifikasi gempa'**
+  String get notifMatiKeterangan;
+
+  /// No description provided for @notifM4.
+  ///
+  /// In id, this message translates to:
+  /// **'M 4,0 ke atas'**
+  String get notifM4;
+
+  /// No description provided for @notifM5.
+  ///
+  /// In id, this message translates to:
+  /// **'M 5,0 ke atas'**
+  String get notifM5;
+
+  /// No description provided for @notifM6.
+  ///
+  /// In id, this message translates to:
+  /// **'M 6,0 ke atas'**
+  String get notifM6;
+
+  /// No description provided for @notifM4Keterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Termasuk gempa kecil yang terasa'**
+  String get notifM4Keterangan;
+
+  /// No description provided for @notifM5Keterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa sedang hingga kuat'**
+  String get notifM5Keterangan;
+
+  /// No description provided for @notifM6Keterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Hanya gempa kuat'**
+  String get notifM6Keterangan;
+
+  /// No description provided for @notifBelumAktif.
+  ///
+  /// In id, this message translates to:
+  /// **'Notifikasi belum aktif di perangkat ini: Firebase belum dikonfigurasi atau platform tidak didukung.'**
+  String get notifBelumAktif;
+
+  /// No description provided for @notifIzinDitolak.
+  ///
+  /// In id, this message translates to:
+  /// **'Izin notifikasi ditolak. Aktifkan lewat pengaturan aplikasi agar notifikasi gempa bisa muncul.'**
+  String get notifIzinDitolak;
+
+  /// No description provided for @notifGagalLangganan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengaturan notifikasi gagal disimpan. Periksa koneksi internet lalu coba lagi.'**
+  String get notifGagalLangganan;
+
+  /// No description provided for @notifSumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Notifikasi dikirim server SiCuaca berdasarkan data gempa terbaru. Sumber: BMKG'**
+  String get notifSumber;
+
+  /// No description provided for @notifBahasaCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Teks notifikasi dikirim server dalam Bahasa Indonesia.'**
+  String get notifBahasaCatatan;
+
+  /// No description provided for @peringatanDiniSegera.
+  ///
+  /// In id, this message translates to:
+  /// **'Peringatan dini cuaca: segera hadir'**
+  String get peringatanDiniSegera;
+
+  /// No description provided for @peringatanKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Peringatan dini cuaca ekstrem untuk wilayah Anda.'**
+  String get peringatanKeterangan;
+
+  /// No description provided for @tentangKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Aplikasi prakiraan cuaca dan info gempa bumi Indonesia.'**
+  String get tentangKeterangan;
+
+  /// No description provided for @tentangSumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Sumber data: BMKG (Badan Meteorologi, Klimatologi, dan Geofisika). SiCuaca bukan aplikasi resmi BMKG.'**
+  String get tentangSumber;
+
+  /// No description provided for @tentangDataWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Data kode dan koordinat wilayah: cahyadsn/wilayah dan cahyadsn/wilayah_boundaries (lisensi MIT), mengikuti Kepmendagri No 300.2.2-2430 Tahun 2025.'**
+  String get tentangDataWilayah;
+
+  /// No description provided for @tentangPengaturan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
+  String get tentangPengaturan;
+
+  /// No description provided for @tentangKredit.
+  ///
+  /// In id, this message translates to:
+  /// **'Kredit dan sumber data'**
+  String get tentangKredit;
+
+  /// No description provided for @tentangBahasa.
+  ///
+  /// In id, this message translates to:
+  /// **'Bahasa'**
+  String get tentangBahasa;
+
+  /// No description provided for @tentangTema.
+  ///
+  /// In id, this message translates to:
+  /// **'Tema'**
+  String get tentangTema;
+
+  /// No description provided for @tentangVersi.
+  ///
+  /// In id, this message translates to:
+  /// **'Versi aplikasi'**
+  String get tentangVersi;
+
+  /// No description provided for @versiAplikasi.
+  ///
+  /// In id, this message translates to:
+  /// **'{versi} (build {build})'**
+  String versiAplikasi(String versi, String build);
+
+  /// No description provided for @ikutiSistem.
+  ///
+  /// In id, this message translates to:
+  /// **'Ikuti sistem'**
+  String get ikutiSistem;
+
+  /// No description provided for @bahasaIndonesia.
+  ///
+  /// In id, this message translates to:
+  /// **'Bahasa Indonesia'**
+  String get bahasaIndonesia;
+
+  /// No description provided for @bahasaInggris.
+  ///
+  /// In id, this message translates to:
+  /// **'English'**
+  String get bahasaInggris;
+
+  /// No description provided for @temaTerang.
+  ///
+  /// In id, this message translates to:
+  /// **'Terang'**
+  String get temaTerang;
+
+  /// No description provided for @temaGelap.
+  ///
+  /// In id, this message translates to:
+  /// **'Gelap'**
+  String get temaGelap;
+
+  /// No description provided for @lisensiSumberTerbuka.
+  ///
+  /// In id, this message translates to:
+  /// **'Lisensi sumber terbuka'**
+  String get lisensiSumberTerbuka;
+
+  /// No description provided for @lisensiDataWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Data wilayah (cahyadsn)'**
+  String get lisensiDataWilayah;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en', 'id'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
+    case 'id':
+      return AppLocalizationsId();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

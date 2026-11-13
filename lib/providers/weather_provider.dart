@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../core/exceptions.dart';
 import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
-import '../services/api_service.dart';
+import '../services/bmkg_repository.dart';
 import '../services/preferences_service.dart';
 import 'lokasi_provider.dart';
 
@@ -11,16 +11,18 @@ enum StatusCuaca { belumAdaWilayah, loading, berhasil, error }
 
 /// State prakiraan cuaca untuk wilayah aktif.
 class WeatherProvider extends ChangeNotifier {
-  WeatherProvider(this._api, this._prefs, this._lokasi);
+  WeatherProvider(this._repo, this._prefs, this._lokasi);
 
-  final ApiService _api;
+  final BmkgRepository _repo;
   final PreferencesService _prefs;
   final LokasiProvider _lokasi;
 
   StatusCuaca _status = StatusCuaca.loading;
   Lokasi? _wilayah;
   Prakiraan? _prakiraan;
-  String? _pesanError;
+  ApiException? _galat;
+  DateTime? _diperbarui;
+  bool _dariCache = false;
 
   /// Naik setiap permintaan baru, agar respons lama yang datang terlambat
   /// tidak menimpa wilayah yang baru dipilih.
@@ -29,7 +31,15 @@ class WeatherProvider extends ChangeNotifier {
   StatusCuaca get status => _status;
   Lokasi? get wilayah => _wilayah;
   Prakiraan? get prakiraan => _prakiraan;
-  String? get pesanError => _pesanError;
+
+  /// Error terakhir (untuk dipetakan ke teks oleh widget).
+  ApiException? get galat => _galat;
+
+  /// Waktu data prakiraan diambil dari BMKG.
+  DateTime? get diperbarui => _diperbarui;
+
+  /// True bila jaringan gagal dan prakiraan berasal dari cache.
+  bool get dariCache => _dariCache;
 
   /// Dipanggil sekali saat aplikasi dibuka: pulihkan wilayah terakhir, atau
   /// coba GPS bila belum pernah memilih wilayah.
@@ -66,21 +76,28 @@ class WeatherProvider extends ChangeNotifier {
     final ke = ++_permintaan;
 
     _status = StatusCuaca.loading;
-    _pesanError = null;
+    _galat = null;
     notifyListeners();
 
     try {
-      final hasil = await _api.fetchPrakiraanCuaca(wilayah.adm4);
+      // Cache prakiraan hanya disimpan untuk wilayah aktif + favorit.
+      final favorit = await _prefs.favorit();
+      final hasil = await _repo.prakiraan(
+        wilayah.adm4,
+        dipertahankan: {for (final f in favorit) f.adm4},
+      );
       if (ke != _permintaan) return;
-      _prakiraan = hasil;
+      _prakiraan = hasil.data;
+      _diperbarui = hasil.diperbarui;
+      _dariCache = hasil.dariCache;
       _status = StatusCuaca.berhasil;
     } on ApiException catch (e) {
       if (ke != _permintaan) return;
-      _pesanError = e.message;
+      _galat = e;
       _status = StatusCuaca.error;
     } catch (_) {
       if (ke != _permintaan) return;
-      _pesanError = ApiException.unknown().message;
+      _galat = ApiException.unknown();
       _status = StatusCuaca.error;
     }
     notifyListeners();

@@ -25,7 +25,7 @@ class ApiService {
   final Dio _dio;
 
   Future<Gempa> fetchAutoGempa() async {
-    final json = await _getJson(ApiConstants.autoGempaUrl);
+    final json = await ambilJson(ApiConstants.autoGempaUrl);
     try {
       return Gempa.fromAutoGempaJson(json);
     } on FormatException catch (e) {
@@ -42,7 +42,7 @@ class ApiService {
       _fetchDaftarGempa(ApiConstants.gempaDirasakanUrl);
 
   Future<List<Gempa>> _fetchDaftarGempa(String url) async {
-    final json = await _getJson(url);
+    final json = await ambilJson(url);
     try {
       return Gempa.daftarDariJson(json);
     } on FormatException catch (e) {
@@ -52,7 +52,7 @@ class ApiService {
 
   /// Prakiraan cuaca 3 hari untuk satu desa/kelurahan (kode adm4).
   Future<Prakiraan> fetchPrakiraanCuaca(String adm4) async {
-    final json = await _getJson(
+    final json = await ambilJson(
       ApiConstants.prakiraanCuacaUrl,
       queryParameters: {'adm4': adm4},
     );
@@ -63,7 +63,9 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> _getJson(
+  /// GET JSON mentah. Error jaringan/HTTP/format diubah jadi [ApiException].
+  /// Dipakai repository agar respons mentah bisa disimpan ke cache.
+  Future<Map<String, dynamic>> ambilJson(
     String url, {
     Map<String, dynamic>? queryParameters,
   }) async {

@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 
-import '../core/strings.dart';
 import '../models/ambang_gempa.dart';
 import '../services/notifikasi_service.dart';
 import '../services/preferences_service.dart';
+
+enum PesanNotifikasi { belumAktif, izinDitolak, gagalLangganan }
 
 /// Pengaturan ambang notifikasi gempa.
 class NotifikasiProvider extends ChangeNotifier {
@@ -15,7 +16,7 @@ class NotifikasiProvider extends ChangeNotifier {
   AmbangGempa _ambang = AmbangGempa.mati;
   bool _memproses = false;
   bool _izinDitolak = false;
-  String? _pesan;
+  PesanNotifikasi? _pesan;
 
   AmbangGempa get ambang => _ambang;
   bool get memproses => _memproses;
@@ -24,7 +25,8 @@ class NotifikasiProvider extends ChangeNotifier {
   /// True bila pesan terakhir adalah penolakan izin (tampilkan tombol
   /// pengaturan).
   bool get izinDitolak => _izinDitolak;
-  String? get pesan => _pesan;
+
+  PesanNotifikasi? get pesan => _pesan;
 
   Future<void> muat() async {
     _ambang = await _prefs.ambangGempa();
@@ -34,7 +36,7 @@ class NotifikasiProvider extends ChangeNotifier {
   Future<void> pilih(AmbangGempa baru) async {
     if (_memproses || baru == _ambang) return;
     if (!tersedia) {
-      _ubahPesan(Str.notifBelumAktif);
+      _ubahPesan(PesanNotifikasi.belumAktif);
       return;
     }
 
@@ -46,14 +48,14 @@ class NotifikasiProvider extends ChangeNotifier {
     try {
       if (baru != AmbangGempa.mati && !await _service.mintaIzin()) {
         _izinDitolak = true;
-        _pesan = Str.notifIzinDitolak;
+        _pesan = PesanNotifikasi.izinDitolak;
         return;
       }
       await _service.langganan(baru);
       _ambang = baru;
       await _prefs.simpanAmbangGempa(baru);
     } catch (_) {
-      _pesan = Str.notifGagalLangganan;
+      _pesan = PesanNotifikasi.gagalLangganan;
     } finally {
       _memproses = false;
       notifyListeners();
@@ -62,7 +64,7 @@ class NotifikasiProvider extends ChangeNotifier {
 
   Future<void> bukaPengaturan() => _service.bukaPengaturanAplikasi();
 
-  void _ubahPesan(String pesan) {
+  void _ubahPesan(PesanNotifikasi pesan) {
     _pesan = pesan;
     notifyListeners();
   }

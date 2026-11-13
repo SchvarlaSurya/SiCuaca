@@ -57,6 +57,11 @@ class PrefsKeys {
   static const String wilayahTerakhir = 'wilayah_terakhir';
   static const String wilayahFavorit = 'wilayah_favorit';
   static const String ambangGempa = 'ambang_gempa';
+  static const String bahasa = 'bahasa';
+  static const String tema = 'tema';
+
+  /// Awalan kunci cache (lihat CacheService).
+  static const String cache = 'cache.';
 }
 
 class NotifikasiConstants {

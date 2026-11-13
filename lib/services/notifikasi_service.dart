@@ -7,7 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../core/constants.dart';
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/ambang_gempa.dart';
 import '../models/gempa.dart';
 
@@ -85,12 +85,17 @@ class NotifikasiService {
   /// Penerus ketukan notifikasi ke halaman detail gempa.
   final PembukaNotifikasi pembuka = PembukaNotifikasi();
 
-  static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
-    NotifikasiConstants.channelGempaId,
-    Str.channelGempaNama,
-    description: Str.channelGempaDeskripsi,
-    importance: Importance.high,
-  );
+  /// Channel gempa. Nama/deskripsinya mengikuti bahasa perangkat saat
+  /// aplikasi dibuka (pilihan bahasa di aplikasi belum diketahui di sini).
+  late final AndroidNotificationChannel _channel = () {
+    final l = l10nUntuk(PlatformDispatcher.instance.locale);
+    return AndroidNotificationChannel(
+      NotifikasiConstants.channelGempaId,
+      l.channelGempaNama,
+      description: l.channelGempaDeskripsi,
+      importance: Importance.high,
+    );
+  }();
 
   /// Dipanggil sekali di main() sebelum runApp. Tidak pernah melempar error.
   Future<void> mulai() async {

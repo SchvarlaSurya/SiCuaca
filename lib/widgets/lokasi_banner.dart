@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../screens/pencarian_screen.dart';
 
@@ -13,7 +13,7 @@ class LokasiBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lokasi = context.watch<LokasiProvider>();
-    final pesan = lokasi.pesan;
+    final pesan = context.l10n.pesanLokasi(lokasi.status);
     if (pesan == null) return const SizedBox.shrink();
 
     final scheme = Theme.of(context).colorScheme;
@@ -56,13 +56,13 @@ class LokasiBanner extends StatelessWidget {
                     onPressed: lokasi.bukaPengaturan,
                     child: Text(
                       lokasi.status == StatusLokasi.layananMati
-                          ? Str.bukaPengaturanLokasi
-                          : Str.bukaPengaturanAplikasi,
+                          ? context.l10n.bukaPengaturanLokasi
+                          : context.l10n.bukaPengaturanAplikasi,
                     ),
                   ),
                 TextButton(
                   onPressed: () => bukaPencarian(context),
-                  child: const Text(Str.cariWilayah),
+                  child: Text(context.l10n.cariWilayah),
                 ),
               ],
             ),

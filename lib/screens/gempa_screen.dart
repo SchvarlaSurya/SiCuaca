@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import '../widgets/ajak_lokasi.dart';
 import '../widgets/gempa_item.dart';
 import '../widgets/gempa_terbaru_card.dart';
-import '../widgets/status_gempa.dart';
+import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
 
 /// Tab Gempa: Terbaru, M 5.0+, Dirasakan.
@@ -20,12 +20,12 @@ class GempaScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(Str.navGempa),
-          bottom: const TabBar(
+          title: Text(context.l10n.navGempa),
+          bottom: TabBar(
             tabs: [
-              Tab(text: Str.gempaTabTerbaru),
-              Tab(text: Str.gempaTabTerkini),
-              Tab(text: Str.gempaTabDirasakan),
+              Tab(text: context.l10n.gempaTabTerbaru),
+              Tab(text: context.l10n.gempaTabTerkini),
+              Tab(text: context.l10n.gempaTabDirasakan),
             ],
           ),
         ),
@@ -49,7 +49,11 @@ class _TabTerbaru extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(16),
         children: [
-          const _Keterangan(Str.gempaTerbaruKeterangan),
+          _Keterangan(context.l10n.gempaTerbaruKeterangan),
+          if (provider.terbaru.dariCache) ...[
+            const SizedBox(height: 12),
+            BannerOffline(diperbarui: provider.terbaru.diperbarui),
+          ],
           const SizedBox(height: 12),
           if (!provider.adaPosisi) ...[
             const AjakLokasi(),
@@ -70,7 +74,7 @@ class _TabTerkini extends StatelessWidget {
     final provider = context.watch<GempaProvider>();
     return _DaftarGempa(
       keadaan: provider.terkini,
-      keterangan: Str.gempaTerkiniKeterangan,
+      keterangan: context.l10n.gempaTerkiniKeterangan,
       onMuatUlang: provider.muatTerkini,
     );
   }
@@ -84,7 +88,7 @@ class _TabDirasakan extends StatelessWidget {
     final provider = context.watch<GempaProvider>();
     return _DaftarGempa(
       keadaan: provider.dirasakan,
-      keterangan: Str.gempaDirasakanKeterangan,
+      keterangan: context.l10n.gempaDirasakanKeterangan,
       onMuatUlang: provider.muatDirasakan,
     );
   }
@@ -111,6 +115,11 @@ class _DaftarGempa extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
         child: _Keterangan(keterangan),
       ),
+      if (keadaan.dariCache)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: BannerOffline(diperbarui: keadaan.diperbarui),
+        ),
       if (!adaPosisi)
         const Padding(
           padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -119,17 +128,19 @@ class _DaftarGempa extends StatelessWidget {
     ];
 
     final List<Widget> isi = switch (keadaan.status) {
-      StatusMuat.loading => [const MemuatGempa()],
+      StatusMuat.loading => [MemuatData(pesan: context.l10n.memuatGempa)],
       StatusMuat.error => [
         Padding(
           padding: const EdgeInsets.all(16),
-          child: GagalGempa(
-            pesan: keadaan.pesan ?? Str.errTakTerduga,
+          child: GagalMuat(
+            pesan: context.l10n.pesanGalat(keadaan.galat),
             onCobaLagi: onMuatUlang,
           ),
         ),
       ],
-      StatusMuat.berhasil when daftar.isEmpty => [const KosongGempa()],
+      StatusMuat.berhasil when daftar.isEmpty => [
+        KosongData(pesan: context.l10n.gempaKosong),
+      ],
       StatusMuat.berhasil => [
         for (var i = 0; i < daftar.length; i++) ...[
           if (i > 0) const Divider(height: 1, indent: 84, endIndent: 16),
@@ -145,7 +156,16 @@ class _DaftarGempa extends StatelessWidget {
         children: [
           ...kepala,
           ...isi,
-          const Padding(padding: EdgeInsets.all(16), child: SumberBmkg()),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SumberBmkg(),
+                LabelDiperbarui(waktu: keadaan.diperbarui),
+              ],
+            ),
+          ),
         ],
       ),
     );

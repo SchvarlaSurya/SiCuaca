@@ -1,18 +1,22 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+import 'core/l10n.dart';
 import 'core/navigasi.dart';
-import 'core/strings.dart';
 import 'core/theme.dart';
 import 'providers/favorit_provider.dart';
 import 'providers/gempa_provider.dart';
 import 'providers/lokasi_provider.dart';
 import 'providers/notifikasi_provider.dart';
+import 'providers/pengaturan_provider.dart';
 import 'providers/weather_provider.dart';
 import 'screens/main_shell.dart';
 import 'services/api_service.dart';
+import 'services/bmkg_repository.dart';
+import 'services/cache_service.dart';
 import 'services/gps_service.dart';
 import 'services/notifikasi_service.dart';
 import 'services/preferences_service.dart';
@@ -22,14 +26,27 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LicenseRegistry.addLicense(() async* {
     final teks = await rootBundle.loadString('assets/data/LICENSE-wilayah.txt');
-    yield LicenseEntryWithLineBreaks([Str.lisensiDataWilayah], teks);
+    // Judul paket lisensi bukan teks antarmuka; nama sumbernya dipakai apa
+    // adanya di kedua bahasa.
+    yield LicenseEntryWithLineBreaks(['cahyadsn/wilayah'], teks);
   });
 
   // Firebase + handler pesan latar belakang harus siap sebelum runApp.
   final notifikasi = NotifikasiService();
   await notifikasi.mulai();
 
-  runApp(SiCuacaApp(notifikasiService: notifikasi));
+  // Pilihan bahasa/tema dimuat sebelum frame pertama agar tidak berkedip.
+  final preferences = PreferencesService();
+  final pengaturan = PengaturanProvider(preferences);
+  await pengaturan.muat();
+
+  runApp(
+    SiCuacaApp(
+      notifikasiService: notifikasi,
+      preferencesService: preferences,
+      pengaturan: pengaturan,
+    ),
+  );
 }
 
 class SiCuacaApp extends StatelessWidget {
@@ -41,6 +58,8 @@ class SiCuacaApp extends StatelessWidget {
     this.wilayahService,
     this.preferencesService,
     this.notifikasiService,
+    this.cacheService,
+    this.pengaturan,
   });
 
   final ApiService? apiService;
@@ -48,6 +67,8 @@ class SiCuacaApp extends StatelessWidget {
   final WilayahService? wilayahService;
   final PreferencesService? preferencesService;
   final NotifikasiService? notifikasiService;
+  final CacheService? cacheService;
+  final PengaturanProvider? pengaturan;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +85,17 @@ class SiCuacaApp extends StatelessWidget {
         Provider<NotifikasiService>(
           create: (_) => notifikasiService ?? NotifikasiService(),
         ),
+        Provider<BmkgRepository>(
+          create: (context) => BmkgRepository(
+            context.read<ApiService>(),
+            cacheService ?? CacheService(),
+          ),
+        ),
+        ChangeNotifierProvider<PengaturanProvider>(
+          create: (context) =>
+              pengaturan ??
+              (PengaturanProvider(context.read<PreferencesService>())..muat()),
+        ),
         ChangeNotifierProvider<LokasiProvider>(
           create: (context) => LokasiProvider(
             context.read<GpsService>(),
@@ -72,14 +104,14 @@ class SiCuacaApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<WeatherProvider>(
           create: (context) => WeatherProvider(
-            context.read<ApiService>(),
+            context.read<BmkgRepository>(),
             context.read<PreferencesService>(),
             context.read<LokasiProvider>(),
           )..mulai(),
         ),
         ChangeNotifierProvider<GempaProvider>(
           create: (context) => GempaProvider(
-            context.read<ApiService>(),
+            context.read<BmkgRepository>(),
             context.read<LokasiProvider>(),
           )..mulai(),
         ),
@@ -94,15 +126,41 @@ class SiCuacaApp extends StatelessWidget {
               FavoritProvider(context.read<PreferencesService>())..muat(),
         ),
       ],
-      child: MaterialApp(
-        title: Str.appName,
-        navigatorKey: Navigasi.navigatorKey,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: ThemeMode.system,
-        home: const MainShell(),
-      ),
+      child: const _Aplikasi(),
+    );
+  }
+}
+
+class _Aplikasi extends StatelessWidget {
+  const _Aplikasi();
+
+  @override
+  Widget build(BuildContext context) {
+    final pengaturan = context.watch<PengaturanProvider>();
+    return MaterialApp(
+      onGenerateTitle: (context) => context.l10n.appName,
+      navigatorKey: Navigasi.navigatorKey,
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: pengaturan.tema.mode,
+      locale: pengaturan.bahasa.locale,
+      supportedLocales: bahasaDidukung,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      // "Ikuti sistem": pakai bahasa perangkat bila didukung, selain itu
+      // Bahasa Indonesia (default aplikasi).
+      localeResolutionCallback: (locale, didukung) {
+        for (final l in didukung) {
+          if (l.languageCode == locale?.languageCode) return l;
+        }
+        return bahasaDidukung.first;
+      },
+      home: const MainShell(),
     );
   }
 }

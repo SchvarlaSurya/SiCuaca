@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../core/format.dart';
 import '../core/navigasi.dart';
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import 'badge_magnitudo.dart';
-import 'status_gempa.dart';
+import 'status_data.dart';
 import 'sumber_bmkg.dart';
 
 /// Kartu ringkasan gempa terbaru (autogempa). Dipakai di Beranda dan tab
@@ -23,16 +23,17 @@ class GempaTerbaruCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     final isi = switch (keadaan.status) {
-      StatusMuat.loading => const MemuatGempa(),
-      StatusMuat.error => GagalGempa(
-        pesan: keadaan.pesan ?? Str.errTakTerduga,
+      StatusMuat.loading => MemuatData(pesan: context.l10n.memuatGempa),
+      StatusMuat.error => GagalMuat(
+        pesan: context.l10n.pesanGalat(keadaan.galat),
         onCobaLagi: provider.muatTerbaru,
       ),
       StatusMuat.berhasil when gempa != null => _Isi(
         gempa: gempa,
         jarak: provider.jarakKm(gempa),
+        diperbarui: keadaan.diperbarui,
       ),
-      StatusMuat.berhasil => const KosongGempa(),
+      StatusMuat.berhasil => KosongData(pesan: context.l10n.gempaKosong),
     };
 
     return Card(
@@ -51,7 +52,7 @@ class GempaTerbaruCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      Str.gempaTerbaruJudul,
+                      context.l10n.gempaTerbaruJudul,
                       style: theme.textTheme.titleMedium,
                     ),
                   ),
@@ -73,10 +74,15 @@ class GempaTerbaruCard extends StatelessWidget {
 }
 
 class _Isi extends StatelessWidget {
-  const _Isi({required this.gempa, required this.jarak});
+  const _Isi({
+    required this.gempa,
+    required this.jarak,
+    required this.diperbarui,
+  });
 
   final Gempa gempa;
   final double? jarak;
+  final DateTime? diperbarui;
 
   @override
   Widget build(BuildContext context) {
@@ -104,21 +110,24 @@ class _Isi extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    gempa.wilayah.isEmpty ? Str.tandaKosong : gempa.wilayah,
+                    gempa.wilayah.isEmpty ? Format.tandaKosong : gempa.wilayah,
                     style: theme.textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${Format.waktuRelatif(gempa.waktuUtc, DateTime.now())} · '
-                    '${Format.waktuLengkap(gempa.waktuUtc)}',
+                    '${Format.waktuRelatif(context.l10n, gempa.waktuUtc, DateTime.now())} · '
+                    '${Format.waktuLengkap(context.l10n, gempa.waktuUtc)}',
                     style: redup,
                   ),
                   if (gempa.kedalaman.isNotEmpty)
-                    Text(Str.kedalamanSingkat(gempa.kedalaman), style: redup),
+                    Text(
+                      context.l10n.kedalamanSingkat(gempa.kedalaman),
+                      style: redup,
+                    ),
                   if (jarak != null) ...[
                     const SizedBox(height: 6),
                     Text(
-                      Str.jarakKm(Format.jarak(jarak)),
+                      context.l10n.jarakKm(Format.jarak(context.l10n, jarak)),
                       style: theme.textTheme.labelLarge?.copyWith(
                         color: scheme.primary,
                       ),
@@ -130,7 +139,12 @@ class _Isi extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        const Align(alignment: Alignment.centerRight, child: SumberBmkg()),
+        Row(
+          children: [
+            Expanded(child: LabelDiperbarui(waktu: diperbarui)),
+            const SumberBmkg(),
+          ],
+        ),
       ],
     );
   }

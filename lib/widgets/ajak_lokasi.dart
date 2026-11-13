@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
 
@@ -37,7 +37,8 @@ class AjakLokasi extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  lokasi.pesan ?? Str.jarakAjak,
+                  context.l10n.pesanLokasi(lokasi.status) ??
+                      context.l10n.jarakAjak,
                   style: TextStyle(color: scheme.onSecondaryContainer),
                 ),
               ),
@@ -51,15 +52,15 @@ class AjakLokasi extends StatelessWidget {
                     ? null
                     : context.read<WeatherProvider>().pakaiLokasiGps,
                 icon: const Icon(Icons.my_location, size: 18),
-                label: const Text(Str.gunakanLokasiSaya),
+                label: Text(context.l10n.gunakanLokasiSaya),
               ),
               if (perluPengaturan)
                 TextButton(
                   onPressed: lokasi.bukaPengaturan,
                   child: Text(
                     lokasi.status == StatusLokasi.layananMati
-                        ? Str.bukaPengaturanLokasi
-                        : Str.bukaPengaturanAplikasi,
+                        ? context.l10n.bukaPengaturanLokasi
+                        : context.l10n.bukaPengaturanAplikasi,
                   ),
                 ),
             ],

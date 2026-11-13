@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../core/exceptions.dart';
 import '../core/geo.dart';
 import '../models/gempa.dart';
-import '../services/api_service.dart';
+import '../services/bmkg_repository.dart';
 import 'lokasi_provider.dart';
 
 enum StatusMuat { loading, berhasil, error }
@@ -13,27 +13,38 @@ class KeadaanGempa<T> {
   const KeadaanGempa.loading()
     : status = StatusMuat.loading,
       data = null,
-      pesan = null;
-  const KeadaanGempa.berhasil(T this.data)
+      galat = null,
+      diperbarui = null,
+      dariCache = false;
+
+  KeadaanGempa.berhasil(DataBmkg<T> hasil)
     : status = StatusMuat.berhasil,
-      pesan = null;
-  const KeadaanGempa.error(String this.pesan)
+      data = hasil.data,
+      galat = null,
+      diperbarui = hasil.diperbarui,
+      dariCache = hasil.dariCache;
+
+  const KeadaanGempa.error(ApiException this.galat)
     : status = StatusMuat.error,
-      data = null;
+      data = null,
+      diperbarui = null,
+      dariCache = false;
 
   final StatusMuat status;
   final T? data;
-  final String? pesan;
+  final ApiException? galat;
+  final DateTime? diperbarui;
+  final bool dariCache;
 }
 
 /// Data gempa BMKG: gempa terbaru, M 5.0+, dan dirasakan, plus jarak ke
 /// posisi GPS pengguna (dari [LokasiProvider]).
 class GempaProvider extends ChangeNotifier {
-  GempaProvider(this._api, this._lokasi) {
+  GempaProvider(this._repo, this._lokasi) {
     _lokasi.addListener(_lokasiBerubah);
   }
 
-  final ApiService _api;
+  final BmkgRepository _repo;
   final LokasiProvider _lokasi;
 
   KeadaanGempa<Gempa> _terbaru = const KeadaanGempa.loading();
@@ -73,31 +84,33 @@ class GempaProvider extends ChangeNotifier {
   Future<void> muatTerbaru() async {
     _terbaru = const KeadaanGempa.loading();
     _beritahu();
-    _terbaru = await _ambil(_api.fetchAutoGempa);
+    _terbaru = await _ambil(_repo.gempaTerbaru);
     _beritahu();
   }
 
   Future<void> muatTerkini() async {
     _terkini = const KeadaanGempa.loading();
     _beritahu();
-    _terkini = await _ambil(_api.fetchGempaTerkini);
+    _terkini = await _ambil(_repo.gempaTerkini);
     _beritahu();
   }
 
   Future<void> muatDirasakan() async {
     _dirasakan = const KeadaanGempa.loading();
     _beritahu();
-    _dirasakan = await _ambil(_api.fetchGempaDirasakan);
+    _dirasakan = await _ambil(_repo.gempaDirasakan);
     _beritahu();
   }
 
-  Future<KeadaanGempa<T>> _ambil<T>(Future<T> Function() ambil) async {
+  Future<KeadaanGempa<T>> _ambil<T>(
+    Future<DataBmkg<T>> Function() ambil,
+  ) async {
     try {
       return KeadaanGempa.berhasil(await ambil());
     } on ApiException catch (e) {
-      return KeadaanGempa.error(e.message);
+      return KeadaanGempa.error(e);
     } catch (_) {
-      return KeadaanGempa.error(ApiException.unknown().message);
+      return KeadaanGempa.error(ApiException.unknown());
     }
   }
 

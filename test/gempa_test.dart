@@ -3,9 +3,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'helpers.dart';
+
 import 'package:app/core/format.dart';
 import 'package:app/core/geo.dart';
-import 'package:app/core/strings.dart';
 import 'package:app/models/gempa.dart';
 import 'package:app/services/notifikasi_service.dart';
 
@@ -121,24 +122,24 @@ void main() {
   group('Format', () {
     test('waktu relatif', () {
       final now = DateTime.utc(2026, 11, 13, 12);
-      expect(Format.waktuRelatif(now, now), Str.baruSaja);
+      expect(Format.waktuRelatif(l, now, now), l.baruSaja);
       expect(
-        Format.waktuRelatif(now.subtract(const Duration(minutes: 12)), now),
-        Str.menitLalu(12),
+        Format.waktuRelatif(l, now.subtract(const Duration(minutes: 12)), now),
+        l.menitLalu(12),
       );
       expect(
-        Format.waktuRelatif(now.subtract(const Duration(hours: 3)), now),
-        Str.jamLalu(3),
+        Format.waktuRelatif(l, now.subtract(const Duration(hours: 3)), now),
+        l.jamLalu(3),
       );
       expect(
-        Format.waktuRelatif(now.subtract(const Duration(days: 2)), now),
-        Str.hariLalu(2),
+        Format.waktuRelatif(l, now.subtract(const Duration(days: 2)), now),
+        l.hariLalu(2),
       );
     });
 
     test('jarak dan zona waktu', () {
-      expect(Format.jarak(8.43), '8,4');
-      expect(Format.jarak(1234.4), '1.234');
+      expect(Format.jarak(l, 8.43), '8,4');
+      expect(Format.jarak(l, 1234.4), '1.234');
       expect(Format.zonaPerangkat(const Duration(hours: 7)), 'WIB');
       expect(Format.zonaPerangkat(const Duration(hours: 9)), 'WIT');
       expect(Format.zonaPerangkat(const Duration(hours: -5)), 'UTC-5');

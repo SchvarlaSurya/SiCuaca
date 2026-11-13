@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/ambang_gempa.dart';
 import '../providers/notifikasi_provider.dart';
 
@@ -9,15 +9,23 @@ import '../providers/notifikasi_provider.dart';
 class PeringatanScreen extends StatelessWidget {
   const PeringatanScreen({super.key});
 
-  static const Map<AmbangGempa, (String, String)> _label = {
-    AmbangGempa.mati: (Str.notifMati, Str.notifMatiKeterangan),
-    AmbangGempa.m4: (Str.notifM4, Str.notifM4Keterangan),
-    AmbangGempa.m5: (Str.notifM5, Str.notifM5Keterangan),
-    AmbangGempa.m6: (Str.notifM6, Str.notifM6Keterangan),
+  static (String, String) _label(AppLocalizations l, AmbangGempa a) =>
+      switch (a) {
+        AmbangGempa.mati => (l.notifMati, l.notifMatiKeterangan),
+        AmbangGempa.m4 => (l.notifM4, l.notifM4Keterangan),
+        AmbangGempa.m5 => (l.notifM5, l.notifM5Keterangan),
+        AmbangGempa.m6 => (l.notifM6, l.notifM6Keterangan),
+      };
+
+  static String _pesan(AppLocalizations l, PesanNotifikasi p) => switch (p) {
+    PesanNotifikasi.belumAktif => l.notifBelumAktif,
+    PesanNotifikasi.izinDitolak => l.notifIzinDitolak,
+    PesanNotifikasi.gagalLangganan => l.notifGagalLangganan,
   };
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final notif = context.watch<NotifikasiProvider>();
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
@@ -27,7 +35,7 @@ class PeringatanScreen extends StatelessWidget {
     final bisaDiubah = notif.tersedia && !notif.memproses;
 
     return Scaffold(
-      appBar: AppBar(title: const Text(Str.navPeringatan)),
+      appBar: AppBar(title: Text(l.navPeringatan)),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 16),
         children: [
@@ -41,10 +49,7 @@ class PeringatanScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    Str.notifJudul,
-                    style: theme.textTheme.titleMedium,
-                  ),
+                  child: Text(l.notifJudul, style: theme.textTheme.titleMedium),
                 ),
                 if (notif.memproses)
                   const SizedBox.square(
@@ -56,10 +61,10 @@ class PeringatanScreen extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-            child: Text(Str.notifKeterangan, style: redup),
+            child: Text(l.notifKeterangan, style: redup),
           ),
           if (!notif.tersedia)
-            const _Kotak(pesan: Str.notifBelumAktif, ikon: Icons.info_outline),
+            _Kotak(pesan: l.notifBelumAktif, ikon: Icons.info_outline),
           RadioGroup<AmbangGempa>(
             groupValue: notif.ambang,
             onChanged: (a) {
@@ -71,33 +76,36 @@ class PeringatanScreen extends StatelessWidget {
                   RadioListTile<AmbangGempa>(
                     value: a,
                     enabled: bisaDiubah,
-                    title: Text(_label[a]!.$1),
-                    subtitle: Text(_label[a]!.$2),
+                    title: Text(_label(l, a).$1),
+                    subtitle: Text(_label(l, a).$2),
                   ),
               ],
             ),
           ),
           if (notif.pesan != null && notif.tersedia)
             _Kotak(
-              pesan: notif.pesan!,
+              pesan: _pesan(l, notif.pesan!),
               ikon: Icons.notifications_off_outlined,
               galat: true,
               aksi: notif.izinDitolak
                   ? TextButton(
                       onPressed: notif.bukaPengaturan,
-                      child: const Text(Str.bukaPengaturanAplikasi),
+                      child: Text(l.bukaPengaturanAplikasi),
                     )
                   : null,
             ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: Text(Str.notifSumber, style: redup),
+            child: Text(
+              [l.notifSumber, if (l.inggris) l.notifBahasaCatatan].join(' '),
+              style: redup,
+            ),
           ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.warning_amber_outlined),
-            title: const Text(Str.peringatanDiniSegera),
-            subtitle: const Text(Str.peringatanKeterangan),
+            title: Text(l.peringatanDiniSegera),
+            subtitle: Text(l.peringatanKeterangan),
             enabled: false,
           ),
         ],

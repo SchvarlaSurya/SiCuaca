@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../core/format.dart';
 import '../core/navigasi.dart';
-import '../core/strings.dart';
+import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import 'badge_magnitudo.dart';
@@ -46,7 +46,7 @@ class GempaItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    gempa.wilayah.isEmpty ? Str.tandaKosong : gempa.wilayah,
+                    gempa.wilayah.isEmpty ? Format.tandaKosong : gempa.wilayah,
                     style: theme.textTheme.titleSmall,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -54,9 +54,13 @@ class GempaItem extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     [
-                      Format.waktuRelatif(gempa.waktuUtc, DateTime.now()),
+                      Format.waktuRelatif(
+                        context.l10n,
+                        gempa.waktuUtc,
+                        DateTime.now(),
+                      ),
                       if (gempa.kedalaman.isNotEmpty)
-                        Str.kedalamanSingkat(gempa.kedalaman),
+                        context.l10n.kedalamanSingkat(gempa.kedalaman),
                     ].join(' · '),
                     style: redup,
                   ),
@@ -88,10 +92,14 @@ class GempaItem extends StatelessWidget {
                           color: scheme.primary,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          Str.jarakKm(Format.jarak(jarak)),
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: scheme.primary,
+                        Expanded(
+                          child: Text(
+                            context.l10n.jarakKm(
+                              Format.jarak(context.l10n, jarak),
+                            ),
+                            style: theme.textTheme.labelMedium?.copyWith(
+                              color: scheme.primary,
+                            ),
                           ),
                         ),
                       ],
