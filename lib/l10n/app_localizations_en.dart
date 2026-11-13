@@ -46,7 +46,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get errDataTidakAda => 'BMKG has no weather data for this area yet.';
+  String get errDataTidakAda => 'Data is not available for this location.';
 
   @override
   String get errFormat => 'The data format from BMKG was not recognised.';
@@ -471,4 +471,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String magnitudoSemantik(String nilai, String tingkat) {
     return 'Magnitude $nilai, $tingkat';
   }
+
+  @override
+  String get navPengaturan => 'Settings';
+
+  @override
+  String get pengaturanTampilan => 'Display';
+
+  @override
+  String get tentangJudul => 'About SiCuaca';
+
+  @override
+  String get dataTidakTersedia => 'Data is not available for this location.';
+
+  @override
+  String get pilihDariDaftar => 'Browse regions';
+
+  @override
+  String get pilihDariDaftarKeterangan =>
+      'Province, regency/city, district, then village';
+
+  @override
+  String get pilihProvinsi => 'Choose province';
+
+  @override
+  String get pilihKabKota => 'Choose regency/city';
+
+  @override
+  String get pilihKecamatan => 'Choose district';
+
+  @override
+  String get pilihDesa => 'Choose village';
+
+  @override
+  String get saringDaftar => 'Filter list';
+
+  @override
+  String get semuaWilayah => 'Indonesia';
 }

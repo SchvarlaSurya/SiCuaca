@@ -167,7 +167,7 @@ abstract class AppLocalizations {
   /// No description provided for @errDataTidakAda.
   ///
   /// In id, this message translates to:
-  /// **'Data cuaca untuk wilayah ini belum tersedia di BMKG.'**
+  /// **'Data tidak tersedia untuk lokasi ini.'**
   String get errDataTidakAda;
 
   /// No description provided for @errFormat.
@@ -883,6 +883,78 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Magnitudo {nilai}, tingkat {tingkat}'**
   String magnitudoSemantik(String nilai, String tingkat);
+
+  /// No description provided for @navPengaturan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengaturan'**
+  String get navPengaturan;
+
+  /// No description provided for @pengaturanTampilan.
+  ///
+  /// In id, this message translates to:
+  /// **'Tampilan'**
+  String get pengaturanTampilan;
+
+  /// No description provided for @tentangJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Tentang SiCuaca'**
+  String get tentangJudul;
+
+  /// No description provided for @dataTidakTersedia.
+  ///
+  /// In id, this message translates to:
+  /// **'Data tidak tersedia untuk lokasi ini.'**
+  String get dataTidakTersedia;
+
+  /// No description provided for @pilihDariDaftar.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih dari daftar wilayah'**
+  String get pilihDariDaftar;
+
+  /// No description provided for @pilihDariDaftarKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Provinsi, kabupaten/kota, kecamatan, lalu desa/kelurahan'**
+  String get pilihDariDaftarKeterangan;
+
+  /// No description provided for @pilihProvinsi.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih provinsi'**
+  String get pilihProvinsi;
+
+  /// No description provided for @pilihKabKota.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih kabupaten/kota'**
+  String get pilihKabKota;
+
+  /// No description provided for @pilihKecamatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih kecamatan'**
+  String get pilihKecamatan;
+
+  /// No description provided for @pilihDesa.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih desa/kelurahan'**
+  String get pilihDesa;
+
+  /// No description provided for @saringDaftar.
+  ///
+  /// In id, this message translates to:
+  /// **'Saring daftar'**
+  String get saringDaftar;
+
+  /// No description provided for @semuaWilayah.
+  ///
+  /// In id, this message translates to:
+  /// **'Indonesia'**
+  String get semuaWilayah;
 }
 
 class _AppLocalizationsDelegate

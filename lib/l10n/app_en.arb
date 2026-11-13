@@ -14,7 +14,7 @@
   "errTidakAdaInternet": "No internet connection. Check your network and try again.",
   "errTimeout": "The BMKG server took too long to respond. Try again in a moment.",
   "errStatusHttp": "The BMKG server returned HTTP status {kode}.",
-  "errDataTidakAda": "BMKG has no weather data for this area yet.",
+  "errDataTidakAda": "Data is not available for this location.",
   "errFormat": "The data format from BMKG was not recognised.",
   "errTakTerduga": "Something went wrong while loading data.",
 
@@ -142,5 +142,17 @@
   "magKuat": "Strong",
   "magBesar": "Major",
   "magTakDiketahui": "Unknown",
-  "magnitudoSemantik": "Magnitude {nilai}, {tingkat}"
+  "magnitudoSemantik": "Magnitude {nilai}, {tingkat}",
+  "navPengaturan": "Settings",
+  "pengaturanTampilan": "Display",
+  "tentangJudul": "About SiCuaca",
+  "dataTidakTersedia": "Data is not available for this location.",
+  "pilihDariDaftar": "Browse regions",
+  "pilihDariDaftarKeterangan": "Province, regency/city, district, then village",
+  "pilihProvinsi": "Choose province",
+  "pilihKabKota": "Choose regency/city",
+  "pilihKecamatan": "Choose district",
+  "pilihDesa": "Choose village",
+  "saringDaftar": "Filter list",
+  "semuaWilayah": "Indonesia"
 }

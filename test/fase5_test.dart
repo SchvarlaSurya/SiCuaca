@@ -194,7 +194,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Beranda'), findsWidgets);
 
-      await tester.tap(find.byIcon(IkonApp.tentang).last);
+      await tester.tap(find.byIcon(IkonApp.pengaturan).last);
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.tentangBahasa));
       await tester.pumpAndSettle();
@@ -202,7 +202,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tab, judul, dan halaman Tentang berganti bahasa.
-      expect(find.text(en.navTentang), findsWidgets);
+      expect(find.text(en.navPengaturan), findsWidgets);
       expect(find.text(en.navBeranda), findsOneWidget);
       expect(find.text(en.tentangBahasa), findsOneWidget);
       expect(find.text('Beranda'), findsNothing);
@@ -223,7 +223,7 @@ void main() {
       await tester.pumpWidget(buatApp(gps: const HasilGps(StatusGps.ditolak)));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(IkonApp.tentang).last);
+      await tester.tap(find.byIcon(IkonApp.pengaturan).last);
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.tentangTema));
       await tester.pumpAndSettle();
@@ -320,7 +320,7 @@ void main() {
           IkonApp.cuaca,
           IkonApp.gempa,
           IkonApp.peringatan,
-          IkonApp.tentang,
+          IkonApp.pengaturan,
           IkonApp.beranda,
         ]) {
           await tester.tap(find.byIcon(ikon).last);

@@ -22,10 +22,14 @@ class CuacaSaatIniCard extends StatelessWidget {
 
     if (cuaca.status != StatusCuaca.berhasil ||
         prakiraan == null ||
-        wilayah == null ||
-        entri == null) {
+        wilayah == null) {
       return const Card(
         child: Padding(padding: EdgeInsets.all(16), child: StatusCuacaView()),
+      );
+    }
+    if (entri == null || !prakiraanCocok(prakiraan, wilayah)) {
+      return const Card(
+        child: Padding(padding: EdgeInsets.all(16), child: DataTidakTersedia()),
       );
     }
 

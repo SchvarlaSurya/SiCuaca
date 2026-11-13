@@ -47,8 +47,26 @@ class DesaTerdekat {
   final double jarakKm;
 }
 
+/// Satu simpul hierarki wilayah: provinsi, kab/kota, kecamatan, atau
+/// desa/kelurahan (kode Kepmendagri).
+class SimpulWilayah {
+  const SimpulWilayah(this.kode, this.nama);
+
+  final String kode;
+  final String nama;
+
+  /// Desa/kelurahan = tingkat terakhir (kode 13 karakter).
+  bool get desa => kode.length == 13;
+}
+
 class IndeksWilayah {
-  IndeksWilayah._(this._desa, this._namaDesa, this._namaKec, this._kunci);
+  IndeksWilayah._(
+    this._desa,
+    this._namaDesa,
+    this._namaKec,
+    this._kunci,
+    this._anak,
+  ) : _desaPerKode = {for (final d in _desa) d.adm4: d};
 
   final List<Lokasi> _desa;
   final List<String> _namaDesa;
@@ -57,7 +75,18 @@ class IndeksWilayah {
   /// "desa kecamatan kabkota provinsi" yang sudah dinormalkan.
   final List<String> _kunci;
 
+  /// Kode induk ('' = akar) ke daftar anaknya, urut nama.
+  final Map<String, List<SimpulWilayah>> _anak;
+  final Map<String, Lokasi> _desaPerKode;
+
   int get jumlahDesa => _desa.length;
+
+  /// Anak langsung dari [kodeInduk]: '' untuk daftar provinsi, kode
+  /// provinsi untuk kab/kota, dan seterusnya sampai desa/kelurahan.
+  List<SimpulWilayah> anak(String kodeInduk) => _anak[kodeInduk] ?? const [];
+
+  /// Desa/kelurahan dengan kode adm4 tertentu.
+  Lokasi? desaDenganKode(String adm4) => _desaPerKode[adm4];
 
   /// Cari desa/kelurahan berdasarkan nama desa, kecamatan, kab/kota, atau
   /// provinsi. Semua kata pada [query] harus muncul. Hasil diurutkan:
@@ -134,6 +163,13 @@ IndeksWilayah parseWilayah(String tsv) {
   final namaDesa = <String>[];
   final namaKec = <String>[];
   final kunci = <String>[];
+  final anak = <String, List<SimpulWilayah>>{};
+  String kodeInduk(String kode) => switch (kode.length) {
+    2 => '',
+    5 => kode.substring(0, 2),
+    8 => kode.substring(0, 5),
+    _ => kode.substring(0, 8),
+  };
 
   for (final mentah in tsv.split('\n')) {
     // Toleran terhadap CRLF bila berkas sempat diubah oleh editor/git.
@@ -145,6 +181,7 @@ IndeksWilayah parseWilayah(String tsv) {
     if (kolom.length < 2) continue;
     final kode = kolom[0];
 
+    (anak[kodeInduk(kode)] ??= []).add(SimpulWilayah(kode, kolom[1]));
     if (kode.length != 13) {
       induk[kode] = kolom[1];
       continue;
@@ -171,5 +208,8 @@ IndeksWilayah parseWilayah(String tsv) {
       '${IndeksWilayah.normalkan(lokasi.provinsi)}',
     );
   }
-  return IndeksWilayah._(desa, namaDesa, namaKec, kunci);
+  for (final daftar in anak.values) {
+    daftar.sort((a, b) => a.nama.toLowerCase().compareTo(b.nama.toLowerCase()));
+  }
+  return IndeksWilayah._(desa, namaDesa, namaKec, kunci, anak);
 }

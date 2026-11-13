@@ -8,9 +8,11 @@ import 'package:app/core/ikon.dart';
 import 'package:app/core/l10n.dart';
 import 'package:app/core/theme.dart';
 import 'package:app/core/warna_semantik.dart';
+import 'package:app/models/ambang_gempa.dart';
 import 'package:app/providers/pengaturan_provider.dart';
 import 'package:app/services/gps_service.dart';
 import 'package:app/services/preferences_service.dart';
+import 'package:app/services/wilayah_service.dart';
 import 'package:app/widgets/status_data.dart';
 
 import 'helpers.dart';
@@ -145,7 +147,7 @@ void main() {
           IkonApp.cuaca,
           IkonApp.gempa,
           IkonApp.peringatan,
-          IkonApp.tentang,
+          IkonApp.pengaturan,
           IkonApp.beranda,
         ]) {
           await tester.tap(find.byIcon(ikon).last);
@@ -175,5 +177,112 @@ void main() {
     await tester.tap(tautan.at(1));
     await tester.pumpAndSettle();
     expect(find.text(l.gempaTerbaruKeterangan), findsOneWidget);
+  });
+
+  group('P2', () {
+    test('dataset wilayah: anak per tingkat dan desa dari kode', () {
+      final indeks = parseWilayah(tsvUji);
+      expect(
+        [for (final s in indeks.anak('')) s.nama],
+        ['DKI Jakarta', 'Jawa Timur'],
+      );
+      expect([for (final s in indeks.anak('35')) s.nama], ['Kab. Malang']);
+      expect(
+        [for (final s in indeks.anak('35.07.10')) s.nama],
+        ['Putat Kidul', "Suka'maju"],
+      );
+      expect(indeks.anak('35.07.10').first.desa, isTrue);
+      expect(indeks.desaDenganKode('31.71.01.1002')?.kecamatan, 'Gambir');
+    });
+
+    Future<void> pilihLewatDaftar(
+      WidgetTester tester,
+      List<String> jalur,
+    ) async {
+      await tester.tap(find.byIcon(IkonApp.cari).first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.pilihDariDaftar));
+      await tester.pumpAndSettle();
+      for (final nama in jalur) {
+        await tester.tap(find.widgetWithText(ListTile, nama).last);
+        await tester.pumpAndSettle();
+      }
+    }
+
+    testWidgets(
+      'pemilih bertingkat: desa cocok tampil, tidak cocok "Data tidak tersedia"',
+      (tester) async {
+        await tester.pumpWidget(
+          buatApp(gps: const HasilGps(StatusGps.ditolak)),
+        );
+        await tester.pumpAndSettle();
+
+        // FakeApi selalu membalas prakiraan Gambir: Putat Kidul tidak cocok.
+        await pilihLewatDaftar(tester, [
+          'Jawa Timur',
+          'Kab. Malang',
+          'Gondanglegi',
+          'Putat Kidul',
+        ]);
+        expect(find.text(l.dataTidakTersedia), findsOneWidget);
+        expect(find.text(l.cuacaSaatIni), findsOneWidget);
+
+        await pilihLewatDaftar(tester, [
+          'DKI Jakarta',
+          'Kota Adm. Jakarta Pusat',
+          'Gambir',
+          'Gambir',
+        ]);
+        expect(find.text(l.dataTidakTersedia), findsNothing);
+        expect(find.text('Gambir'), findsWidgets);
+        expect(find.text(l.kelembapan), findsOneWidget);
+      },
+    );
+
+    testWidgets('pemilih bertingkat: kembali naik satu tingkat', (
+      tester,
+    ) async {
+      await tester.pumpWidget(buatApp(gps: const HasilGps(StatusGps.ditolak)));
+      await tester.pumpAndSettle();
+      await pilihLewatDaftar(tester, ['Jawa Timur', 'Kab. Malang']);
+      expect(find.text(l.pilihKecamatan), findsOneWidget);
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+      expect(find.text(l.pilihKabKota), findsOneWidget);
+      // Remah roti kembali ke akar.
+      await tester.tap(find.widgetWithText(TextButton, l.semuaWilayah));
+      await tester.pumpAndSettle();
+      expect(find.text(l.pilihProvinsi), findsOneWidget);
+    });
+
+    testWidgets('Pengaturan: tema, bahasa, dan ambang notifikasi', (
+      tester,
+    ) async {
+      final notif = FakeNotif();
+      await tester.pumpWidget(
+        buatApp(gps: const HasilGps(StatusGps.ditolak), notif: notif),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(IkonApp.pengaturan).last);
+      await tester.pumpAndSettle();
+      expect(find.text(l.pengaturanTampilan), findsOneWidget);
+      expect(find.text(l.tentangJudul), findsOneWidget);
+
+      await tester.tap(find.text(l.notifJudul).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.notifM5).last);
+      await tester.pumpAndSettle();
+      expect(notif.langgananDipanggil, [AmbangGempa.m5]);
+      expect(find.text(l.notifM5), findsOneWidget);
+
+      await tester.tap(find.text(l.tentangTema));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.temaGelap).last);
+      await tester.pumpAndSettle();
+      final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+      expect(app.themeMode, ThemeMode.dark);
+      final prefs = await SharedPreferences.getInstance();
+      expect(prefs.getString('tema'), 'gelap');
+    });
   });
 }

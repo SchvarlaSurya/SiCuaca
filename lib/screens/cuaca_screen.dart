@@ -111,7 +111,7 @@ class _Prakiraan extends StatelessWidget {
       const LokasiBanner(),
     ];
 
-    if (prakiraan.kosong || terdekat == null) {
+    if (terdekat == null || !prakiraanCocok(prakiraan, wilayah)) {
       return RefreshIndicator(
         onRefresh: onMuatUlang,
         child: ListView(
@@ -119,7 +119,12 @@ class _Prakiraan extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           children: [
             ...kepala,
-            KosongData(pesan: l.tidakAdaPrakiraan),
+            const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: DataTidakTersedia(),
+              ),
+            ),
           ],
         ),
       );

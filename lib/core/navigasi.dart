@@ -9,7 +9,7 @@ abstract final class TabUtama {
   static const int cuaca = 1;
   static const int gempa = 2;
   static const int peringatan = 3;
-  static const int tentang = 4;
+  static const int pengaturan = 4;
 }
 
 /// Titik navigasi terpusat. Dipakai juga dari luar pohon widget (ketukan

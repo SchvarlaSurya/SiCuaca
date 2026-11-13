@@ -10,7 +10,7 @@ import 'beranda_screen.dart';
 import 'cuaca_screen.dart';
 import 'gempa_screen.dart';
 import 'peringatan_screen.dart';
-import 'tentang_screen.dart';
+import 'pengaturan_screen.dart';
 
 /// Kerangka utama dengan bottom bar 5 tab.
 ///
@@ -44,7 +44,7 @@ class _MainShellState extends State<MainShell> {
     CuacaScreen(),
     GempaScreen(),
     PeringatanScreen(),
-    TentangScreen(),
+    PengaturanScreen(),
   ];
 
   @override
@@ -75,8 +75,8 @@ class _MainShellState extends State<MainShell> {
               label: l.navPeringatan,
             ),
             NavigationDestination(
-              icon: const Icon(IkonApp.tentang),
-              label: l.navTentang,
+              icon: const Icon(IkonApp.pengaturan),
+              label: l.navPengaturan,
             ),
           ],
         ),

@@ -46,8 +46,7 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get errDataTidakAda =>
-      'Data cuaca untuk wilayah ini belum tersedia di BMKG.';
+  String get errDataTidakAda => 'Data tidak tersedia untuk lokasi ini.';
 
   @override
   String get errFormat => 'Format data dari BMKG tidak dikenali.';
@@ -454,4 +453,41 @@ class AppLocalizationsId extends AppLocalizations {
   String magnitudoSemantik(String nilai, String tingkat) {
     return 'Magnitudo $nilai, tingkat $tingkat';
   }
+
+  @override
+  String get navPengaturan => 'Pengaturan';
+
+  @override
+  String get pengaturanTampilan => 'Tampilan';
+
+  @override
+  String get tentangJudul => 'Tentang SiCuaca';
+
+  @override
+  String get dataTidakTersedia => 'Data tidak tersedia untuk lokasi ini.';
+
+  @override
+  String get pilihDariDaftar => 'Pilih dari daftar wilayah';
+
+  @override
+  String get pilihDariDaftarKeterangan =>
+      'Provinsi, kabupaten/kota, kecamatan, lalu desa/kelurahan';
+
+  @override
+  String get pilihProvinsi => 'Pilih provinsi';
+
+  @override
+  String get pilihKabKota => 'Pilih kabupaten/kota';
+
+  @override
+  String get pilihKecamatan => 'Pilih kecamatan';
+
+  @override
+  String get pilihDesa => 'Pilih desa/kelurahan';
+
+  @override
+  String get saringDaftar => 'Saring daftar';
+
+  @override
+  String get semuaWilayah => 'Indonesia';
 }

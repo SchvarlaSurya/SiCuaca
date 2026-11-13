@@ -11,6 +11,7 @@ import '../providers/weather_provider.dart';
 import '../services/wilayah_service.dart';
 import '../widgets/status_data.dart';
 import '../widgets/tombol_favorit.dart';
+import 'pilih_wilayah_screen.dart';
 
 /// Membuka layar pencarian wilayah.
 Future<void> bukaPencarian(BuildContext context) {
@@ -108,6 +109,16 @@ class _Awal extends StatelessWidget {
           leading: const Icon(IkonApp.lokasiSaya),
           title: Text(context.l10n.gunakanLokasiSaya),
           onTap: onGps,
+        ),
+        ListTile(
+          leading: const Icon(IkonApp.daftarWilayah),
+          title: Text(context.l10n.pilihDariDaftar),
+          subtitle: Text(context.l10n.pilihDariDaftarKeterangan),
+          trailing: const Icon(IkonApp.selengkapnya),
+          onTap: () async {
+            final lokasi = await bukaPilihWilayah(context);
+            if (lokasi != null) onPilih(lokasi);
+          },
         ),
         const Divider(),
         Padding(

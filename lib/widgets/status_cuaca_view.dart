@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../core/ikon.dart';
 import '../core/l10n.dart';
+import '../models/lokasi.dart';
+import '../models/prakiraan.dart';
 import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
 import '../screens/pencarian_screen.dart';
@@ -76,6 +78,48 @@ class _PilihWilayah extends StatelessWidget {
               label: Text(l.cariWilayah),
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+/// True bila prakiraan memang untuk [wilayah] dan berisi data. Bila tidak,
+/// layar menampilkan [DataTidakTersedia], bukan data wilayah lain.
+bool prakiraanCocok(Prakiraan prakiraan, Lokasi wilayah) {
+  final kode = prakiraan.lokasi.adm4;
+  return !prakiraan.kosong && (kode.isEmpty || kode == wilayah.adm4);
+}
+
+/// "Data tidak tersedia untuk lokasi ini" + tombol ganti wilayah.
+class DataTidakTersedia extends StatelessWidget {
+  const DataTidakTersedia({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(IkonApp.kosong, color: theme.colorScheme.onSurfaceVariant),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l.dataTidakTersedia,
+                style: theme.textTheme.bodyMedium,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        OutlinedButton.icon(
+          onPressed: () => bukaPencarian(context),
+          icon: const Icon(IkonApp.cari),
+          label: Text(l.gantiWilayah),
         ),
       ],
     );

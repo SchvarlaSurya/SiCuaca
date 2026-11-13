@@ -15,7 +15,7 @@
   "errTimeout": "Server BMKG terlalu lama merespons. Coba lagi beberapa saat lagi.",
   "errStatusHttp": "Server BMKG mengembalikan status HTTP {kode}.",
   "@errStatusHttp": {"placeholders": {"kode": {"type": "String"}}},
-  "errDataTidakAda": "Data cuaca untuk wilayah ini belum tersedia di BMKG.",
+  "errDataTidakAda": "Data tidak tersedia untuk lokasi ini.",
   "errFormat": "Format data dari BMKG tidak dikenali.",
   "errTakTerduga": "Terjadi kesalahan tak terduga saat mengambil data.",
 
@@ -155,5 +155,17 @@
   "magBesar": "Besar",
   "magTakDiketahui": "Tak diketahui",
   "magnitudoSemantik": "Magnitudo {nilai}, tingkat {tingkat}",
-  "@magnitudoSemantik": {"placeholders": {"nilai": {"type": "String"}, "tingkat": {"type": "String"}}}
+  "@magnitudoSemantik": {"placeholders": {"nilai": {"type": "String"}, "tingkat": {"type": "String"}}},
+  "navPengaturan": "Pengaturan",
+  "pengaturanTampilan": "Tampilan",
+  "tentangJudul": "Tentang SiCuaca",
+  "dataTidakTersedia": "Data tidak tersedia untuk lokasi ini.",
+  "pilihDariDaftar": "Pilih dari daftar wilayah",
+  "pilihDariDaftarKeterangan": "Provinsi, kabupaten/kota, kecamatan, lalu desa/kelurahan",
+  "pilihProvinsi": "Pilih provinsi",
+  "pilihKabKota": "Pilih kabupaten/kota",
+  "pilihKecamatan": "Pilih kecamatan",
+  "pilihDesa": "Pilih desa/kelurahan",
+  "saringDaftar": "Saring daftar",
+  "semuaWilayah": "Indonesia"
 }

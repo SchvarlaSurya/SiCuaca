@@ -12,7 +12,7 @@ abstract final class IkonApp {
   static const IconData cuaca = Icons.wb_sunny_rounded;
   static const IconData gempa = Icons.waves_rounded;
   static const IconData peringatan = Icons.notifications_rounded;
-  static const IconData tentang = Icons.info_rounded;
+  static const IconData pengaturan = Icons.settings_rounded;
 
   // Aksi.
   static const IconData lokasiSaya = Icons.my_location_rounded;
@@ -22,6 +22,8 @@ abstract final class IkonApp {
   static const IconData selengkapnya = Icons.chevron_right_rounded;
   static const IconData muatUlang = Icons.refresh_rounded;
   static const IconData tutup = Icons.close_rounded;
+  static const IconData daftarWilayah = Icons.account_tree_rounded;
+  static const IconData saring = Icons.filter_list_rounded;
 
   // Status.
   static const IconData offline = Icons.cloud_off_rounded;
