@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../core/strings.dart';
 import 'beranda_screen.dart';
+import 'cuaca_screen.dart';
 import 'placeholder_screens.dart';
 import 'tentang_screen.dart';
 
@@ -37,23 +39,23 @@ class _MainShellState extends State<MainShell> {
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
-            label: 'Beranda',
+            label: Str.navBeranda,
           ),
           NavigationDestination(
             icon: Icon(Icons.wb_sunny_outlined),
             selectedIcon: Icon(Icons.wb_sunny),
-            label: 'Cuaca',
+            label: Str.navCuaca,
           ),
-          NavigationDestination(icon: Icon(Icons.waves), label: 'Gempa'),
+          NavigationDestination(icon: Icon(Icons.waves), label: Str.navGempa),
           NavigationDestination(
             icon: Icon(Icons.warning_amber_outlined),
             selectedIcon: Icon(Icons.warning_amber),
-            label: 'Peringatan',
+            label: Str.navPeringatan,
           ),
           NavigationDestination(
             icon: Icon(Icons.info_outline),
             selectedIcon: Icon(Icons.info),
-            label: 'Tentang',
+            label: Str.navTentang,
           ),
         ],
       ),

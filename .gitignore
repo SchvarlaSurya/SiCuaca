@@ -46,3 +46,8 @@ app.*.map.json
 
 # Project documents
 PRD_SiCuaca.pdf
+
+# Alat bantu lokal (preview, screenshot)
+.claude/
+.playwright-mcp/
+android/build/

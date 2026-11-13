@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../core/constants.dart';
+import '../core/strings.dart';
 
 class TentangScreen extends StatelessWidget {
   const TentangScreen({super.key});
@@ -11,14 +11,14 @@ class TentangScreen extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Tentang')),
+      appBar: AppBar(title: const Text(Str.navTentang)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(AppConstants.appName, style: theme.textTheme.headlineSmall),
+          Text(Str.appName, style: theme.textTheme.headlineSmall),
           const SizedBox(height: 4),
           Text(
-            'Aplikasi prakiraan cuaca dan info gempa bumi Indonesia.',
+            Str.tentangKeterangan,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: scheme.onSurfaceVariant,
             ),
@@ -28,20 +28,36 @@ class TentangScreen extends StatelessWidget {
             margin: EdgeInsets.zero,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Column(
                 children: [
-                  Icon(Icons.info_outline, color: scheme.primary),
-                  const SizedBox(width: 12),
-                  const Expanded(
-                    child: Text(
-                      'Sumber data: BMKG (Badan Meteorologi, Klimatologi, dan '
-                      'Geofisika). SiCuaca bukan aplikasi resmi BMKG.',
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.info_outline, color: scheme.primary),
+                      const SizedBox(width: 12),
+                      const Expanded(child: Text(Str.tentangSumber)),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.map_outlined, color: scheme.primary),
+                      const SizedBox(width: 12),
+                      const Expanded(child: Text(Str.tentangDataWilayah)),
+                    ],
                   ),
                 ],
               ),
             ),
+          ),
+          const SizedBox(height: 8),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.description_outlined),
+            title: const Text(Str.lisensiSumberTerbuka),
+            onTap: () =>
+                showLicensePage(context: context, applicationName: Str.appName),
           ),
         ],
       ),

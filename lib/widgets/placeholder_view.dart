@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/strings.dart';
+
 /// Isi sementara untuk tab yang fiturnya belum dibuat.
 class PlaceholderView extends StatelessWidget {
   const PlaceholderView({
@@ -49,7 +51,7 @@ class PlaceholderView extends StatelessWidget {
             const SizedBox(height: 16),
             Chip(
               avatar: const Icon(Icons.schedule, size: 18),
-              label: const Text('Segera hadir'),
+              label: const Text(Str.segeraHadir),
               side: BorderSide(color: scheme.outlineVariant),
             ),
           ],

@@ -1,11 +1,5 @@
-/// Nilai tetap aplikasi. Semua URL BMKG dan batas waktu jaringan ada di sini,
-/// supaya tidak tersebar di dalam method.
-class AppConstants {
-  const AppConstants._();
-
-  static const String appName = 'SiCuaca';
-}
-
+/// Nilai tetap aplikasi. Semua URL BMKG, batas waktu jaringan, dan kunci
+/// penyimpanan ada di sini, supaya tidak tersebar di dalam method.
 class ApiConstants {
   const ApiConstants._();
 
@@ -23,4 +17,35 @@ class ApiConstants {
 
   static const Duration connectTimeout = Duration(seconds: 10);
   static const Duration receiveTimeout = Duration(seconds: 15);
+}
+
+class WilayahConstants {
+  const WilayahConstants._();
+
+  /// Daftar kode wilayah Kepmendagri + titik tengah desa. Dibangun oleh
+  /// `tool/build_wilayah.py`.
+  static const String assetPath = 'assets/data/wilayah.tsv';
+
+  /// Jumlah maksimal hasil pencarian yang ditampilkan.
+  static const int batasHasilCari = 50;
+
+  /// Huruf minimal sebelum pencarian dijalankan.
+  static const int minimalHurufCari = 3;
+
+  /// Bila desa terdekat lebih jauh dari ini, posisi GPS dianggap di luar
+  /// wilayah Indonesia dan pengguna diminta memilih manual.
+  static const double radiusMaksimalKm = 50;
+}
+
+class LokasiConstants {
+  const LokasiConstants._();
+
+  static const Duration batasWaktuGps = Duration(seconds: 15);
+}
+
+class PrefsKeys {
+  const PrefsKeys._();
+
+  static const String wilayahTerakhir = 'wilayah_terakhir';
+  static const String wilayahFavorit = 'wilayah_favorit';
 }

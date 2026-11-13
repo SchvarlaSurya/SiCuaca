@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import '../core/constants.dart';
 import '../core/exceptions.dart';
 import '../models/gempa.dart';
+import '../models/prakiraan.dart';
 
 /// Satu-satunya pintu ke API BMKG. Semua error dio diubah menjadi
 /// [ApiException] sehingga lapisan lain tidak perlu mengenal dio.
@@ -32,12 +33,17 @@ class ApiService {
     }
   }
 
-  /// Fase 1: dikembalikan sebagai Map mentah, model menyusul di fase berikut.
-  Future<Map<String, dynamic>> fetchPrakiraanCuaca(String adm4) {
-    return _getJson(
+  /// Prakiraan cuaca 3 hari untuk satu desa/kelurahan (kode adm4).
+  Future<Prakiraan> fetchPrakiraanCuaca(String adm4) async {
+    final json = await _getJson(
       ApiConstants.prakiraanCuacaUrl,
       queryParameters: {'adm4': adm4},
     );
+    try {
+      return Prakiraan.fromJson(json);
+    } on FormatException catch (e) {
+      throw ApiException.badFormat(e.message);
+    }
   }
 
   Future<Map<String, dynamic>> _getJson(
@@ -63,10 +69,10 @@ class ApiService {
       try {
         return _asJsonMap(jsonDecode(data));
       } on FormatException {
-        throw ApiException.badFormat('respons bukan JSON');
+        throw ApiException.badFormat();
       }
     }
-    throw ApiException.badFormat('respons bukan objek JSON');
+    throw ApiException.badFormat();
   }
 
   ApiException _fromDio(DioException e) {
@@ -79,7 +85,10 @@ class ApiService {
       case DioExceptionType.connectionError:
         return ApiException.noInternet();
       case DioExceptionType.badResponse:
-        return ApiException.badStatus(e.response?.statusCode);
+        final kode = e.response?.statusCode;
+        return kode == 404
+            ? ApiException.notFound()
+            : ApiException.badStatus(kode);
       case DioExceptionType.badCertificate:
       case DioExceptionType.cancel:
       case DioExceptionType.unknown:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/strings.dart';
 import '../models/gempa.dart';
 import '../providers/uji_koneksi_provider.dart';
 
@@ -30,12 +31,12 @@ class UjiKoneksiCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Uji Koneksi API',
+                    Str.ujiKoneksiJudul,
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Uji ulang',
+                  tooltip: Str.ujiUlang,
                   onPressed: sedangMemuat ? null : provider.ujiKoneksi,
                   icon: const Icon(Icons.refresh),
                 ),
@@ -73,7 +74,7 @@ class _Memuat extends StatelessWidget {
             child: CircularProgressIndicator(strokeWidth: 2.5),
           ),
           SizedBox(width: 12),
-          Text('Menghubungi server BMKG…'),
+          Text(Str.menghubungiBmkg),
         ],
       ),
     );
@@ -85,7 +86,8 @@ class _Berhasil extends StatelessWidget {
 
   final Gempa gempa;
 
-  static String _atauStrip(String teks) => teks.isEmpty ? '-' : teks;
+  static String _atauStrip(String teks) =>
+      teks.isEmpty ? Str.tandaKosong : teks;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +106,7 @@ class _Berhasil extends StatelessWidget {
             Icon(Icons.check_circle, size: 18, color: scheme.primary),
             const SizedBox(width: 6),
             Text(
-              'Terhubung. Gempa terbaru:',
+              Str.terhubungGempaTerbaru,
               style: theme.textTheme.labelLarge?.copyWith(
                 color: scheme.primary,
               ),
@@ -132,7 +134,7 @@ class _Berhasil extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Magnitudo',
+                    Str.magnitudo,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: scheme.onPrimaryContainer,
                     ),
@@ -207,7 +209,7 @@ class _Gagal extends StatelessWidget {
         FilledButton.icon(
           onPressed: onCobaLagi,
           icon: const Icon(Icons.refresh),
-          label: const Text('Coba lagi'),
+          label: const Text(Str.cobaLagi),
         ),
       ],
     );

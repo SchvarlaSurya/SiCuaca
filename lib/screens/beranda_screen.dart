@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../core/constants.dart';
+import '../core/strings.dart';
+import '../widgets/aksi_wilayah.dart';
+import '../widgets/cuaca_saat_ini_card.dart';
+import '../widgets/lokasi_banner.dart';
 import '../widgets/uji_koneksi_card.dart';
 
 class BerandaScreen extends StatelessWidget {
@@ -11,19 +14,24 @@ class BerandaScreen extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AppConstants.appName)),
+      appBar: AppBar(
+        title: const Text(Str.appName),
+        actions: const [AksiWilayah()],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('Beranda', style: theme.textTheme.headlineSmall),
+          Text(Str.berandaJudul, style: theme.textTheme.headlineSmall),
           const SizedBox(height: 4),
           Text(
-            'Prakiraan cuaca dan info gempa bumi Indonesia. '
-            'Ringkasan lengkap segera hadir.',
+            Str.berandaKeterangan,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
+          const SizedBox(height: 16),
+          const LokasiBanner(),
+          const CuacaSaatIniCard(),
           const SizedBox(height: 16),
           const UjiKoneksiCard(),
         ],

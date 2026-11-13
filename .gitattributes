@@ -1,0 +1,2 @@
+# Dataset dibaca per baris; jangan diubah jadi CRLF.
+assets/data/*.tsv text eol=lf
