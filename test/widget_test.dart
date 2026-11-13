@@ -1,30 +1,65 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:app/core/exceptions.dart';
 import 'package:app/main.dart';
+import 'package:app/models/gempa.dart';
+import 'package:app/services/api_service.dart';
+
+class _FakeApiService extends ApiService {
+  _FakeApiService({this.gagal = false});
+
+  final bool gagal;
+
+  @override
+  Future<Gempa> fetchAutoGempa() async {
+    if (gagal) throw ApiException.noInternet();
+    return Gempa.fromJson(const {
+      'Magnitude': '4.6',
+      'Wilayah': 'Pusat gempa berada di laut 32 km barat laut Pulau Panjang',
+    });
+  }
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Gempa.fromJson tidak crash saat field hilang atau null', () {
+    final gempa = Gempa.fromJson(const {'Magnitude': null});
+    expect(gempa.magnitudo, '');
+    expect(gempa.wilayah, '');
+    expect(gempa.shakemapUrl, isNull);
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  test('Gempa.fromAutoGempaJson membaca Infogempa.gempa', () {
+    final gempa = Gempa.fromAutoGempaJson(const {
+      'Infogempa': {
+        'gempa': {'Magnitude': '5.1', 'Shakemap': 'x.mmi.jpg'},
+      },
+    });
+    expect(gempa.magnitudo, '5.1');
+    expect(gempa.shakemapUrl, 'https://data.bmkg.go.id/DataMKG/TEWS/x.mmi.jpg');
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('Beranda menampilkan gempa terbaru, tab Tentang bisa dibuka', (
+    tester,
+  ) async {
+    await tester.pumpWidget(SiCuacaApp(apiService: _FakeApiService()));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('4.6'), findsOneWidget);
+    expect(find.textContaining('Pulau Panjang'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.info_outline).last);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('bukan aplikasi resmi BMKG'), findsOneWidget);
+  });
+
+  testWidgets('Pesan error dan tombol coba lagi saat gagal', (tester) async {
+    await tester.pumpWidget(
+      SiCuacaApp(apiService: _FakeApiService(gagal: true)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Tidak ada koneksi internet'), findsOneWidget);
+    expect(find.text('Coba lagi'), findsOneWidget);
   });
 }
