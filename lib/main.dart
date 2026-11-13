@@ -29,6 +29,15 @@ Future<void> main() async {
     // Judul paket lisensi bukan teks antarmuka; nama sumbernya dipakai apa
     // adanya di kedua bahasa.
     yield LicenseEntryWithLineBreaks(['cahyadsn/wilayah'], teks);
+    // Huruf yang di-bundle (SIL Open Font License 1.1).
+    for (final (nama, berkas) in const [
+      ('Inter', 'assets/fonts/OFL-Inter.txt'),
+      ('Plus Jakarta Sans', 'assets/fonts/OFL-PlusJakartaSans.txt'),
+    ]) {
+      yield LicenseEntryWithLineBreaks([
+        nama,
+      ], await rootBundle.loadString(berkas));
+    }
   });
 
   // Firebase + handler pesan latar belakang harus siap sebelum runApp.

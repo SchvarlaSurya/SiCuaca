@@ -420,4 +420,38 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get lisensiDataWilayah => 'Data wilayah (cahyadsn)';
+
+  @override
+  String get selengkapnya => 'Selengkapnya';
+
+  @override
+  String dataTerakhir(String waktu) {
+    return 'Data terakhir diperbarui $waktu';
+  }
+
+  @override
+  String get prakiraanPer3Jam => 'Prakiraan per 3 jam';
+
+  @override
+  String get magKecil => 'Kecil';
+
+  @override
+  String get magRingan => 'Ringan';
+
+  @override
+  String get magSedang => 'Sedang';
+
+  @override
+  String get magKuat => 'Kuat';
+
+  @override
+  String get magBesar => 'Besar';
+
+  @override
+  String get magTakDiketahui => 'Tak diketahui';
+
+  @override
+  String magnitudoSemantik(String nilai, String tingkat) {
+    return 'Magnitudo $nilai, tingkat $tingkat';
+  }
 }

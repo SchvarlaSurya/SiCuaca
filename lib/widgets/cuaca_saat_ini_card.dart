@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core/format.dart';
-import '../core/l10n.dart';
-import '../models/lokasi.dart';
-import '../models/prakiraan.dart';
 import '../providers/weather_provider.dart';
-import 'ikon_cuaca.dart';
+import 'hero_cuaca.dart';
 import 'status_cuaca_view.dart';
 import 'status_data.dart';
 import 'sumber_bmkg.dart';
 import 'tombol_favorit.dart';
 
-/// Kartu Beranda: cuaca pada jam prakiraan terdekat dengan sekarang.
+/// Bagian cuaca di Beranda: kartu hero pada jam prakiraan terdekat dengan
+/// sekarang, tile kelembapan/angin, dan sumber data.
 class CuacaSaatIniCard extends StatelessWidget {
   const CuacaSaatIniCard({super.key});
 
@@ -23,155 +20,32 @@ class CuacaSaatIniCard extends StatelessWidget {
     final wilayah = cuaca.wilayah;
     final entri = prakiraan?.entriTerdekat(DateTime.now());
 
-    final tampilData =
-        cuaca.status == StatusCuaca.berhasil &&
-        prakiraan != null &&
-        wilayah != null &&
-        entri != null;
-
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: tampilData
-            ? _Isi(wilayah: wilayah, prakiraan: prakiraan, entri: entri)
-            : const StatusCuacaView(),
-      ),
-    );
-  }
-}
-
-class _Isi extends StatelessWidget {
-  const _Isi({
-    required this.wilayah,
-    required this.prakiraan,
-    required this.entri,
-  });
-
-  final Lokasi wilayah;
-  final Prakiraan prakiraan;
-  final EntriPrakiraan entri;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = context.l10n;
-    final diperbarui = context.select<WeatherProvider, DateTime?>(
-      (c) => c.diperbarui,
-    );
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final redup = theme.textTheme.bodySmall?.copyWith(
-      color: scheme.onSurfaceVariant,
-    );
+    if (cuaca.status != StatusCuaca.berhasil ||
+        prakiraan == null ||
+        wilayah == null ||
+        entri == null) {
+      return const Card(
+        child: Padding(padding: EdgeInsets.all(16), child: StatusCuacaView()),
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    context.l10n.cuacaSaatIni,
-                    style: theme.textTheme.labelLarge,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(wilayah.desa, style: theme.textTheme.titleLarge),
-                  Text(wilayah.labelInduk, style: redup),
-                ],
-              ),
-            ),
-            TombolFavorit(lokasi: wilayah),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            IkonCuaca(deskripsi: entri.deskripsi, malam: entri.malam, size: 56),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    Format.suhu(entri.suhu),
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    l.deskripsiCuaca(entri).isEmpty
-                        ? Format.tandaKosong
-                        : l.deskripsiCuaca(entri),
-                    style: theme.textTheme.titleMedium,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _Detail(
-          ikon: Icons.water_drop_outlined,
-          label: context.l10n.kelembapan,
-          nilai: Format.persen(entri.kelembapan),
+        HeroCuaca(
+          wilayah: wilayah,
+          entri: entri,
+          selisihZona: prakiraan.selisihZona,
+          aksi: TombolFavorit(lokasi: wilayah),
         ),
         const SizedBox(height: 8),
-        _Detail(
-          ikon: Icons.air,
-          label: context.l10n.angin,
-          nilai: Format.angin(l, entri.kecepatanAngin, entri.arahAngin),
-        ),
-        const SizedBox(height: 16),
+        KisiTile(children: tileCuaca(context, entri)),
+        const SizedBox(height: 8),
         Row(
           children: [
-            Expanded(
-              child: Text(
-                l.pukul(
-                  '${Format.jam(entri.waktuLokal)} '
-                          '${Format.zona(prakiraan.selisihZona)}'
-                      .trim(),
-                ),
-                style: redup,
-              ),
-            ),
+            Expanded(child: LabelDiperbarui(waktu: cuaca.diperbarui)),
             const SumberBmkg(),
           ],
-        ),
-        const SizedBox(height: 4),
-        LabelDiperbarui(waktu: diperbarui),
-      ],
-    );
-  }
-}
-
-class _Detail extends StatelessWidget {
-  const _Detail({required this.ikon, required this.label, required this.nilai});
-
-  final IconData ikon;
-  final String label;
-  final String nilai;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        Icon(ikon, size: 20, color: theme.colorScheme.onSurfaceVariant),
-        const SizedBox(width: 8),
-        Text(label, style: theme.textTheme.bodyMedium),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            nilai,
-            textAlign: TextAlign.end,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
         ),
       ],
     );

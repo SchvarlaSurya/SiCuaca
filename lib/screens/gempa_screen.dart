@@ -47,8 +47,9 @@ class _TabTerbaru extends StatelessWidget {
       onRefresh: provider.muatTerbaru,
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
+          JudulBagian(context.l10n.gempaTerbaruJudul),
           _Keterangan(context.l10n.gempaTerbaruKeterangan),
           if (provider.terbaru.dariCache) ...[
             const SizedBox(height: 12),
@@ -59,7 +60,7 @@ class _TabTerbaru extends StatelessWidget {
             const AjakLokasi(),
             const SizedBox(height: 12),
           ],
-          const GempaTerbaruCard(),
+          const GempaTerbaruCard(utama: true),
         ],
       ),
     );
@@ -128,7 +129,15 @@ class _DaftarGempa extends StatelessWidget {
     ];
 
     final List<Widget> isi = switch (keadaan.status) {
-      StatusMuat.loading => [MemuatData(pesan: context.l10n.memuatGempa)],
+      StatusMuat.loading => [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: MemuatData(
+            pesan: context.l10n.memuatGempa,
+            bentuk: BentukKerangka.daftar,
+          ),
+        ),
+      ],
       StatusMuat.error => [
         Padding(
           padding: const EdgeInsets.all(16),
@@ -143,7 +152,7 @@ class _DaftarGempa extends StatelessWidget {
       ],
       StatusMuat.berhasil => [
         for (var i = 0; i < daftar.length; i++) ...[
-          if (i > 0) const Divider(height: 1, indent: 84, endIndent: 16),
+          if (i > 0) const Divider(indent: 92, endIndent: 16),
           GempaItem(gempa: daftar[i]),
         ],
       ],

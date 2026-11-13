@@ -72,6 +72,25 @@ flutter:
   assets:
     - assets/data/wilayah.tsv
     - assets/data/LICENSE-wilayah.txt
+    - assets/fonts/OFL-Inter.txt
+    - assets/fonts/OFL-PlusJakartaSans.txt
+
+  # Huruf di-bundle (SIL OFL 1.1), tidak diunduh saat aplikasi berjalan.
+  fonts:
+    - family: PlusJakartaSans
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
+import '../core/theme.dart';
 import '../models/ambang_gempa.dart';
 import '../providers/notifikasi_provider.dart';
+import '../widgets/status_data.dart';
 
 /// Tab Peringatan: pengaturan ambang notifikasi gempa.
 class PeringatanScreen extends StatelessWidget {
@@ -37,20 +40,13 @@ class PeringatanScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l.navPeringatan)),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.only(top: 8, bottom: 24),
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Icon(
-                  Icons.notifications_active_outlined,
-                  color: scheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(l.notifJudul, style: theme.textTheme.titleMedium),
-                ),
+                Expanded(child: JudulBagian(l.notifJudul)),
                 if (notif.memproses)
                   const SizedBox.square(
                     dimension: 18,
@@ -64,28 +60,37 @@ class PeringatanScreen extends StatelessWidget {
             child: Text(l.notifKeterangan, style: redup),
           ),
           if (!notif.tersedia)
-            _Kotak(pesan: l.notifBelumAktif, ikon: Icons.info_outline),
-          RadioGroup<AmbangGempa>(
-            groupValue: notif.ambang,
-            onChanged: (a) {
-              if (a != null) notif.pilih(a);
-            },
-            child: Column(
-              children: [
-                for (final a in AmbangGempa.values)
-                  RadioListTile<AmbangGempa>(
-                    value: a,
-                    enabled: bisaDiubah,
-                    title: Text(_label(l, a).$1),
-                    subtitle: Text(_label(l, a).$2),
-                  ),
-              ],
+            _Kotak(pesan: l.notifBelumAktif, ikon: IkonApp.info),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: RadioGroup<AmbangGempa>(
+                groupValue: notif.ambang,
+                onChanged: (a) {
+                  if (a != null) notif.pilih(a);
+                },
+                child: Column(
+                  children: [
+                    for (final a in AmbangGempa.values) ...[
+                      if (a != AmbangGempa.values.first)
+                        const Divider(indent: 16, endIndent: 16),
+                      RadioListTile<AmbangGempa>(
+                        value: a,
+                        enabled: bisaDiubah,
+                        title: Text(_label(l, a).$1),
+                        subtitle: Text(_label(l, a).$2),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
           if (notif.pesan != null && notif.tersedia)
             _Kotak(
               pesan: _pesan(l, notif.pesan!),
-              ikon: Icons.notifications_off_outlined,
+              ikon: IkonApp.notifMati,
               galat: true,
               aksi: notif.izinDitolak
                   ? TextButton(
@@ -101,9 +106,12 @@ class PeringatanScreen extends StatelessWidget {
               style: redup,
             ),
           ),
-          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
+          ),
           ListTile(
-            leading: const Icon(Icons.warning_amber_outlined),
+            leading: const Icon(IkonApp.peringatanDini),
             title: Text(l.peringatanDiniSegera),
             subtitle: Text(l.peringatanKeterangan),
             enabled: false,
@@ -138,7 +146,7 @@ class _Kotak extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
       decoration: BoxDecoration(
         color: latar,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppTheme.radiusTile),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

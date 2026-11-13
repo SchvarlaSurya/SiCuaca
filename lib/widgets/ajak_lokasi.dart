@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
@@ -22,7 +23,7 @@ class AjakLokasi extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
       decoration: BoxDecoration(
         color: scheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,10 +31,7 @@ class AjakLokasi extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                Icons.location_searching,
-                color: scheme.onSecondaryContainer,
-              ),
+              Icon(IkonApp.lokasiCari, color: scheme.onSecondaryContainer),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -51,7 +49,7 @@ class AjakLokasi extends StatelessWidget {
                 onPressed: lokasi.sedangMencari
                     ? null
                     : context.read<WeatherProvider>().pakaiLokasiGps,
-                icon: const Icon(Icons.my_location, size: 18),
+                icon: const Icon(IkonApp.lokasiSaya, size: 18),
                 label: Text(context.l10n.gunakanLokasiSaya),
               ),
               if (perluPengaturan)

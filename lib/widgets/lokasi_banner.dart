@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../screens/pencarian_screen.dart';
@@ -22,7 +23,7 @@ class LokasiBanner extends StatelessWidget {
         lokasi.status == StatusLokasi.layananMati;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(top: 4, bottom: 4),
       color: scheme.secondaryContainer,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
@@ -32,7 +33,7 @@ class LokasiBanner extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.location_off, color: scheme.onSecondaryContainer),
+                Icon(IkonApp.lokasiMati, color: scheme.onSecondaryContainer),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -43,7 +44,7 @@ class LokasiBanner extends StatelessWidget {
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   onPressed: lokasi.reset,
-                  icon: const Icon(Icons.close),
+                  icon: const Icon(IkonApp.tutup),
                   color: scheme.onSecondaryContainer,
                 ),
               ],

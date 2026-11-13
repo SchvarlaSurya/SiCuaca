@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../providers/pengaturan_provider.dart';
+import '../widgets/status_data.dart';
 
 class TentangScreen extends StatelessWidget {
   const TentangScreen({super.key});
@@ -25,7 +27,7 @@ class TentangScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l.appName, style: theme.textTheme.headlineSmall),
+                Text(l.appName, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 4),
                 Text(
                   l.tentangKeterangan,
@@ -38,7 +40,7 @@ class TentangScreen extends StatelessWidget {
           ),
           _Judul(l.tentangPengaturan),
           _Pilihan<PilihanBahasa>(
-            ikon: Icons.translate,
+            ikon: IkonApp.bahasa,
             judul: l.tentangBahasa,
             nilai: pengaturan.bahasa,
             pilihan: {
@@ -49,7 +51,7 @@ class TentangScreen extends StatelessWidget {
             onPilih: pengaturan.pilihBahasa,
           ),
           _Pilihan<PilihanTema>(
-            ikon: Icons.contrast,
+            ikon: IkonApp.tema,
             judul: l.tentangTema,
             nilai: pengaturan.tema,
             pilihan: {
@@ -68,12 +70,9 @@ class TentangScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _BarisInfo(ikon: Icons.info_outline, teks: l.tentangSumber),
+                    _BarisInfo(ikon: IkonApp.info, teks: l.tentangSumber),
                     const SizedBox(height: 12),
-                    _BarisInfo(
-                      ikon: Icons.map_outlined,
-                      teks: l.tentangDataWilayah,
-                    ),
+                    _BarisInfo(ikon: IkonApp.peta, teks: l.tentangDataWilayah),
                   ],
                 ),
               ),
@@ -81,7 +80,7 @@ class TentangScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           ListTile(
-            leading: const Icon(Icons.description_outlined),
+            leading: const Icon(IkonApp.lisensi),
             title: Text(l.lisensiSumberTerbuka),
             onTap: () =>
                 showLicensePage(context: context, applicationName: l.appName),
@@ -100,15 +99,9 @@ class _Judul extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-      child: Text(
-        teks,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
-        ),
-      ),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: JudulBagian(teks),
     );
   }
 }
@@ -174,7 +167,7 @@ class _BarisInfo extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(ikon, color: Theme.of(context).colorScheme.primary),
+        Icon(ikon, color: Theme.of(context).colorScheme.onSurfaceVariant),
         const SizedBox(width: 12),
         Expanded(child: Text(teks)),
       ],
@@ -193,7 +186,7 @@ class _Versi extends StatelessWidget {
       builder: (context, snap) {
         final info = snap.data;
         return ListTile(
-          leading: const Icon(Icons.new_releases_outlined),
+          leading: const Icon(IkonApp.versi),
           title: Text(l.tentangVersi),
           subtitle: Text(
             info == null

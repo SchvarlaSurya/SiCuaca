@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
@@ -18,10 +19,15 @@ class StatusCuacaView extends StatelessWidget {
     final cuaca = context.watch<WeatherProvider>();
     final mencariGps = context.watch<LokasiProvider>().sedangMencari;
 
-    if (mencariGps) return MemuatData(pesan: l.mencariLokasi);
+    if (mencariGps) {
+      return MemuatData(pesan: l.mencariLokasi, bentuk: BentukKerangka.kartu);
+    }
 
     return switch (cuaca.status) {
-      StatusCuaca.loading => MemuatData(pesan: l.memuatCuaca),
+      StatusCuaca.loading => MemuatData(
+        pesan: l.memuatCuaca,
+        bentuk: BentukKerangka.kartu,
+      ),
       StatusCuaca.error => GagalMuat(
         pesan: l.pesanGalat(cuaca.galat),
         onCobaLagi: cuaca.muatUlang,
@@ -61,12 +67,12 @@ class _PilihWilayah extends StatelessWidget {
           children: [
             FilledButton.icon(
               onPressed: context.read<WeatherProvider>().pakaiLokasiGps,
-              icon: const Icon(Icons.my_location),
+              icon: const Icon(IkonApp.lokasiSaya),
               label: Text(l.gunakanLokasiSaya),
             ),
             OutlinedButton.icon(
               onPressed: () => bukaPencarian(context),
-              icon: const Icon(Icons.search),
+              icon: const Icon(IkonApp.cari),
               label: Text(l.cariWilayah),
             ),
           ],

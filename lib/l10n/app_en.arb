@@ -132,5 +132,15 @@
   "temaTerang": "Light",
   "temaGelap": "Dark",
   "lisensiSumberTerbuka": "Open source licences",
-  "lisensiDataWilayah": "Area data (cahyadsn)"
+  "lisensiDataWilayah": "Area data (cahyadsn)",
+  "selengkapnya": "See more",
+  "dataTerakhir": "Data last updated {waktu}",
+  "prakiraanPer3Jam": "3-hourly forecast",
+  "magKecil": "Minor",
+  "magRingan": "Light",
+  "magSedang": "Moderate",
+  "magKuat": "Strong",
+  "magBesar": "Major",
+  "magTakDiketahui": "Unknown",
+  "magnitudoSemantik": "Magnitude {nilai}, {tingkat}"
 }

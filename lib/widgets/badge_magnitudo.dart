@@ -2,62 +2,113 @@ import 'package:flutter/material.dart';
 
 import '../core/format.dart';
 import '../core/l10n.dart';
+import '../core/warna_semantik.dart';
 
-/// Kotak magnitudo dengan warna sesuai tingkat:
-/// < 4 hijau, 4–4.9 kuning, 5–5.9 oranye, ≥ 6 merah.
+String _angka(double? magnitudo, String? teks) => (teks?.isNotEmpty ?? false)
+    ? teks!
+    : magnitudo?.toStringAsFixed(1) ?? Format.tandaKosong;
+
+/// Kotak magnitudo untuk daftar: angka + label tingkat (Kecil, Ringan,
+/// Sedang, Kuat, Besar). Warna hanya penguat, label teks selalu ada.
 class BadgeMagnitudo extends StatelessWidget {
-  const BadgeMagnitudo({
-    super.key,
-    required this.magnitudo,
-    this.teks,
-    this.besar = false,
-  });
+  const BadgeMagnitudo({super.key, required this.magnitudo, this.teks});
 
   final double? magnitudo;
 
   /// Teks asli dari BMKG (mis. "4.1"); dipakai bila ada.
   final String? teks;
-  final bool besar;
-
-  static (Color, Color) warna(double? m) {
-    if (m == null) return (const Color(0xFF9E9E9E), Colors.white);
-    if (m >= 6) return (const Color(0xFFC62828), Colors.white);
-    if (m >= 5) return (const Color(0xFFEF6C00), Colors.white);
-    if (m >= 4) return (const Color(0xFFF9A825), Colors.black);
-    return (const Color(0xFF2E7D32), Colors.white);
-  }
 
   @override
   Widget build(BuildContext context) {
-    final (latar, depan) = warna(magnitudo);
+    final l = context.l10n;
     final theme = Theme.of(context);
-    final label = (teks?.isNotEmpty ?? false)
-        ? teks!
-        : magnitudo?.toStringAsFixed(1) ?? Format.tandaKosong;
-
-    return Container(
-      width: besar ? 84 : 56,
-      padding: EdgeInsets.symmetric(vertical: besar ? 12 : 8),
-      decoration: BoxDecoration(
-        color: latar,
-        borderRadius: BorderRadius.circular(besar ? 16 : 12),
+    final tingkat = TingkatMagnitudo.dari(magnitudo);
+    final angka = _angka(magnitudo, teks);
+    return Semantics(
+      label: l.magnitudoSemantik(angka, tingkat.label(l)),
+      child: ExcludeSemantics(
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 64),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          decoration: BoxDecoration(
+            color: tingkat.latar,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                angka,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: tingkat.depan,
+                ),
+              ),
+              Text(
+                tingkat.label(l).toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: tingkat.depan,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style:
-                (besar
-                        ? theme.textTheme.headlineMedium
-                        : theme.textTheme.titleLarge)
-                    ?.copyWith(color: depan, fontWeight: FontWeight.w700),
-          ),
-          Text(
-            besar ? context.l10n.magnitudo : 'M',
-            style: theme.textTheme.labelSmall?.copyWith(color: depan),
-          ),
-        ],
+    );
+  }
+}
+
+/// Label tingkat berbentuk pil, untuk ditaruh di samping angka besar.
+class LabelTingkat extends StatelessWidget {
+  const LabelTingkat({super.key, required this.magnitudo});
+
+  final double? magnitudo;
+
+  @override
+  Widget build(BuildContext context) {
+    final tingkat = TingkatMagnitudo.dari(magnitudo);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: tingkat.latar,
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Text(
+        tingkat.label(context.l10n).toUpperCase(),
+        style: Theme.of(
+          context,
+        ).textTheme.labelLarge?.copyWith(color: tingkat.depan),
+      ),
+    );
+  }
+}
+
+/// Magnitudo sebagai informasi utama layar: angka 64 sp + "M" + label
+/// tingkat.
+class MagnitudoBesar extends StatelessWidget {
+  const MagnitudoBesar({super.key, required this.magnitudo, this.teks});
+
+  final double? magnitudo;
+  final String? teks;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final theme = Theme.of(context);
+    final angka = _angka(magnitudo, teks);
+    final tingkat = TingkatMagnitudo.dari(magnitudo);
+    return Semantics(
+      label: l.magnitudoSemantik(angka, tingkat.label(l)),
+      child: ExcludeSemantics(
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 12,
+          runSpacing: 8,
+          children: [
+            Text(angka, style: theme.textTheme.displayLarge),
+            Text(l.magnitudo, style: theme.textTheme.labelMedium),
+            LabelTingkat(magnitudo: magnitudo),
+          ],
+        ),
       ),
     );
   }

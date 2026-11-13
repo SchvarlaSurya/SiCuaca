@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 
-/// Memetakan `weather_desc` BMKG ke ikon Material. Gambar dari URL BMKG
-/// sengaja tidak dipakai.
+import '../core/ikon.dart';
+
+/// Memetakan `weather_desc` BMKG ke ikon. Gambar dari URL BMKG sengaja
+/// tidak dipakai.
 ///
 /// Dicocokkan dengan kata kunci (bukan kode angka) karena kode cuaca BMKG
 /// tidak selalu konsisten dengan dokumentasinya.
 IconData ikonCuaca(String deskripsi, {bool malam = false}) {
   final d = deskripsi.toLowerCase();
-  if (d.contains('petir')) return Icons.thunderstorm;
-  if (d.contains('hujan')) return Icons.water_drop;
+  if (d.contains('petir')) return IkonApp.petir;
+  if (d.contains('hujan')) return IkonApp.hujan;
   if (d.contains('kabut') || d.contains('asap') || d.contains('kabur')) {
-    return Icons.foggy;
+    return IkonApp.kabut;
   }
   if (d.contains('cerah berawan')) {
-    return malam ? Icons.nights_stay : Icons.cloud_queue;
+    return malam ? IkonApp.cerahBerawanMalam : IkonApp.cerahBerawan;
   }
-  if (d.contains('berawan')) return Icons.cloud;
-  if (d.contains('cerah')) return malam ? Icons.bedtime : Icons.wb_sunny;
-  return Icons.cloud_outlined;
+  if (d.contains('berawan')) return IkonApp.berawan;
+  if (d.contains('cerah')) return malam ? IkonApp.cerahMalam : IkonApp.cerah;
+  return IkonApp.berawan;
 }
 
 class IkonCuaca extends StatelessWidget {
@@ -26,18 +28,22 @@ class IkonCuaca extends StatelessWidget {
     required this.deskripsi,
     this.malam = false,
     this.size = 24,
+    this.warna,
   });
 
   final String deskripsi;
   final bool malam;
   final double size;
 
+  /// Bawaan: warna primer tema.
+  final Color? warna;
+
   @override
   Widget build(BuildContext context) {
     return Icon(
       ikonCuaca(deskripsi, malam: malam),
       size: size,
-      color: Theme.of(context).colorScheme.primary,
+      color: warna ?? Theme.of(context).colorScheme.primary,
       semanticLabel: deskripsi,
     );
   }

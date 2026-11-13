@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
@@ -26,12 +27,12 @@ class AksiWilayah extends StatelessWidget {
                   dimension: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Icon(Icons.my_location),
+              : const Icon(IkonApp.lokasiSaya),
         ),
         IconButton(
           tooltip: context.l10n.cariWilayah,
           onPressed: () => bukaPencarian(context),
-          icon: const Icon(Icons.search),
+          icon: const Icon(IkonApp.cari),
         ),
       ],
     );

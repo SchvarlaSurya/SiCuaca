@@ -143,5 +143,17 @@
   "temaTerang": "Terang",
   "temaGelap": "Gelap",
   "lisensiSumberTerbuka": "Lisensi sumber terbuka",
-  "lisensiDataWilayah": "Data wilayah (cahyadsn)"
+  "lisensiDataWilayah": "Data wilayah (cahyadsn)",
+  "selengkapnya": "Selengkapnya",
+  "dataTerakhir": "Data terakhir diperbarui {waktu}",
+  "@dataTerakhir": {"placeholders": {"waktu": {"type": "String"}}},
+  "prakiraanPer3Jam": "Prakiraan per 3 jam",
+  "magKecil": "Kecil",
+  "magRingan": "Ringan",
+  "magSedang": "Sedang",
+  "magKuat": "Kuat",
+  "magBesar": "Besar",
+  "magTakDiketahui": "Tak diketahui",
+  "magnitudoSemantik": "Magnitudo {nilai}, tingkat {tingkat}",
+  "@magnitudoSemantik": {"placeholders": {"nilai": {"type": "String"}, "tingkat": {"type": "String"}}}
 }

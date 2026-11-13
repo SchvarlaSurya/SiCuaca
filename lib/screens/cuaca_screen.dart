@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/format.dart';
+import '../core/ikon.dart';
 import '../core/l10n.dart';
+import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
 import '../providers/weather_provider.dart';
 import '../widgets/aksi_wilayah.dart';
+import '../widgets/hero_cuaca.dart';
 import '../widgets/ikon_cuaca.dart';
 import '../widgets/lokasi_banner.dart';
 import '../widgets/status_cuaca_view.dart';
 import '../widgets/status_data.dart';
 import '../widgets/tombol_favorit.dart';
 
-/// Prakiraan per hari (satu tab per tanggal), entri tiap 3 jam.
+/// Prakiraan cuaca: kartu hero (jam terdekat), lalu prakiraan per 3 jam
+/// dengan satu tab per tanggal. Semuanya satu daftar gulir, sehingga tarik
+/// untuk memuat ulang bekerja di mana saja.
 class CuacaScreen extends StatelessWidget {
   const CuacaScreen({super.key});
 
@@ -28,7 +33,7 @@ class CuacaScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(berhasil ? wilayah.desa : context.l10n.navCuaca),
+        title: Text(context.l10n.navCuaca),
         actions: [
           if (berhasil) TombolFavorit(lokasi: wilayah),
           const AksiWilayah(),
@@ -37,17 +42,40 @@ class CuacaScreen extends StatelessWidget {
       body: berhasil
           ? _Prakiraan(
               prakiraan: prakiraan,
-              subjudul: wilayah.labelInduk,
+              wilayah: wilayah,
               diperbarui: cuaca.diperbarui,
               dariCache: cuaca.dariCache,
               onMuatUlang: cuaca.muatUlang,
             )
           : RefreshIndicator(
               onRefresh: cuaca.muatUlang,
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
-                children: const [LokasiBanner(), StatusCuacaView()],
+              // Kartu status di tengah layar agar tidak tampak kosong.
+              child: LayoutBuilder(
+                builder: (context, batas) => SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: (batas.maxHeight - 32).clamp(
+                        0,
+                        double.infinity,
+                      ),
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        LokasiBanner(),
+                        Card(
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: StatusCuacaView(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
     );
@@ -57,14 +85,14 @@ class CuacaScreen extends StatelessWidget {
 class _Prakiraan extends StatelessWidget {
   const _Prakiraan({
     required this.prakiraan,
-    required this.subjudul,
+    required this.wilayah,
     required this.diperbarui,
     required this.dariCache,
     required this.onMuatUlang,
   });
 
   final Prakiraan prakiraan;
-  final String subjudul;
+  final Lokasi wilayah;
   final DateTime? diperbarui;
   final bool dariCache;
   final Future<void> Function() onMuatUlang;
@@ -73,8 +101,28 @@ class _Prakiraan extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final theme = Theme.of(context);
-    if (prakiraan.kosong) {
-      return Center(child: KosongData(pesan: l.tidakAdaPrakiraan));
+    final terdekat = prakiraan.entriTerdekat(DateTime.now());
+
+    final kepala = <Widget>[
+      if (dariCache) ...[
+        BannerOffline(diperbarui: diperbarui),
+        const SizedBox(height: 8),
+      ],
+      const LokasiBanner(),
+    ];
+
+    if (prakiraan.kosong || terdekat == null) {
+      return RefreshIndicator(
+        onRefresh: onMuatUlang,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          children: [
+            ...kepala,
+            KosongData(pesan: l.tidakAdaPrakiraan),
+          ],
+        ),
+      );
     }
 
     final selisih = prakiraan.selisihZona ?? Duration.zero;
@@ -85,72 +133,66 @@ class _Prakiraan extends StatelessWidget {
       // Kunci baru saat data berganti, agar jumlah tab ikut diperbarui.
       key: ObjectKey(prakiraan),
       length: prakiraan.hari.length,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: Text(
-              subjudul,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          if (dariCache)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: BannerOffline(diperbarui: diperbarui),
-            ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: LokasiBanner(),
-          ),
-          TabBar(
-            isScrollable: true,
-            tabAlignment: TabAlignment.start,
-            tabs: [
-              for (final h in prakiraan.hari)
-                Tab(text: Format.labelHari(l, h.first.waktuLokal, hariIni)),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
+      child: Builder(
+        builder: (context) {
+          final tab = DefaultTabController.of(context);
+          return RefreshIndicator(
+            onRefresh: onMuatUlang,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
-                for (final h in prakiraan.hari)
-                  RefreshIndicator(
-                    onRefresh: onMuatUlang,
-                    child: ListView.separated(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      itemCount: h.length + 1,
-                      separatorBuilder: (_, _) =>
-                          const Divider(height: 1, indent: 16, endIndent: 16),
-                      itemBuilder: (context, i) => i < h.length
-                          ? _BarisEntri(entri: h[i])
-                          : Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${l.waktuSetempat}'
-                                    '${zona.isEmpty ? '' : ' ($zona)'} · '
-                                    '${l.sumberBmkg}',
-                                    style: theme.textTheme.labelSmall?.copyWith(
-                                      color: theme.colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                  LabelDiperbarui(waktu: diperbarui),
-                                ],
-                              ),
-                            ),
-                    ),
+                ...kepala,
+                HeroCuaca(
+                  wilayah: wilayah,
+                  entri: terdekat,
+                  selisihZona: prakiraan.selisihZona,
+                ),
+                const SizedBox(height: 8),
+                KisiTile(children: tileCuaca(context, terdekat)),
+                const SizedBox(height: 16),
+                JudulBagian(l.prakiraanPer3Jam),
+                TabBar(
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.start,
+                  tabs: [
+                    for (final h in prakiraan.hari)
+                      Tab(
+                        text: Format.labelHari(l, h.first.waktuLokal, hariIni),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                ListenableBuilder(
+                  listenable: tab,
+                  builder: (context, _) {
+                    final hari = prakiraan.hari[tab.index];
+                    return Card(
+                      child: Column(
+                        children: [
+                          for (var i = 0; i < hari.length; i++) ...[
+                            if (i > 0) const Divider(indent: 16, endIndent: 16),
+                            _BarisEntri(entri: hari[i]),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  '${l.waktuSetempat}'
+                  '${zona.isEmpty ? '' : ' ($zona)'} · '
+                  '${l.sumberBmkg}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
+                ),
+                LabelDiperbarui(waktu: diperbarui),
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -163,17 +205,20 @@ class _BarisEntri extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
     final theme = Theme.of(context);
     final redup = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
     );
+    final skala = MediaQuery.textScalerOf(context).scale(16) / 16;
+    final deskripsi = l.deskripsiCuaca(entri);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
           SizedBox(
-            width: 52,
+            width: 52 * skala,
             child: Text(
               Format.jam(entri.waktuLokal),
               style: theme.textTheme.titleSmall,
@@ -186,9 +231,7 @@ class _BarisEntri extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  context.l10n.deskripsiCuaca(entri).isEmpty
-                      ? Format.tandaKosong
-                      : context.l10n.deskripsiCuaca(entri),
+                  deskripsi.isEmpty ? Format.tandaKosong : deskripsi,
                   style: theme.textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 2),
@@ -196,14 +239,14 @@ class _BarisEntri extends StatelessWidget {
                   spacing: 12,
                   children: [
                     _Info(
-                      ikon: Icons.water_drop_outlined,
+                      ikon: IkonApp.kelembapan,
                       teks: Format.persen(entri.kelembapan),
                       gaya: redup,
                     ),
                     _Info(
-                      ikon: Icons.air,
+                      ikon: IkonApp.angin,
                       teks: Format.angin(
-                        context.l10n,
+                        l,
                         entri.kecepatanAngin,
                         entri.arahAngin,
                       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/format.dart';
+import '../core/ikon.dart';
 import '../core/navigasi.dart';
 import '../core/l10n.dart';
 import '../models/gempa.dart';
@@ -26,13 +27,13 @@ class GempaItem extends StatelessWidget {
         ? gempa.potensi
         : gempa.dirasakan;
     final ikonKeterangan = gempa.potensi.isNotEmpty
-        ? Icons.waves
-        : Icons.groups_outlined;
+        ? IkonApp.potensi
+        : IkonApp.dirasakan;
 
     return InkWell(
       onTap: () => Navigasi.bukaDetailGempa(gempa),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -86,11 +87,7 @@ class GempaItem extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(
-                          Icons.near_me_outlined,
-                          size: 14,
-                          color: scheme.primary,
-                        ),
+                        Icon(IkonApp.jarak, size: 14, color: scheme.primary),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(

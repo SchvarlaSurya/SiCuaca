@@ -823,6 +823,66 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Data wilayah (cahyadsn)'**
   String get lisensiDataWilayah;
+
+  /// No description provided for @selengkapnya.
+  ///
+  /// In id, this message translates to:
+  /// **'Selengkapnya'**
+  String get selengkapnya;
+
+  /// No description provided for @dataTerakhir.
+  ///
+  /// In id, this message translates to:
+  /// **'Data terakhir diperbarui {waktu}'**
+  String dataTerakhir(String waktu);
+
+  /// No description provided for @prakiraanPer3Jam.
+  ///
+  /// In id, this message translates to:
+  /// **'Prakiraan per 3 jam'**
+  String get prakiraanPer3Jam;
+
+  /// No description provided for @magKecil.
+  ///
+  /// In id, this message translates to:
+  /// **'Kecil'**
+  String get magKecil;
+
+  /// No description provided for @magRingan.
+  ///
+  /// In id, this message translates to:
+  /// **'Ringan'**
+  String get magRingan;
+
+  /// No description provided for @magSedang.
+  ///
+  /// In id, this message translates to:
+  /// **'Sedang'**
+  String get magSedang;
+
+  /// No description provided for @magKuat.
+  ///
+  /// In id, this message translates to:
+  /// **'Kuat'**
+  String get magKuat;
+
+  /// No description provided for @magBesar.
+  ///
+  /// In id, this message translates to:
+  /// **'Besar'**
+  String get magBesar;
+
+  /// No description provided for @magTakDiketahui.
+  ///
+  /// In id, this message translates to:
+  /// **'Tak diketahui'**
+  String get magTakDiketahui;
+
+  /// No description provided for @magnitudoSemantik.
+  ///
+  /// In id, this message translates to:
+  /// **'Magnitudo {nilai}, tingkat {tingkat}'**
+  String magnitudoSemantik(String nilai, String tingkat);
 }
 
 class _AppLocalizationsDelegate

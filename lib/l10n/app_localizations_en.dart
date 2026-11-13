@@ -437,4 +437,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lisensiDataWilayah => 'Area data (cahyadsn)';
+
+  @override
+  String get selengkapnya => 'See more';
+
+  @override
+  String dataTerakhir(String waktu) {
+    return 'Data last updated $waktu';
+  }
+
+  @override
+  String get prakiraanPer3Jam => '3-hourly forecast';
+
+  @override
+  String get magKecil => 'Minor';
+
+  @override
+  String get magRingan => 'Light';
+
+  @override
+  String get magSedang => 'Moderate';
+
+  @override
+  String get magKuat => 'Strong';
+
+  @override
+  String get magBesar => 'Major';
+
+  @override
+  String get magTakDiketahui => 'Unknown';
+
+  @override
+  String magnitudoSemantik(String nilai, String tingkat) {
+    return 'Magnitude $nilai, $tingkat';
+  }
 }

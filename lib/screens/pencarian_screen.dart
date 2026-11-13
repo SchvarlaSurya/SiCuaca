@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core/constants.dart';
+import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../models/lokasi.dart';
 import '../providers/favorit_provider.dart';
@@ -104,7 +105,7 @@ class _Awal extends StatelessWidget {
     return ListView(
       children: [
         ListTile(
-          leading: const Icon(Icons.my_location),
+          leading: const Icon(IkonApp.lokasiSaya),
           title: Text(context.l10n.gunakanLokasiSaya),
           onTap: onGps,
         ),
@@ -139,7 +140,7 @@ class _BarisWilayah extends StatelessWidget {
     ].where((s) => s.isNotEmpty).join(', ');
 
     return ListTile(
-      leading: const Icon(Icons.place_outlined),
+      leading: const Icon(IkonApp.tempat),
       title: Text(lokasi.desa),
       subtitle: Text(induk),
       trailing: TombolFavorit(lokasi: lokasi),

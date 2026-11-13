@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
+import '../core/navigasi.dart';
+import '../models/ambang_gempa.dart';
 import '../providers/gempa_provider.dart';
+import '../providers/notifikasi_provider.dart';
 import '../providers/weather_provider.dart';
 import '../widgets/aksi_wilayah.dart';
 import '../widgets/cuaca_saat_ini_card.dart';
@@ -10,17 +14,18 @@ import '../widgets/gempa_terbaru_card.dart';
 import '../widgets/lokasi_banner.dart';
 import '../widgets/status_data.dart';
 
+/// Beranda: tiga bagian berjudul (cuaca, gempa, peringatan), masing-masing
+/// dengan tautan "Selengkapnya" ke tabnya. Informasi utama: suhu.
 class BerandaScreen extends StatelessWidget {
   const BerandaScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final theme = Theme.of(context);
     final cuaca = context.watch<WeatherProvider>();
     final gempa = context.watch<GempaProvider>();
 
-    // Banner offline bila salah satu kartu menampilkan data tersimpan.
+    // Banner offline bila salah satu bagian menampilkan data tersimpan.
     final waktuCache = [
       if (cuaca.status == StatusCuaca.berhasil && cuaca.dariCache)
         cuaca.diperbarui,
@@ -31,29 +36,74 @@ class BerandaScreen extends StatelessWidget {
       appBar: AppBar(title: Text(l.appName), actions: const [AksiWilayah()]),
       body: RefreshIndicator(
         onRefresh: () => Future.wait([cuaca.muatUlang(), gempa.muatTerbaru()]),
-        child: ListView(
+        // Isi Beranda pendek (tiga bagian), jadi semuanya dibangun sekaligus.
+        child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(l.berandaJudul, style: theme.textTheme.headlineSmall),
-            const SizedBox(height: 4),
-            Text(
-              l.berandaKeterangan,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (waktuCache.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                BannerOffline(diperbarui: waktuCache.first),
+              ],
+              const SizedBox(height: 8),
+              const LokasiBanner(),
+              JudulBagian(
+                l.cuacaSaatIni,
+                onSelengkapnya: () => Navigasi.bukaTab(TabUtama.cuaca),
               ),
-            ),
-            const SizedBox(height: 16),
-            if (waktuCache.isNotEmpty) ...[
-              BannerOffline(diperbarui: waktuCache.first),
-              const SizedBox(height: 12),
+              const CuacaSaatIniCard(),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 8),
+              JudulBagian(
+                l.gempaTerbaruJudul,
+                onSelengkapnya: () => Navigasi.bukaTab(TabUtama.gempa),
+              ),
+              const GempaTerbaruCard(),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 8),
+              JudulBagian(
+                l.navPeringatan,
+                onSelengkapnya: () => Navigasi.bukaTab(TabUtama.peringatan),
+              ),
+              const _RingkasPeringatan(),
             ],
-            const LokasiBanner(),
-            const CuacaSaatIniCard(),
-            const SizedBox(height: 16),
-            const GempaTerbaruCard(),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+/// Status notifikasi gempa saat ini (pengaturan yang sudah ada).
+class _RingkasPeringatan extends StatelessWidget {
+  const _RingkasPeringatan();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final ambang = context.select<NotifikasiProvider, AmbangGempa>(
+      (n) => n.ambang,
+    );
+    final status = switch (ambang) {
+      AmbangGempa.mati => l.notifMati,
+      AmbangGempa.m4 => l.notifM4,
+      AmbangGempa.m5 => l.notifM5,
+      AmbangGempa.m6 => l.notifM6,
+    };
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        leading: Icon(
+          ambang == AmbangGempa.mati ? IkonApp.notifMati : IkonApp.notifAktif,
+        ),
+        title: Text(l.notifJudul),
+        subtitle: Text(status),
+        trailing: const Icon(IkonApp.selengkapnya),
+        onTap: () => Navigasi.bukaTab(TabUtama.peringatan),
       ),
     );
   }
