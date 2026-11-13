@@ -51,3 +51,6 @@ PRD_SiCuaca.pdf
 .claude/
 .playwright-mcp/
 android/build/
+
+# Konfigurasi Firebase per developer (berisi API key proyek)
+android/app/google-services.json

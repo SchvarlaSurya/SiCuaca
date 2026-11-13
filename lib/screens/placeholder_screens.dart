@@ -18,19 +18,3 @@ class GempaScreen extends StatelessWidget {
     );
   }
 }
-
-class PeringatanScreen extends StatelessWidget {
-  const PeringatanScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text(Str.navPeringatan)),
-      body: const PlaceholderView(
-        icon: Icons.warning_amber_outlined,
-        judul: Str.peringatanJudul,
-        keterangan: Str.peringatanKeterangan,
-      ),
-    );
-  }
-}

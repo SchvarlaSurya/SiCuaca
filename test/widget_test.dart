@@ -9,11 +9,14 @@ import 'package:app/core/exceptions.dart';
 import 'package:app/core/strings.dart';
 import 'package:app/main.dart';
 import 'package:app/models/gempa.dart';
+import 'package:app/models/ambang_gempa.dart';
 import 'package:app/models/lokasi.dart';
 import 'package:app/models/prakiraan.dart';
 import 'package:app/providers/favorit_provider.dart';
+import 'package:app/providers/notifikasi_provider.dart';
 import 'package:app/services/api_service.dart';
 import 'package:app/services/gps_service.dart';
+import 'package:app/services/notifikasi_service.dart';
 import 'package:app/services/preferences_service.dart';
 import 'package:app/services/wilayah_service.dart';
 
@@ -69,10 +72,39 @@ class _FakeWilayah extends WilayahService {
   Future<IndeksWilayah> muat() async => parseWilayah(_tsv);
 }
 
-Widget _app({required HasilGps gps, bool offline = false}) => SiCuacaApp(
+class _FakeNotif extends NotifikasiService {
+  _FakeNotif({this.izin = true, this.gagal = false, this.aktif = true});
+
+  final bool izin;
+  final bool gagal;
+  final bool aktif;
+  final List<AmbangGempa> langgananDipanggil = [];
+
+  @override
+  bool get siap => aktif;
+
+  @override
+  Future<bool> mintaIzin() async => izin;
+
+  @override
+  Future<void> langganan(AmbangGempa ambang) async {
+    if (gagal) throw Exception('SERVICE_NOT_AVAILABLE');
+    langgananDipanggil.add(ambang);
+  }
+
+  @override
+  Future<void> bukaPengaturanAplikasi() async {}
+}
+
+Widget _app({
+  required HasilGps gps,
+  bool offline = false,
+  NotifikasiService? notif,
+}) => SiCuacaApp(
   apiService: _FakeApi(offline: offline),
   gpsService: _FakeGps(gps),
   wilayahService: _FakeWilayah(),
+  notifikasiService: notif,
 );
 
 void main() {
@@ -208,5 +240,85 @@ void main() {
     expect(find.text(Str.errTidakAdaInternet), findsNWidgets(2));
     expect(find.text(Str.cobaLagi), findsWidgets);
     expect(find.text(Str.gpsGagal), findsNothing);
+  });
+
+  group('Notifikasi gempa', () {
+    test('memilih M5 subscribe ke gempa_m5 dan tersimpan', () async {
+      final service = _FakeNotif();
+      final p = NotifikasiProvider(service, PreferencesService());
+      await p.muat();
+      await p.pilih(AmbangGempa.m5);
+
+      expect(service.langgananDipanggil, [AmbangGempa.m5]);
+      expect(AmbangGempa.m5.topik, 'gempa_m5');
+      final dibukaLagi = NotifikasiProvider(service, PreferencesService());
+      await dibukaLagi.muat();
+      expect(dibukaLagi.ambang, AmbangGempa.m5);
+    });
+
+    test('izin ditolak: pilihan tidak berubah, tidak crash', () async {
+      final service = _FakeNotif(izin: false);
+      final p = NotifikasiProvider(service, PreferencesService());
+      await p.pilih(AmbangGempa.m4);
+
+      expect(p.ambang, AmbangGempa.mati);
+      expect(p.izinDitolak, isTrue);
+      expect(p.pesan, Str.notifIzinDitolak);
+      expect(service.langgananDipanggil, isEmpty);
+    });
+
+    test('mematikan notifikasi tidak meminta izin', () async {
+      SharedPreferences.setMockInitialValues({'ambang_gempa': 'm6'});
+      final service = _FakeNotif(izin: false);
+      final p = NotifikasiProvider(service, PreferencesService());
+      await p.muat();
+      await p.pilih(AmbangGempa.mati);
+
+      expect(p.ambang, AmbangGempa.mati);
+      expect(service.langgananDipanggil, [AmbangGempa.mati]);
+    });
+
+    test('gagal subscribe (offline): pesan jelas, pilihan tetap', () async {
+      final p = NotifikasiProvider(
+        _FakeNotif(gagal: true),
+        PreferencesService(),
+      );
+      await p.pilih(AmbangGempa.m5);
+
+      expect(p.ambang, AmbangGempa.mati);
+      expect(p.pesan, Str.notifGagalLangganan);
+    });
+
+    test('Firebase belum dikonfigurasi: pesan belum aktif', () async {
+      final p = NotifikasiProvider(
+        _FakeNotif(aktif: false),
+        PreferencesService(),
+      );
+      await p.pilih(AmbangGempa.m5);
+
+      expect(p.ambang, AmbangGempa.mati);
+      expect(p.pesan, Str.notifBelumAktif);
+    });
+
+    testWidgets('tab Peringatan: memilih ambang mengubah pilihan', (
+      tester,
+    ) async {
+      final service = _FakeNotif();
+      await tester.pumpWidget(
+        _app(gps: const HasilGps(StatusGps.ditolak), notif: service),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.warning_amber_outlined).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(Str.notifM5));
+      await tester.pumpAndSettle();
+
+      expect(service.langgananDipanggil, [AmbangGempa.m5]);
+      final radio = tester.widget<RadioGroup<AmbangGempa>>(
+        find.byType(RadioGroup<AmbangGempa>),
+      );
+      expect(radio.groupValue, AmbangGempa.m5);
+    });
   });
 }

@@ -129,6 +129,36 @@ class Str {
   static const String peringatanKeterangan =
       'Peringatan dini cuaca ekstrem untuk wilayah Anda.';
 
+  // Notifikasi gempa (tab Peringatan)
+  static const String channelGempaNama = 'Gempa bumi';
+  static const String channelGempaDeskripsi =
+      'Notifikasi gempa baru sesuai ambang magnitudo yang dipilih.';
+  static const String notifJudul = 'Notifikasi gempa';
+  static const String notifKeterangan =
+      'Kirim notifikasi saat terjadi gempa dengan magnitudo minimal:';
+  static const String notifMati = 'Mati';
+  static const String notifMatiKeterangan = 'Tidak menerima notifikasi gempa';
+  static const String notifM4 = 'M 4,0 ke atas';
+  static const String notifM5 = 'M 5,0 ke atas';
+  static const String notifM6 = 'M 6,0 ke atas';
+  static const String notifM4Keterangan = 'Termasuk gempa kecil yang terasa';
+  static const String notifM5Keterangan = 'Gempa sedang hingga kuat';
+  static const String notifM6Keterangan = 'Hanya gempa kuat';
+  static const String notifBelumAktif =
+      'Notifikasi belum aktif di perangkat ini: Firebase belum dikonfigurasi '
+      'atau platform tidak didukung.';
+  static const String notifIzinDitolak =
+      'Izin notifikasi ditolak. Aktifkan lewat pengaturan aplikasi agar '
+      'notifikasi gempa bisa muncul.';
+  static const String notifGagalLangganan =
+      'Pengaturan notifikasi gagal disimpan. Periksa koneksi internet lalu '
+      'coba lagi.';
+  static const String notifSumber =
+      'Notifikasi dikirim server SiCuaca berdasarkan data gempa terbaru. '
+      'Sumber: BMKG';
+  static const String peringatanDiniSegera =
+      'Peringatan dini cuaca: segera hadir';
+
   // Tentang
   static const String tentangKeterangan =
       'Aplikasi prakiraan cuaca dan info gempa bumi Indonesia.';

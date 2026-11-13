@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/constants.dart';
+import '../models/ambang_gempa.dart';
 import '../models/lokasi.dart';
 
 /// Penyimpanan lokal kecil: wilayah terakhir dan wilayah favorit.
@@ -51,6 +52,21 @@ class PreferencesService {
     } catch (_) {
       return [];
     }
+  }
+
+  Future<AmbangGempa> ambangGempa() async {
+    try {
+      final nama = (await _prefs).getString(PrefsKeys.ambangGempa);
+      return AmbangGempa.dariNama(nama);
+    } catch (_) {
+      return AmbangGempa.mati;
+    }
+  }
+
+  Future<void> simpanAmbangGempa(AmbangGempa ambang) async {
+    try {
+      await (await _prefs).setString(PrefsKeys.ambangGempa, ambang.name);
+    } catch (_) {}
   }
 
   Future<void> simpanFavorit(List<Lokasi> daftar) async {

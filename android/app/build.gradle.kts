@@ -4,6 +4,13 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Plugin Google Services hanya dipasang bila google-services.json sudah ada,
+// supaya aplikasi tetap bisa di-build sebelum proyek Firebase dibuat
+// (notifikasi gempa nonaktif sampai berkas itu ditaruh di android/app/).
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "com.example.app"
     compileSdk = flutter.compileSdkVersion
@@ -12,11 +19,14 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Dibutuhkan flutter_local_notifications.
+        isCoreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.app"
+        // Package name yang didaftarkan di Firebase. Harus sama persis dengan
+        // "package_name" di google-services.json.
+        applicationId = "com.sicuaca.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -42,4 +52,8 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

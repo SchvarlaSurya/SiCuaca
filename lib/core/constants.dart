@@ -48,4 +48,13 @@ class PrefsKeys {
 
   static const String wilayahTerakhir = 'wilayah_terakhir';
   static const String wilayahFavorit = 'wilayah_favorit';
+  static const String ambangGempa = 'ambang_gempa';
+}
+
+class NotifikasiConstants {
+  const NotifikasiConstants._();
+
+  /// Harus sama dengan `android_channel_id` di backend (config/sicuaca.php)
+  /// dan meta-data default channel di AndroidManifest.xml.
+  static const String channelGempaId = 'gempa_bumi';
 }

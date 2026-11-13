@@ -7,20 +7,28 @@ import 'core/strings.dart';
 import 'core/theme.dart';
 import 'providers/favorit_provider.dart';
 import 'providers/lokasi_provider.dart';
+import 'providers/notifikasi_provider.dart';
 import 'providers/uji_koneksi_provider.dart';
 import 'providers/weather_provider.dart';
 import 'screens/main_shell.dart';
 import 'services/api_service.dart';
 import 'services/gps_service.dart';
+import 'services/notifikasi_service.dart';
 import 'services/preferences_service.dart';
 import 'services/wilayah_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   LicenseRegistry.addLicense(() async* {
     final teks = await rootBundle.loadString('assets/data/LICENSE-wilayah.txt');
     yield LicenseEntryWithLineBreaks([Str.lisensiDataWilayah], teks);
   });
-  runApp(const SiCuacaApp());
+
+  // Firebase + handler pesan latar belakang harus siap sebelum runApp.
+  final notifikasi = NotifikasiService();
+  await notifikasi.mulai();
+
+  runApp(SiCuacaApp(notifikasiService: notifikasi));
 }
 
 class SiCuacaApp extends StatelessWidget {
@@ -31,12 +39,14 @@ class SiCuacaApp extends StatelessWidget {
     this.gpsService,
     this.wilayahService,
     this.preferencesService,
+    this.notifikasiService,
   });
 
   final ApiService? apiService;
   final GpsService? gpsService;
   final WilayahService? wilayahService;
   final PreferencesService? preferencesService;
+  final NotifikasiService? notifikasiService;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +59,9 @@ class SiCuacaApp extends StatelessWidget {
         ),
         Provider<PreferencesService>(
           create: (_) => preferencesService ?? PreferencesService(),
+        ),
+        Provider<NotifikasiService>(
+          create: (_) => notifikasiService ?? NotifikasiService(),
         ),
         ChangeNotifierProvider<UjiKoneksiProvider>(
           create: (context) =>
@@ -66,6 +79,12 @@ class SiCuacaApp extends StatelessWidget {
             context.read<PreferencesService>(),
             context.read<LokasiProvider>(),
           )..mulai(),
+        ),
+        ChangeNotifierProvider<NotifikasiProvider>(
+          create: (context) => NotifikasiProvider(
+            context.read<NotifikasiService>(),
+            context.read<PreferencesService>(),
+          )..muat(),
         ),
         ChangeNotifierProvider<FavoritProvider>(
           create: (context) =>
