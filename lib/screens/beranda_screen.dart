@@ -4,7 +4,7 @@ import '../core/strings.dart';
 import '../widgets/aksi_wilayah.dart';
 import '../widgets/cuaca_saat_ini_card.dart';
 import '../widgets/lokasi_banner.dart';
-import '../widgets/uji_koneksi_card.dart';
+import '../widgets/gempa_terbaru_card.dart';
 
 class BerandaScreen extends StatelessWidget {
   const BerandaScreen({super.key});
@@ -33,7 +33,7 @@ class BerandaScreen extends StatelessWidget {
           const LokasiBanner(),
           const CuacaSaatIniCard(),
           const SizedBox(height: 16),
-          const UjiKoneksiCard(),
+          const GempaTerbaruCard(),
         ],
       ),
     );

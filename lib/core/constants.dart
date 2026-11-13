@@ -7,6 +7,14 @@ class ApiConstants {
   static const String autoGempaUrl =
       'https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json';
 
+  /// 15 gempa terakhir dengan magnitudo 5.0 ke atas.
+  static const String gempaTerkiniUrl =
+      'https://data.bmkg.go.id/DataMKG/TEWS/gempaterkini.json';
+
+  /// 15 gempa terakhir yang dirasakan (semua magnitudo).
+  static const String gempaDirasakanUrl =
+      'https://data.bmkg.go.id/DataMKG/TEWS/gempadirasakan.json';
+
   /// Folder tempat file shakemap disimpan. Nama file diambil dari field
   /// `Shakemap` pada respons autogempa.
   static const String shakemapBaseUrl = 'https://data.bmkg.go.id/DataMKG/TEWS/';

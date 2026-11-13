@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../core/strings.dart';
 import 'beranda_screen.dart';
 import 'cuaca_screen.dart';
+import 'gempa_screen.dart';
 import 'peringatan_screen.dart';
-import 'placeholder_screens.dart';
 import 'tentang_screen.dart';
 
 /// Kerangka utama dengan bottom bar 5 tab.

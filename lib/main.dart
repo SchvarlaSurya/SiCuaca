@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import 'core/strings.dart';
 import 'core/theme.dart';
 import 'providers/favorit_provider.dart';
+import 'providers/gempa_provider.dart';
 import 'providers/lokasi_provider.dart';
 import 'providers/notifikasi_provider.dart';
-import 'providers/uji_koneksi_provider.dart';
 import 'providers/weather_provider.dart';
 import 'screens/main_shell.dart';
 import 'services/api_service.dart';
@@ -63,10 +63,6 @@ class SiCuacaApp extends StatelessWidget {
         Provider<NotifikasiService>(
           create: (_) => notifikasiService ?? NotifikasiService(),
         ),
-        ChangeNotifierProvider<UjiKoneksiProvider>(
-          create: (context) =>
-              UjiKoneksiProvider(context.read<ApiService>())..ujiKoneksi(),
-        ),
         ChangeNotifierProvider<LokasiProvider>(
           create: (context) => LokasiProvider(
             context.read<GpsService>(),
@@ -77,6 +73,12 @@ class SiCuacaApp extends StatelessWidget {
           create: (context) => WeatherProvider(
             context.read<ApiService>(),
             context.read<PreferencesService>(),
+            context.read<LokasiProvider>(),
+          )..mulai(),
+        ),
+        ChangeNotifierProvider<GempaProvider>(
+          create: (context) => GempaProvider(
+            context.read<ApiService>(),
             context.read<LokasiProvider>(),
           )..mulai(),
         ),

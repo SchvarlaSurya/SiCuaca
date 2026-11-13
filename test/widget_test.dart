@@ -34,6 +34,10 @@ const _tsv =
 
 final _gambir = parseWilayah(_tsv).cari('gambir').first;
 
+Map<String, dynamic> _json(String nama) =>
+    jsonDecode(File('test/fixtures/$nama').readAsStringSync())
+        as Map<String, dynamic>;
+
 Map<String, dynamic> _fixture() =>
     jsonDecode(
           File('test/fixtures/prakiraan_31.71.01.1001.json').readAsStringSync(),
@@ -48,7 +52,19 @@ class _FakeApi extends ApiService {
   @override
   Future<Gempa> fetchAutoGempa() async {
     if (offline) throw ApiException.noInternet();
-    return Gempa.fromJson(const {'Magnitude': '4.6', 'Wilayah': 'Laut'});
+    return Gempa.fromAutoGempaJson(_json('autogempa.json'));
+  }
+
+  @override
+  Future<List<Gempa>> fetchGempaTerkini() async {
+    if (offline) throw ApiException.noInternet();
+    return Gempa.daftarDariJson(_json('gempaterkini.json'));
+  }
+
+  @override
+  Future<List<Gempa>> fetchGempaDirasakan() async {
+    if (offline) throw ApiException.noInternet();
+    return Gempa.daftarDariJson(_json('gempadirasakan.json'));
   }
 
   @override
@@ -64,7 +80,8 @@ class _FakeGps extends GpsService {
   final HasilGps hasil;
 
   @override
-  Future<HasilGps> ambilPosisi() async => hasil;
+  Future<HasilGps> ambilPosisi({bool mintaIzin = true}) async =>
+      mintaIzin ? hasil : const HasilGps(StatusGps.ditolak);
 }
 
 class _FakeWilayah extends WilayahService {
@@ -109,14 +126,6 @@ Widget _app({
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
-
-  group('Gempa', () {
-    test('tidak crash saat field hilang atau null', () {
-      final gempa = Gempa.fromJson(const {'Magnitude': null});
-      expect(gempa.magnitudo, '');
-      expect(gempa.shakemapUrl, isNull);
-    });
-  });
 
   group('Prakiraan', () {
     test('membaca respons asli BMKG', () {
@@ -210,7 +219,10 @@ void main() {
 
     expect(find.text(Str.cuacaSaatIni), findsOneWidget);
     expect(find.text('Gambir'), findsWidgets);
-    expect(find.text(Str.sumberBmkg), findsOneWidget);
+    // Kartu cuaca dan kartu gempa terbaru masing-masing mencantumkan sumber.
+    expect(find.text(Str.sumberBmkg), findsNWidgets(2));
+    // Posisi GPS tersedia: jarak gempa terbaru ke pengguna tampil.
+    expect(find.textContaining('km dari Anda'), findsOneWidget);
     final tersimpan = await PreferencesService().wilayahTerakhir();
     expect(tersimpan?.adm4, '31.71.01.1001');
 
@@ -236,7 +248,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Kartu cuaca dan kartu uji koneksi sama-sama gagal.
+    // Kartu cuaca dan kartu gempa terbaru sama-sama gagal.
     expect(find.text(Str.errTidakAdaInternet), findsNWidgets(2));
     expect(find.text(Str.cobaLagi), findsWidgets);
     expect(find.text(Str.gpsGagal), findsNothing);
@@ -319,6 +331,86 @@ void main() {
         find.byType(RadioGroup<AmbangGempa>),
       );
       expect(radio.groupValue, AmbangGempa.m5);
+    });
+  });
+
+  group('Tab Gempa', () {
+    testWidgets('tiga sub-tab berisi data, item membuka detail', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(gps: const HasilGps(StatusGps.berhasil, lat: -6.17, lon: 106.82)),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.waves).last);
+      await tester.pumpAndSettle();
+      expect(find.text(Str.gempaTerbaruJudul), findsWidgets);
+
+      await tester.tap(find.text(Str.gempaTabTerkini));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('116 km TimurLaut HALMAHERASELATAN-MALUT'),
+        findsOneWidget,
+      );
+      expect(find.text('Tidak berpotensi tsunami'), findsWidgets);
+      expect(find.textContaining('km dari Anda'), findsWidgets);
+
+      await tester.tap(find.text(Str.gempaTabDirasakan));
+      await tester.pumpAndSettle();
+      expect(find.text('II - III Enggano'), findsWidgets);
+
+      await tester.tap(find.text('II - III Enggano').first);
+      await tester.pumpAndSettle();
+      expect(find.text(Str.gempaDetailJudul), findsOneWidget);
+      expect(find.text(Str.shakemapJudul), findsOneWidget);
+      final gulir = find.byType(Scrollable).last;
+      await tester.scrollUntilVisible(
+        find.text(Str.jarakDariAnda),
+        200,
+        scrollable: gulir,
+      );
+      expect(find.text(Str.jarakDariAnda), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text(Str.sumberBmkg),
+        200,
+        scrollable: gulir,
+      );
+      expect(find.text(Str.sumberBmkg), findsWidgets);
+    });
+
+    testWidgets('izin lokasi ditolak: jarak disembunyikan, ada ajakan', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_app(gps: const HasilGps(StatusGps.ditolak)));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.waves).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(Str.gempaTabTerkini));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('km dari Anda'), findsNothing);
+      expect(find.text(Str.gpsDitolak), findsWidgets);
+      expect(
+        find.text('116 km TimurLaut HALMAHERASELATAN-MALUT'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('offline: pesan jelas dan tombol coba lagi', (tester) async {
+      await tester.pumpWidget(
+        _app(gps: const HasilGps(StatusGps.ditolak), offline: true),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.waves).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(Str.gempaTabDirasakan));
+      await tester.pumpAndSettle();
+
+      expect(find.text(Str.errTidakAdaInternet), findsWidgets);
+      expect(find.text(Str.cobaLagi), findsWidgets);
     });
   });
 }

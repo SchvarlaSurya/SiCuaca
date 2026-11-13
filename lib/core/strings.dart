@@ -7,7 +7,6 @@ class Str {
   static const String appName = 'SiCuaca';
   static const String sumberBmkg = 'Sumber: BMKG';
   static const String cobaLagi = 'Coba lagi';
-  static const String segeraHadir = 'Segera hadir';
 
   // Navigasi
   static const String navBeranda = 'Beranda';
@@ -36,12 +35,41 @@ class Str {
   static const String berandaKeterangan =
       'Prakiraan cuaca dan info gempa bumi Indonesia.';
 
-  // Uji koneksi
-  static const String ujiKoneksiJudul = 'Uji Koneksi API';
-  static const String ujiUlang = 'Uji ulang';
-  static const String menghubungiBmkg = 'Menghubungi server BMKG…';
-  static const String terhubungGempaTerbaru = 'Terhubung. Gempa terbaru:';
+  // Gempa
+  static const String gempaTabTerbaru = 'Terbaru';
+  static const String gempaTabTerkini = 'M 5.0+';
+  static const String gempaTabDirasakan = 'Dirasakan';
+  static const String gempaTerbaruJudul = 'Gempa terbaru';
+  static const String gempaTerbaruKeterangan =
+      'Gempa terakhir yang dicatat BMKG.';
+  static const String gempaTerkiniKeterangan =
+      '15 gempa terakhir dengan magnitudo 5,0 ke atas.';
+  static const String gempaDirasakanKeterangan =
+      '15 gempa terakhir yang dirasakan masyarakat.';
+  static const String memuatGempa = 'Memuat data gempa…';
+  static const String gempaKosong = 'Belum ada data gempa.';
+  static const String gempaDetailJudul = 'Detail gempa';
+  static const String lihatDetail = 'Lihat detail';
   static const String magnitudo = 'Magnitudo';
+  static const String kedalaman = 'Kedalaman';
+  static const String waktuKejadian = 'Waktu';
+  static const String koordinat = 'Koordinat';
+  static const String pusatGempa = 'Pusat gempa';
+  static const String potensi = 'Potensi';
+  static const String dirasakanDi = 'Dirasakan di';
+  static const String jarakDariAnda = 'Jarak dari Anda';
+  static const String shakemapJudul = 'Peta guncangan (shakemap)';
+  static const String shakemapTidakTersedia =
+      'Peta guncangan tidak tersedia untuk gempa ini.';
+  static const String jarakAjak =
+      'Aktifkan lokasi untuk melihat jarak gempa dari posisi Anda.';
+  static String jarakKm(String km) => '± $km km dari Anda';
+  static String kedalamanSingkat(String km) => 'Kedalaman $km';
+  static const String baruSaja = 'Baru saja';
+  static String menitLalu(int n) => '$n menit lalu';
+  static String jamLalu(int n) => '$n jam lalu';
+  static String hariLalu(int n) => '$n hari lalu';
+  static String zonaUtc(String offset) => 'UTC$offset';
 
   // Cuaca
   static const String cuacaSaatIni = 'Cuaca saat ini';
@@ -122,9 +150,6 @@ class Str {
   static const String bukaPengaturanLokasi = 'Buka pengaturan lokasi';
 
   // Placeholder tab
-  static const String gempaJudul = 'Info Gempa Bumi';
-  static const String gempaKeterangan =
-      'Gempa terbaru, gempa dirasakan, dan peta guncangan.';
   static const String peringatanJudul = 'Peringatan Dini';
   static const String peringatanKeterangan =
       'Peringatan dini cuaca ekstrem untuk wilayah Anda.';

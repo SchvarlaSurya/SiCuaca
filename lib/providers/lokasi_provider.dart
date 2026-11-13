@@ -27,6 +27,11 @@ class LokasiProvider extends ChangeNotifier {
   StatusLokasi _status = StatusLokasi.idle;
   StatusLokasi get status => _status;
 
+  /// Posisi GPS terakhir yang berhasil diambil (untuk jarak gempa), atau
+  /// null bila belum ada / izin tidak diberikan.
+  ({double lat, double lon})? _posisi;
+  ({double lat, double lon})? get posisi => _posisi;
+
   bool get sedangMencari => _status == StatusLokasi.mencari;
 
   /// Pesan untuk pengguna bila deteksi gagal; null bila tidak ada masalah.
@@ -56,6 +61,7 @@ class LokasiProvider extends ChangeNotifier {
       });
       return null;
     }
+    _posisi = (lat: lat, lon: lon);
 
     try {
       final indeks = await _wilayah.muat();
@@ -70,6 +76,20 @@ class LokasiProvider extends ChangeNotifier {
     } catch (_) {
       _ubah(StatusLokasi.gagal);
       return null;
+    }
+  }
+
+  /// Perbarui [posisi] tanpa dialog izin dan tanpa mengubah [status].
+  /// Dipakai saat wilayah dipulihkan dari penyimpanan sehingga GPS belum
+  /// dibaca, tetapi izin mungkin sudah diberikan sebelumnya.
+  Future<void> segarkanPosisi() async {
+    if (sedangMencari) return;
+    final hasil = await _gps.ambilPosisi(mintaIzin: false);
+    final lat = hasil.lat;
+    final lon = hasil.lon;
+    if (hasil.status == StatusGps.berhasil && lat != null && lon != null) {
+      _posisi = (lat: lat, lon: lon);
+      notifyListeners();
     }
   }
 

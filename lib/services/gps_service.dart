@@ -17,14 +17,16 @@ class HasilGps {
 /// Pembungkus geolocator. Tidak pernah melempar error: semua kasus izin dan
 /// layanan dikembalikan sebagai [StatusGps].
 class GpsService {
-  Future<HasilGps> ambilPosisi() async {
+  /// Bila [mintaIzin] false, izin yang belum diberikan dianggap ditolak
+  /// tanpa memunculkan dialog (dipakai untuk pembaruan diam-diam).
+  Future<HasilGps> ambilPosisi({bool mintaIzin = true}) async {
     try {
       if (!await Geolocator.isLocationServiceEnabled()) {
         return const HasilGps(StatusGps.layananMati);
       }
 
       var izin = await Geolocator.checkPermission();
-      if (izin == LocationPermission.denied) {
+      if (izin == LocationPermission.denied && mintaIzin) {
         izin = await Geolocator.requestPermission();
       }
       if (izin == LocationPermission.denied) {

@@ -33,6 +33,23 @@ class ApiService {
     }
   }
 
+  /// 15 gempa terakhir M 5.0+, terbaru dulu.
+  Future<List<Gempa>> fetchGempaTerkini() =>
+      _fetchDaftarGempa(ApiConstants.gempaTerkiniUrl);
+
+  /// 15 gempa terakhir yang dirasakan, terbaru dulu.
+  Future<List<Gempa>> fetchGempaDirasakan() =>
+      _fetchDaftarGempa(ApiConstants.gempaDirasakanUrl);
+
+  Future<List<Gempa>> _fetchDaftarGempa(String url) async {
+    final json = await _getJson(url);
+    try {
+      return Gempa.daftarDariJson(json);
+    } on FormatException catch (e) {
+      throw ApiException.badFormat(e.message);
+    }
+  }
+
   /// Prakiraan cuaca 3 hari untuk satu desa/kelurahan (kode adm4).
   Future<Prakiraan> fetchPrakiraanCuaca(String adm4) async {
     final json = await _getJson(
