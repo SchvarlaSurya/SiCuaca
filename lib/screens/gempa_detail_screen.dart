@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../core/format.dart';
@@ -38,7 +39,29 @@ class GempaDetailScreen extends StatelessWidget {
     ].join(' ');
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.gempaDetailJudul)),
+      appBar: AppBar(
+        title: Text(l.gempaDetailJudul),
+        actions: [
+          IconButton(
+            tooltip: 'Salin ringkasan',
+            icon: const Icon(Icons.share_outlined),
+            onPressed: () async {
+              final teks =
+                  'Gempa M${gempa.magnitudo} terjadi ${gempa.wilayah} '
+                  'pada ${gempa.tanggal} ${gempa.jam}. Kedalaman ${gempa.kedalaman}. '
+                  'Sumber: BMKG.';
+              await Clipboard.setData(ClipboardData(text: teks));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Ringkasan disalin ke clipboard'),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [

@@ -4,6 +4,7 @@ import '../core/exceptions.dart';
 import '../core/geo.dart';
 import '../models/gempa.dart';
 import '../services/bmkg_repository.dart';
+import '../services/cache_service.dart';
 import 'lokasi_provider.dart';
 
 enum StatusMuat { loading, berhasil, error }
@@ -40,21 +41,25 @@ class KeadaanGempa<T> {
 /// Data gempa BMKG: gempa terbaru, M 5.0+, dan dirasakan, plus jarak ke
 /// posisi GPS pengguna (dari [LokasiProvider]).
 class GempaProvider extends ChangeNotifier {
-  GempaProvider(this._repo, this._lokasi) {
+  GempaProvider(this._repo, this._lokasi, [CacheService? cache])
+    : _cache = cache ?? CacheService() {
     _lokasi.addListener(_lokasiBerubah);
   }
 
   final BmkgRepository _repo;
   final LokasiProvider _lokasi;
+  final CacheService _cache;
 
   KeadaanGempa<Gempa> _terbaru = const KeadaanGempa.loading();
   KeadaanGempa<List<Gempa>> _terkini = const KeadaanGempa.loading();
   KeadaanGempa<List<Gempa>> _dirasakan = const KeadaanGempa.loading();
   bool _dibuang = false;
+  List<Gempa> _riwayat = const [];
 
   KeadaanGempa<Gempa> get terbaru => _terbaru;
   KeadaanGempa<List<Gempa>> get terkini => _terkini;
   KeadaanGempa<List<Gempa>> get dirasakan => _dirasakan;
+  List<Gempa> get riwayat => _riwayat;
 
   /// True bila jarak bisa dihitung (posisi GPS tersedia).
   bool get adaPosisi => _lokasi.posisi != null;
@@ -71,6 +76,8 @@ class GempaProvider extends ChangeNotifier {
 
   /// Dipanggil sekali saat aplikasi dibuka.
   Future<void> mulai() async {
+    _riwayat = await _cache.bacaRiwayatGempa();
+    _beritahu();
     if (!adaPosisi) {
       // Tanpa dialog: hanya terisi bila izin lokasi sudah pernah diberikan.
       _lokasi.segarkanPosisi();
@@ -85,6 +92,7 @@ class GempaProvider extends ChangeNotifier {
     _terbaru = const KeadaanGempa.loading();
     _beritahu();
     _terbaru = await _ambil(_repo.gempaTerbaru);
+    _perbaruiRiwayat();
     _beritahu();
   }
 
@@ -92,6 +100,7 @@ class GempaProvider extends ChangeNotifier {
     _terkini = const KeadaanGempa.loading();
     _beritahu();
     _terkini = await _ambil(_repo.gempaTerkini);
+    _perbaruiRiwayat();
     _beritahu();
   }
 
@@ -99,7 +108,32 @@ class GempaProvider extends ChangeNotifier {
     _dirasakan = const KeadaanGempa.loading();
     _beritahu();
     _dirasakan = await _ambil(_repo.gempaDirasakan);
+    _perbaruiRiwayat();
     _beritahu();
+  }
+
+  void _perbaruiRiwayat() {
+    final gabungan = <Gempa>[
+      ..._riwayat,
+      if (_terbaru.data != null) _terbaru.data!,
+      ...?_terkini.data,
+      ...?_dirasakan.data,
+    ];
+    final unik = <String, Gempa>{
+      for (final gempa in gabungan) gempa.kunci: gempa,
+    };
+    final hasil =
+        unik.values.where((gempa) {
+          final waktu = gempa.waktuUtc;
+          return waktu == null ||
+              DateTime.now().toUtc().difference(waktu).inDays <= 30;
+        }).toList()..sort((a, b) {
+          if (a.waktuUtc == null) return 1;
+          if (b.waktuUtc == null) return -1;
+          return b.waktuUtc!.compareTo(a.waktuUtc!);
+        });
+    _riwayat = hasil;
+    _cache.simpanRiwayatGempa(hasil);
   }
 
   Future<KeadaanGempa<T>> _ambil<T>(
