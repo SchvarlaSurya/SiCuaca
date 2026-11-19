@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
+import 'riwayat_gempa_screen.dart';
+import 'siaga_gempa_screen.dart';
 import '../widgets/ajak_lokasi.dart';
 import '../widgets/gempa_item.dart';
 import '../widgets/gempa_terbaru_card.dart';
@@ -21,6 +23,26 @@ class GempaScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(context.l10n.navGempa),
+          actions: [
+            IconButton(
+              tooltip: 'Siaga gempa',
+              icon: const Icon(Icons.health_and_safety_outlined),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const SiagaGempaScreen(),
+                ),
+              ),
+            ),
+            IconButton(
+              tooltip: 'Riwayat gempa',
+              icon: const Icon(Icons.history),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const RiwayatGempaScreen(),
+                ),
+              ),
+            ),
+          ],
           bottom: TabBar(
             tabs: [
               Tab(text: context.l10n.gempaTabTerbaru),

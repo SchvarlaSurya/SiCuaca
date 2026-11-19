@@ -122,6 +122,7 @@ class SiCuacaApp extends StatelessWidget {
           create: (context) => GempaProvider(
             context.read<BmkgRepository>(),
             context.read<LokasiProvider>(),
+            cacheService ?? CacheService(),
           )..mulai(),
         ),
         ChangeNotifierProvider<NotifikasiProvider>(

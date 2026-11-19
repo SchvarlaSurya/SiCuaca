@@ -52,6 +52,23 @@ class Gempa {
     );
   }
 
+  /// Bentuk ringkas untuk penyimpanan riwayat lokal. Data ini tetap memakai
+  /// nama field BMKG agar dibaca kembali melalui jalur parser yang sama.
+  Map<String, dynamic> toJson() => {
+    'Tanggal': tanggal,
+    'Jam': jam,
+    'Coordinates': koordinat,
+    'Lintang': lintang,
+    'Bujur': bujur,
+    'Magnitude': magnitudo,
+    'Kedalaman': kedalaman,
+    'Wilayah': wilayah,
+    'Potensi': potensi,
+    'Dirasakan': dirasakan,
+    'Shakemap': shakemap,
+    'DateTime': waktuUtc?.toIso8601String(),
+  };
+
   /// Membaca data FCM dari backend SiCuaca (lihat sicuaca-backend/README.md).
   /// Mengembalikan null bila bukan pesan gempa atau datanya tidak cukup
   /// (tanpa kunci, waktu, atau koordinat).

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/constants.dart';
+import '../models/gempa.dart';
 
 /// Satu isi cache: respons JSON mentah BMKG dan waktu pengambilannya.
 class EntriCache {
@@ -72,5 +73,32 @@ class CacheService {
         }
       }
     } catch (_) {}
+  }
+
+  Future<void> simpanRiwayatGempa(Iterable<Gempa> daftar) async {
+    try {
+      final json = daftar.map((gempa) => gempa.toJson()).toList();
+      await (await _prefs).setString(
+        '${PrefsKeys.cache}${PrefsKeys.riwayatGempa}',
+        jsonEncode(json),
+      );
+    } catch (_) {}
+  }
+
+  Future<List<Gempa>> bacaRiwayatGempa() async {
+    try {
+      final teks = (await _prefs).getString(
+        '${PrefsKeys.cache}${PrefsKeys.riwayatGempa}',
+      );
+      if (teks == null) return const [];
+      final isi = jsonDecode(teks);
+      if (isi is! List) return const [];
+      return [
+        for (final item in isi)
+          if (item is Map) Gempa.fromJson(Map<String, dynamic>.from(item)),
+      ];
+    } catch (_) {
+      return const [];
+    }
   }
 }

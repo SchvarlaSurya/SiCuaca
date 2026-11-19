@@ -62,6 +62,7 @@ class PrefsKeys {
 
   /// Awalan kunci cache (lihat CacheService).
   static const String cache = 'cache.';
+  static const String riwayatGempa = 'riwayat_gempa';
 }
 
 class NotifikasiConstants {
