@@ -7,6 +7,8 @@ import '../core/theme.dart';
 import '../core/warna_semantik.dart';
 import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
+import '../services/share_service.dart';
+import 'animasi_cuaca.dart';
 import 'ikon_cuaca.dart';
 import 'status_data.dart';
 
@@ -46,7 +48,7 @@ class HeroCuaca extends StatelessWidget {
     final redup = polos ? scheme.onPrimaryContainer : gaya.redup;
     final deskripsi = l.deskripsiCuaca(entri);
 
-    return Container(
+    final kartu = Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 16, 8, 20),
       decoration: BoxDecoration(
@@ -90,7 +92,32 @@ class HeroCuaca extends StatelessWidget {
                     ),
                   ),
                 ),
-                ?aksi,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(IkonApp.bagikan),
+                      color: teks,
+                      tooltip: l.bagikanCuaca,
+                      onPressed: () {
+                        ShareService.bagikanCuaca(
+                          desa: wilayah.desa,
+                          induk: wilayah.labelInduk,
+                          kondisi:
+                              deskripsi.isEmpty ? entri.deskripsi : deskripsi,
+                          suhu: Format.suhu(entri.suhu),
+                          kelembapan: Format.persen(entri.kelembapan),
+                          angin: Format.angin(
+                            l,
+                            entri.kecepatanAngin,
+                            entri.arahAngin,
+                          ),
+                        );
+                      },
+                    ),
+                    ?aksi,
+                  ],
+                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -132,6 +159,14 @@ class HeroCuaca extends StatelessWidget {
           ],
         ),
       ),
+    );
+
+    if (polos) return kartu;
+
+    return AnimasiCuaca(
+      kondisi: KondisiLangit.dari(entri.deskripsi),
+      malam: entri.malam,
+      child: kartu,
     );
   }
 }

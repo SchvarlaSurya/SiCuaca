@@ -8,6 +8,7 @@ import '../models/ambang_gempa.dart';
 import '../providers/notifikasi_provider.dart';
 import '../providers/pengaturan_provider.dart';
 import '../widgets/status_data.dart';
+import 'onboarding_screen.dart';
 
 /// Pengaturan: tampilan (tema, bahasa), ambang notifikasi gempa, dan
 /// informasi tentang aplikasi. Semua pilihan tersimpan di perangkat lewat
@@ -86,6 +87,19 @@ class PengaturanScreen extends StatelessWidget {
                 leading: const Icon(IkonApp.peta),
                 title: Text(l.lisensiDataWilayah),
                 subtitle: Text(l.tentangDataWilayah),
+              ),
+              ListTile(
+                leading: const Icon(IkonApp.info),
+                title: Text(l.panduanAplikasi),
+                subtitle: Text(l.panduanAplikasiKeterangan),
+                trailing: const Icon(IkonApp.selengkapnya),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => OnboardingScreen(
+                      onSelesai: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ),
               ),
               ListTile(
                 leading: const Icon(IkonApp.lisensi),

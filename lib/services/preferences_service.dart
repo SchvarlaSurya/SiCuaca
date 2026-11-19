@@ -91,4 +91,18 @@ class PreferencesService {
       ]);
     } catch (_) {}
   }
+
+  Future<bool> sudahOnboarding() async {
+    try {
+      return (await _prefs).getBool(PrefsKeys.sudahOnboarding) ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> setSudahOnboarding([bool sudah = true]) async {
+    try {
+      await (await _prefs).setBool(PrefsKeys.sudahOnboarding, sudah);
+    } catch (_) {}
+  }
 }

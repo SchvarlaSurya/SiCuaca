@@ -154,5 +154,19 @@
   "pilihKecamatan": "Choose district",
   "pilihDesa": "Choose village",
   "saringDaftar": "Filter list",
-  "semuaWilayah": "Indonesia"
+  "semuaWilayah": "Indonesia",
+  "bagikan": "Share",
+  "bagikanCuaca": "Share weather info",
+  "bagikanGempa": "Share earthquake info",
+  "onboardingLewati": "Skip",
+  "onboardingLanjut": "Next",
+  "onboardingMulai": "Get started",
+  "onboardingCuacaJudul": "Accurate Weather Forecast",
+  "onboardingCuacaDeskripsi": "Track current weather and 3-hourly forecasts for every village and district in Indonesia directly from BMKG.",
+  "onboardingGempaJudul": "Earthquake Info & Alerts",
+  "onboardingGempaDeskripsi": "Stay updated on recent earthquakes, magnitude, distance from you, and get automatic alerts when earthquakes strike.",
+  "onboardingWilayahJudul": "Easy Region Search",
+  "onboardingWilayahDeskripsi": "Use GPS to instantly detect your location or browse over 80,000 villages across Indonesia.",
+  "panduanAplikasi": "App introduction",
+  "panduanAplikasiKeterangan": "Revisit the introductory feature slides"
 }

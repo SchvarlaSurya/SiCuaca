@@ -24,6 +24,7 @@ abstract final class IkonApp {
   static const IconData tutup = Icons.close_rounded;
   static const IconData daftarWilayah = Icons.account_tree_rounded;
   static const IconData saring = Icons.filter_list_rounded;
+  static const IconData bagikan = Icons.share_rounded;
 
   // Status.
   static const IconData offline = Icons.cloud_off_rounded;
