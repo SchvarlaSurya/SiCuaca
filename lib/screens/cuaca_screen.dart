@@ -1,5 +1,10 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../core/format.dart';
 import '../core/ikon.dart';
@@ -14,6 +19,8 @@ import '../widgets/lokasi_banner.dart';
 import '../widgets/status_cuaca_view.dart';
 import '../widgets/status_data.dart';
 import '../widgets/tombol_favorit.dart';
+import '../widgets/app_chrome.dart';
+import 'perbandingan_cuaca_screen.dart';
 
 /// Prakiraan cuaca: kartu hero (jam terdekat), lalu prakiraan per 3 jam
 /// dengan satu tab per tanggal. Semuanya satu daftar gulir, sehingga tarik
@@ -33,52 +40,236 @@ class CuacaScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.l10n.navCuaca),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.l10n.navCuaca),
+            Text(
+              'Prakiraan lokal dari BMKG',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
         actions: [
+          IconButton(
+            tooltip: 'Bandingkan favorit',
+            icon: const Icon(Icons.compare_arrows),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const PerbandinganCuacaScreen(),
+              ),
+            ),
+          ),
           if (berhasil) TombolFavorit(lokasi: wilayah),
+          if (berhasil)
+            IconButton(
+              tooltip: 'Bagikan cuaca',
+              icon: const Icon(Icons.ios_share),
+              onPressed: () => _bukaKartuCuaca(
+                context,
+                wilayah,
+                prakiraan.entriTerdekat(DateTime.now()),
+                cuaca.diperbarui,
+                cuaca.dariCache,
+              ),
+            ),
           const AksiWilayah(),
         ],
       ),
-      body: berhasil
-          ? _Prakiraan(
-              prakiraan: prakiraan,
-              wilayah: wilayah,
-              diperbarui: cuaca.diperbarui,
-              dariCache: cuaca.dariCache,
-              onMuatUlang: cuaca.muatUlang,
-            )
-          : RefreshIndicator(
-              onRefresh: cuaca.muatUlang,
-              // Kartu status di tengah layar agar tidak tampak kosong.
-              child: LayoutBuilder(
-                builder: (context, batas) => SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: (batas.maxHeight - 32).clamp(
-                        0,
-                        double.infinity,
-                      ),
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        LokasiBanner(),
-                        Card(
-                          child: Padding(
-                            padding: EdgeInsets.all(16),
-                            child: StatusCuacaView(),
-                          ),
+      body: LatarAtmosfer(
+        gelap: false,
+        child: berhasil
+            ? _Prakiraan(
+                prakiraan: prakiraan,
+                wilayah: wilayah,
+                diperbarui: cuaca.diperbarui,
+                dariCache: cuaca.dariCache,
+                onMuatUlang: cuaca.muatUlang,
+              )
+            : RefreshIndicator(
+                onRefresh: cuaca.muatUlang,
+                // Kartu status di tengah layar agar tidak tampak kosong.
+                child: LayoutBuilder(
+                  builder: (context, batas) => SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(16),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: (batas.maxHeight - 32).clamp(
+                          0,
+                          double.infinity,
                         ),
-                      ],
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          LokasiBanner(),
+                          Card(
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: StatusCuacaView(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
+  }
+}
+
+void _bukaKartuCuaca(
+  BuildContext context,
+  Lokasi lokasi,
+  EntriPrakiraan? entri,
+  DateTime? diperbarui,
+  bool dariCache,
+) {
+  if (entri == null) return;
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => KartuCuacaScreen(
+        lokasi: lokasi,
+        entri: entri,
+        diperbarui: diperbarui,
+        dariCache: dariCache,
+      ),
+    ),
+  );
+}
+
+class KartuCuacaScreen extends StatelessWidget {
+  KartuCuacaScreen({
+    super.key,
+    required this.lokasi,
+    required this.entri,
+    this.diperbarui,
+    required this.dariCache,
+  });
+  final Lokasi lokasi;
+  final EntriPrakiraan entri;
+  final DateTime? diperbarui;
+  final bool dariCache;
+  final GlobalKey _kunciKartu = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final teks =
+        'Cuaca di ${lokasi.labelLengkap}: ${l.deskripsiCuaca(entri)}, ${Format.suhu(entri.suhu)}. ${dariCache ? l.modeOffline : ''} Sumber: BMKG. SiCuaca bukan aplikasi resmi BMKG.';
+    return Scaffold(
+      appBar: AppBar(title: const Text('Kartu Cuaca')),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          RepaintBoundary(
+            key: _kunciKartu,
+            child: Card(
+              clipBehavior: Clip.antiAlias,
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF302080), Color(0xFF6B56DC)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'SiCuaca · ${lokasi.labelLengkap}',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleMedium?.copyWith(color: Colors.white),
+                    ),
+                    const SizedBox(height: 28),
+                    Text(
+                      Format.suhu(entri.suhu),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.displayLarge?.copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      l.deskripsiCuaca(entri),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(color: const Color(0xFFE5E0FF)),
+                    ),
+                    const SizedBox(height: 24),
+                    if (dariCache)
+                      Text(
+                        l.modeOffline,
+                        style: const TextStyle(color: Color(0xFFE5E0FF)),
+                      ),
+                    if (diperbarui != null)
+                      Text(
+                        l.diperbarui(Format.waktuLengkap(l, diperbarui)),
+                        style: const TextStyle(color: Color(0xFFE5E0FF)),
+                      ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '${l.sumberBmkg}. SiCuaca bukan aplikasi resmi BMKG.',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: const Color(0xFFE5E0FF),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            icon: const Icon(Icons.share),
+            label: const Text('Bagikan kartu cuaca'),
+            onPressed: () => _bagikan(context, teks),
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.copy),
+            label: const Text('Salin ringkasan teks'),
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: teks));
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Ringkasan cuaca disalin')),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _bagikan(BuildContext context, String teks) async {
+    try {
+      final boundary =
+          _kunciKartu.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
+      if (boundary == null) throw StateError('Kartu belum siap dirender');
+      final image = await boundary.toImage(pixelRatio: 3);
+      final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (bytes == null) throw StateError('Gambar kartu tidak dapat dibuat');
+      final file = XFile.fromData(
+        bytes.buffer.asUint8List(),
+        mimeType: 'image/png',
+        name: 'sicuaca-cuaca.png',
+      );
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [file],
+          text: teks,
+          fileNameOverrides: const ['sicuaca-cuaca.png'],
+        ),
+      );
+    } catch (_) {
+      await SharePlus.instance.share(ShareParams(text: teks));
+    }
   }
 }
 
@@ -148,15 +339,23 @@ class _Prakiraan extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
                 ...kepala,
-                HeroCuaca(
-                  wilayah: wilayah,
-                  entri: terdekat,
-                  selisihZona: prakiraan.selisihZona,
+                MasukLembut(
+                  child: HeroCuaca(
+                    wilayah: wilayah,
+                    entri: terdekat,
+                    selisihZona: prakiraan.selisihZona,
+                  ),
                 ),
                 const SizedBox(height: 8),
-                KisiTile(children: tileCuaca(context, terdekat)),
+                MasukLembut(
+                  delay: const Duration(milliseconds: 70),
+                  child: KisiTile(children: tileCuaca(context, terdekat)),
+                ),
                 const SizedBox(height: 16),
-                JudulBagian(l.prakiraanPer3Jam),
+                MasukLembut(
+                  delay: const Duration(milliseconds: 120),
+                  child: JudulBagian(l.prakiraanPer3Jam),
+                ),
                 TabBar(
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
@@ -172,14 +371,18 @@ class _Prakiraan extends StatelessWidget {
                   listenable: tab,
                   builder: (context, _) {
                     final hari = prakiraan.hari[tab.index];
-                    return Card(
-                      child: Column(
-                        children: [
-                          for (var i = 0; i < hari.length; i++) ...[
-                            if (i > 0) const Divider(indent: 16, endIndent: 16),
-                            _BarisEntri(entri: hari[i]),
+                    return MasukLembut(
+                      delay: const Duration(milliseconds: 160),
+                      child: Card(
+                        child: Column(
+                          children: [
+                            for (var i = 0; i < hari.length; i++) ...[
+                              if (i > 0)
+                                const Divider(indent: 16, endIndent: 16),
+                              _BarisEntri(entri: hari[i]),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     );
                   },

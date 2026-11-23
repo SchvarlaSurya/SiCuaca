@@ -32,7 +32,14 @@ class BadgeMagnitudo extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             color: tingkat.latar,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: tingkat.depan.withValues(alpha: .12),
+                blurRadius: 12,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -104,7 +111,10 @@ class MagnitudoBesar extends StatelessWidget {
           spacing: 12,
           runSpacing: 8,
           children: [
-            Text(angka, style: theme.textTheme.displayLarge),
+            Text(
+              angka,
+              style: theme.textTheme.displayLarge?.copyWith(letterSpacing: -3),
+            ),
             Text(l.magnitudo, style: theme.textTheme.labelMedium),
             LabelTingkat(magnitudo: magnitudo),
           ],

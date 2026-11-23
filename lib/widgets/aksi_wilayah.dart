@@ -17,7 +17,7 @@ class AksiWilayah extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        IconButton(
+        _AksiBulat(
           tooltip: context.l10n.gunakanLokasiSaya,
           onPressed: mencari
               ? null
@@ -29,7 +29,7 @@ class AksiWilayah extends StatelessWidget {
                 )
               : const Icon(IkonApp.lokasiSaya),
         ),
-        IconButton(
+        _AksiBulat(
           tooltip: context.l10n.cariWilayah,
           onPressed: () => bukaPencarian(context),
           icon: const Icon(IkonApp.cari),
@@ -37,4 +37,24 @@ class AksiWilayah extends StatelessWidget {
       ],
     );
   }
+}
+
+class _AksiBulat extends StatelessWidget {
+  const _AksiBulat({
+    required this.tooltip,
+    required this.onPressed,
+    required this.icon,
+  });
+  final String tooltip;
+  final VoidCallback? onPressed;
+  final Widget icon;
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(right: 4),
+    child: Material(
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
+      shape: const CircleBorder(),
+      child: IconButton(tooltip: tooltip, onPressed: onPressed, icon: icon),
+    ),
+  );
 }
