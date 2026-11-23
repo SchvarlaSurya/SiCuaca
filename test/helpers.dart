@@ -107,7 +107,9 @@ Widget buatApp({
   FakeApi? api,
   NotifikasiService? notif,
   PengaturanProvider? pengaturan,
+  bool sudahOnboarding = true,
 }) => SiCuacaApp(
+  sudahOnboarding: sudahOnboarding,
   apiService: api ?? FakeApi(offline: offline),
   gpsService: FakeGps(gps),
   wilayahService: FakeWilayah(),

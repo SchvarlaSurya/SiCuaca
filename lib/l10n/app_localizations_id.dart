@@ -610,4 +610,61 @@ class AppLocalizationsId extends AppLocalizations {
   ) {
     return 'Gempa M $magnitudo di $wilayah, $waktu. Kedalaman $kedalaman. Sumber: BMKG.';
   }
+
+  @override
+  String get bagikan => 'Bagikan';
+
+  @override
+  String get bagikanCuaca => 'Bagikan info cuaca';
+
+  @override
+  String get bagikanGempa => 'Bagikan info gempa';
+
+  @override
+  String get onboardingLewati => 'Lewati';
+
+  @override
+  String get onboardingLanjut => 'Lanjut';
+
+  @override
+  String get onboardingMulai => 'Mulai';
+
+  @override
+  String get onboardingCuacaJudul => 'Prakiraan Cuaca Akurat';
+
+  @override
+  String get onboardingCuacaDeskripsi =>
+      'Pantau cuaca terkini dan prakiraan per 3 jam di seluruh pelosok desa dan kelurahan Indonesia langsung dari BMKG.';
+
+  @override
+  String get onboardingGempaJudul => 'Info & Notifikasi Gempa';
+
+  @override
+  String get onboardingGempaDeskripsi =>
+      'Ketahui gempa terbaru, magnitudo, jarak dari lokasi Anda, serta terima notifikasi otomatis saat terjadi gempa.';
+
+  @override
+  String get onboardingWilayahJudul => 'Pencarian Wilayah Mudah';
+
+  @override
+  String get onboardingWilayahDeskripsi =>
+      'Gunakan GPS untuk mendeteksi wilayah Anda secara instan atau cari lebih dari 80.000 desa/kelurahan di Indonesia.';
+
+  @override
+  String get panduanAplikasi => 'Panduan aplikasi';
+
+  @override
+  String get panduanAplikasiKeterangan =>
+      'Lihat kembali slide pengenalan fitur SiCuaca';
+
+  @override
+  String bagikanCuacaJudul(String lokasi) {
+    return '🌤️ Cuaca di $lokasi';
+  }
+
+  @override
+  String get bagikanGempaJudul => '⚠️ Info gempa bumi';
+
+  @override
+  String get bagikanSumber => 'Sumber: BMKG · via SiCuaca';
 }

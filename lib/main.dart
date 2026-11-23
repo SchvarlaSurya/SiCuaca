@@ -14,6 +14,7 @@ import 'providers/notifikasi_provider.dart';
 import 'providers/pengaturan_provider.dart';
 import 'providers/weather_provider.dart';
 import 'screens/main_shell.dart';
+import 'screens/onboarding_screen.dart';
 import 'services/api_service.dart';
 import 'services/bmkg_repository.dart';
 import 'services/cache_service.dart';
@@ -48,12 +49,14 @@ Future<void> main() async {
   final preferences = PreferencesService();
   final pengaturan = PengaturanProvider(preferences);
   await pengaturan.muat();
+  final sudahOnboarding = await preferences.sudahOnboarding();
 
   runApp(
     SiCuacaApp(
       notifikasiService: notifikasi,
       preferencesService: preferences,
       pengaturan: pengaturan,
+      sudahOnboarding: sudahOnboarding,
     ),
   );
 }
@@ -69,6 +72,7 @@ class SiCuacaApp extends StatelessWidget {
     this.notifikasiService,
     this.cacheService,
     this.pengaturan,
+    this.sudahOnboarding = true,
   });
 
   final ApiService? apiService;
@@ -78,6 +82,7 @@ class SiCuacaApp extends StatelessWidget {
   final NotifikasiService? notifikasiService;
   final CacheService? cacheService;
   final PengaturanProvider? pengaturan;
+  final bool sudahOnboarding;
 
   @override
   Widget build(BuildContext context) {
@@ -136,13 +141,33 @@ class SiCuacaApp extends StatelessWidget {
               FavoritProvider(context.read<PreferencesService>())..muat(),
         ),
       ],
-      child: const _Aplikasi(),
+      child: _Aplikasi(sudahOnboarding: sudahOnboarding),
     );
   }
 }
 
-class _Aplikasi extends StatelessWidget {
-  const _Aplikasi();
+class _Aplikasi extends StatefulWidget {
+  const _Aplikasi({required this.sudahOnboarding});
+
+  final bool sudahOnboarding;
+
+  @override
+  State<_Aplikasi> createState() => _AplikasiState();
+}
+
+class _AplikasiState extends State<_Aplikasi> {
+  late bool _sudahOnboarding;
+
+  @override
+  void initState() {
+    super.initState();
+    _sudahOnboarding = widget.sudahOnboarding;
+  }
+
+  void _selesaiOnboarding() {
+    context.read<PreferencesService>().setSudahOnboarding(true);
+    setState(() => _sudahOnboarding = true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +195,9 @@ class _Aplikasi extends StatelessWidget {
         }
         return bahasaDidukung.first;
       },
-      home: const MainShell(),
+      home: _sudahOnboarding
+          ? const MainShell()
+          : OnboardingScreen(onSelesai: _selesaiOnboarding),
     );
   }
 }

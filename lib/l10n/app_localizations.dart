@@ -1170,6 +1170,108 @@ abstract class AppLocalizations {
     String waktu,
     String kedalaman,
   );
+
+  /// No description provided for @bagikan.
+  ///
+  /// In id, this message translates to:
+  /// **'Bagikan'**
+  String get bagikan;
+
+  /// No description provided for @bagikanCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Bagikan info cuaca'**
+  String get bagikanCuaca;
+
+  /// No description provided for @bagikanGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Bagikan info gempa'**
+  String get bagikanGempa;
+
+  /// No description provided for @onboardingLewati.
+  ///
+  /// In id, this message translates to:
+  /// **'Lewati'**
+  String get onboardingLewati;
+
+  /// No description provided for @onboardingLanjut.
+  ///
+  /// In id, this message translates to:
+  /// **'Lanjut'**
+  String get onboardingLanjut;
+
+  /// No description provided for @onboardingMulai.
+  ///
+  /// In id, this message translates to:
+  /// **'Mulai'**
+  String get onboardingMulai;
+
+  /// No description provided for @onboardingCuacaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Prakiraan Cuaca Akurat'**
+  String get onboardingCuacaJudul;
+
+  /// No description provided for @onboardingCuacaDeskripsi.
+  ///
+  /// In id, this message translates to:
+  /// **'Pantau cuaca terkini dan prakiraan per 3 jam di seluruh pelosok desa dan kelurahan Indonesia langsung dari BMKG.'**
+  String get onboardingCuacaDeskripsi;
+
+  /// No description provided for @onboardingGempaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Info & Notifikasi Gempa'**
+  String get onboardingGempaJudul;
+
+  /// No description provided for @onboardingGempaDeskripsi.
+  ///
+  /// In id, this message translates to:
+  /// **'Ketahui gempa terbaru, magnitudo, jarak dari lokasi Anda, serta terima notifikasi otomatis saat terjadi gempa.'**
+  String get onboardingGempaDeskripsi;
+
+  /// No description provided for @onboardingWilayahJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Pencarian Wilayah Mudah'**
+  String get onboardingWilayahJudul;
+
+  /// No description provided for @onboardingWilayahDeskripsi.
+  ///
+  /// In id, this message translates to:
+  /// **'Gunakan GPS untuk mendeteksi wilayah Anda secara instan atau cari lebih dari 80.000 desa/kelurahan di Indonesia.'**
+  String get onboardingWilayahDeskripsi;
+
+  /// No description provided for @panduanAplikasi.
+  ///
+  /// In id, this message translates to:
+  /// **'Panduan aplikasi'**
+  String get panduanAplikasi;
+
+  /// No description provided for @panduanAplikasiKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Lihat kembali slide pengenalan fitur SiCuaca'**
+  String get panduanAplikasiKeterangan;
+
+  /// No description provided for @bagikanCuacaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'🌤️ Cuaca di {lokasi}'**
+  String bagikanCuacaJudul(String lokasi);
+
+  /// No description provided for @bagikanGempaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'⚠️ Info gempa bumi'**
+  String get bagikanGempaJudul;
+
+  /// No description provided for @bagikanSumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Sumber: BMKG · via SiCuaca'**
+  String get bagikanSumber;
 }
 
 class _AppLocalizationsDelegate

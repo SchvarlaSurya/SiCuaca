@@ -8,6 +8,7 @@ import '../core/l10n.dart';
 import '../core/theme.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
+import '../services/share_service.dart';
 import '../widgets/ajak_lokasi.dart';
 import '../widgets/badge_magnitudo.dart';
 import '../widgets/status_data.dart';
@@ -42,6 +43,24 @@ class GempaDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.gempaDetailJudul),
         actions: [
+          IconButton(
+            icon: const Icon(IkonApp.bagikan),
+            tooltip: l.bagikanGempa,
+            onPressed: () {
+              ShareService.bagikanGempa(
+                l,
+                magnitudo: gempa.magnitudo,
+                wilayah: gempa.wilayah,
+                kedalaman: gempa.kedalaman,
+                waktu: Format.waktuLengkap(l, gempa.waktuUtc),
+                potensi: gempa.potensi,
+                dirasakan: gempa.dirasakan,
+                jarakDariAnda: jarak != null
+                    ? l.jarakKm(Format.jarak(l, jarak))
+                    : null,
+              );
+            },
+          ),
           IconButton(
             tooltip: l.salinRingkasan,
             icon: const Icon(IkonApp.salin),

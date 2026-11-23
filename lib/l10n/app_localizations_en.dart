@@ -635,4 +635,61 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return 'M $magnitudo earthquake at $wilayah, $waktu. Depth $kedalaman. Source: BMKG.';
   }
+
+  @override
+  String get bagikan => 'Share';
+
+  @override
+  String get bagikanCuaca => 'Share weather info';
+
+  @override
+  String get bagikanGempa => 'Share earthquake info';
+
+  @override
+  String get onboardingLewati => 'Skip';
+
+  @override
+  String get onboardingLanjut => 'Next';
+
+  @override
+  String get onboardingMulai => 'Get started';
+
+  @override
+  String get onboardingCuacaJudul => 'Accurate Weather Forecast';
+
+  @override
+  String get onboardingCuacaDeskripsi =>
+      'Track current weather and 3-hourly forecasts for every village and district in Indonesia directly from BMKG.';
+
+  @override
+  String get onboardingGempaJudul => 'Earthquake Info & Alerts';
+
+  @override
+  String get onboardingGempaDeskripsi =>
+      'Stay updated on recent earthquakes, magnitude, distance from you, and get automatic alerts when earthquakes strike.';
+
+  @override
+  String get onboardingWilayahJudul => 'Easy Region Search';
+
+  @override
+  String get onboardingWilayahDeskripsi =>
+      'Use GPS to instantly detect your location or browse over 80,000 villages across Indonesia.';
+
+  @override
+  String get panduanAplikasi => 'App introduction';
+
+  @override
+  String get panduanAplikasiKeterangan =>
+      'Revisit the introductory feature slides';
+
+  @override
+  String bagikanCuacaJudul(String lokasi) {
+    return '🌤️ Weather in $lokasi';
+  }
+
+  @override
+  String get bagikanGempaJudul => '⚠️ Earthquake info';
+
+  @override
+  String get bagikanSumber => 'Source: BMKG · via SiCuaca';
 }

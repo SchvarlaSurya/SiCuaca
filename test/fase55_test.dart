@@ -343,4 +343,58 @@ void main() {
       });
     }
   });
+
+  group('Onboarding', () {
+    for (final bahasa in [PilihanBahasa.indonesia, PilihanBahasa.inggris]) {
+      testWidgets('pertama dibuka, 360 dp + huruf 1,3x (${bahasa.name})', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 3;
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final t = lookupAppLocalizations(bahasa.locale!);
+
+        await tester.pumpWidget(
+          buatApp(
+            gps: _gpsJakarta,
+            sudahOnboarding: false,
+            pengaturan: PengaturanProvider(
+              PreferencesService(),
+              bahasa: bahasa,
+              tema: PilihanTema.gelap,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text(t.onboardingCuacaJudul), findsOneWidget);
+
+        await tester.tap(find.text(t.onboardingLanjut));
+        await tester.pumpAndSettle();
+        expect(find.text(t.onboardingGempaJudul), findsOneWidget);
+        await tester.tap(find.text(t.onboardingLanjut));
+        await tester.pumpAndSettle();
+        expect(find.text(t.onboardingWilayahJudul), findsOneWidget);
+        expect(find.text(t.onboardingLewati), findsNothing);
+
+        await tester.tap(find.text(t.onboardingMulai));
+        await tester.pumpAndSettle();
+        expect(find.byIcon(IkonApp.beranda), findsWidgets);
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getBool('sudah_onboarding'), isTrue);
+        expect(tester.takeException(), isNull);
+      });
+    }
+
+    testWidgets('Lewati langsung ke aplikasi', (tester) async {
+      await tester.pumpWidget(
+        buatApp(gps: _gpsJakarta, sudahOnboarding: false),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.onboardingLewati));
+      await tester.pumpAndSettle();
+      expect(find.text(l.cuacaSaatIni), findsOneWidget);
+    });
+  });
 }

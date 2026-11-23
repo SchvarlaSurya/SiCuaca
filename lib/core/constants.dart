@@ -59,6 +59,7 @@ class PrefsKeys {
   static const String ambangGempa = 'ambang_gempa';
   static const String bahasa = 'bahasa';
   static const String tema = 'tema';
+  static const String sudahOnboarding = 'sudah_onboarding';
 
   /// Awalan kunci cache (lihat CacheService).
   static const String cache = 'cache.';
