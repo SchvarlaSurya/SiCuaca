@@ -102,6 +102,7 @@ class GempaDetailScreen extends StatelessWidget {
                     MagnitudoBesar(
                       magnitudo: gempa.magnitudoAngka,
                       teks: gempa.magnitudo,
+                      warna: Colors.white,
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -119,7 +120,7 @@ class GempaDetailScreen extends StatelessWidget {
                         Format.waktuRelatif(l, gempa.waktuUtc, DateTime.now()),
                       ].join(' · '),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFFE4DFFF),
+                        color: const Color(0xFFF3F1FF),
                       ),
                     ),
                   ],

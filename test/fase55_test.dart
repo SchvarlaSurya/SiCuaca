@@ -60,6 +60,26 @@ void main() {
       expect(jumlah, 20);
     });
 
+    test('kartu hero ungu: teks terang lulus di semua titik gradasi', () {
+      for (final kondisi in KondisiLangit.values) {
+        for (final malam in [false, true]) {
+          final g = GayaHero.untuk(
+            kondisi,
+            malam: malam,
+            kecerahan: Brightness.dark,
+          );
+          for (final latar in [
+            const Color(0xFF302080),
+            const Color(0xFF6250DB),
+            g.bawah,
+          ]) {
+            expect(kontras(Colors.white, latar), greaterThanOrEqualTo(4.5));
+            expect(kontras(g.teks, latar), greaterThanOrEqualTo(4.5));
+          }
+        }
+      }
+    });
+
     test('kartu hero tanpa gradasi (kurangi gerakan) tetap lulus', () {
       for (final s in [AppTheme.skemaTerang, AppTheme.skemaGelap]) {
         expect(

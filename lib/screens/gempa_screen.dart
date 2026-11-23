@@ -159,7 +159,7 @@ class _GempaIntro extends StatelessWidget {
                 Text(
                   context.l10n.gempaSiagaKeterangan,
                   style: const TextStyle(
-                    color: Color(0xFFDCD7FF),
+                    color: Color(0xFFF3F1FF),
                     fontSize: 12,
                   ),
                 ),

@@ -140,7 +140,7 @@ class _SiagaHero extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             l.siagaHeroKeterangan,
-            style: const TextStyle(color: Color(0xFFE5E0FF)),
+            style: const TextStyle(color: Color(0xFFF3F1FF)),
           ),
         ],
       ),

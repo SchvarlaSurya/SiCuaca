@@ -92,10 +92,19 @@ class LabelTingkat extends StatelessWidget {
 /// Magnitudo sebagai informasi utama layar: angka 64 sp + "M" + label
 /// tingkat.
 class MagnitudoBesar extends StatelessWidget {
-  const MagnitudoBesar({super.key, required this.magnitudo, this.teks});
+  const MagnitudoBesar({
+    super.key,
+    required this.magnitudo,
+    this.teks,
+    this.warna,
+  });
 
   final double? magnitudo;
   final String? teks;
+
+  /// Warna angka dan kata "Magnitudo" bila diletakkan di atas latar gelap
+  /// (mis. kartu ungu di detail gempa). Bawaan: warna teks tema.
+  final Color? warna;
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +122,15 @@ class MagnitudoBesar extends StatelessWidget {
           children: [
             Text(
               angka,
-              style: theme.textTheme.displayLarge?.copyWith(letterSpacing: -3),
+              style: theme.textTheme.displayLarge?.copyWith(
+                letterSpacing: -3,
+                color: warna,
+              ),
             ),
-            Text(l.magnitudo, style: theme.textTheme.labelMedium),
+            Text(
+              l.magnitudo,
+              style: theme.textTheme.labelMedium?.copyWith(color: warna),
+            ),
             LabelTingkat(magnitudo: magnitudo),
           ],
         ),

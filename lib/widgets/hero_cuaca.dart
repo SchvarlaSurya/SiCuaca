@@ -38,13 +38,16 @@ class HeroCuaca extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final polos = MediaQuery.of(context).disableAnimations;
+    // Gradasi ungu selalu gelap, jadi ujung kondisinya diambil dari palet
+    // gelap dan teksnya terang di kedua tema. Kontras terendah teks
+    // terhadap #302080, #6250DB, dan 10 warna kondisi gelap: 5,21:1.
     final gaya = GayaHero.untuk(
       KondisiLangit.dari(entri.deskripsi),
       malam: entri.malam,
-      kecerahan: theme.brightness,
+      kecerahan: Brightness.dark,
     );
-    final teks = polos ? scheme.onPrimaryContainer : gaya.teks;
-    final redup = polos ? scheme.onPrimaryContainer : gaya.redup;
+    final teks = polos ? scheme.onPrimaryContainer : Colors.white;
+    final redup = polos ? scheme.onPrimaryContainer : gaya.teks;
     final deskripsi = l.deskripsiCuaca(entri);
 
     final kartu = Container(

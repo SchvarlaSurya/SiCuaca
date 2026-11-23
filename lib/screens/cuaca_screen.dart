@@ -202,24 +202,24 @@ class KartuCuacaScreen extends StatelessWidget {
                     Text(
                       l.deskripsiCuaca(entri),
                       style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(color: const Color(0xFFE5E0FF)),
+                          ?.copyWith(color: const Color(0xFFF3F1FF)),
                     ),
                     const SizedBox(height: 24),
                     if (dariCache)
                       Text(
                         l.modeOffline,
-                        style: const TextStyle(color: Color(0xFFE5E0FF)),
+                        style: const TextStyle(color: Color(0xFFF3F1FF)),
                       ),
                     if (diperbarui != null)
                       Text(
                         l.diperbarui(Format.waktuLengkap(l, diperbarui)),
-                        style: const TextStyle(color: Color(0xFFE5E0FF)),
+                        style: const TextStyle(color: Color(0xFFF3F1FF)),
                       ),
                     const SizedBox(height: 12),
                     Text(
                       '${l.sumberBmkg}. ${l.bukanResmi}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFFE5E0FF),
+                        color: const Color(0xFFF3F1FF),
                       ),
                     ),
                   ],
