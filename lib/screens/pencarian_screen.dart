@@ -11,6 +11,7 @@ import '../providers/weather_provider.dart';
 import '../services/wilayah_service.dart';
 import '../widgets/status_data.dart';
 import '../widgets/tombol_favorit.dart';
+import '../widgets/app_chrome.dart';
 import 'pilih_wilayah_screen.dart';
 
 /// Membuka layar pencarian wilayah.
@@ -57,35 +58,38 @@ class PencarianScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          if (cari.status == StatusDataWilayah.memuat)
-            const LinearProgressIndicator(),
-          Expanded(
-            child: switch (cari.status) {
-              StatusDataWilayah.gagal => KosongData(
-                pesan: context.l10n.gagalMemuatDataWilayah,
-              ),
-              StatusDataWilayah.memuat when !terlaluPendek => KosongData(
-                pesan: context.l10n.memuatDataWilayah,
-              ),
-              _ when terlaluPendek => _Awal(
-                onGps: () => _pakaiGps(context),
-                onPilih: (l) => _pilih(context, l),
-              ),
-              _ when cari.hasil.isEmpty => KosongData(
-                pesan: context.l10n.cariTidakAdaHasil,
-              ),
-              _ => ListView.builder(
-                itemCount: cari.hasil.length,
-                itemBuilder: (context, i) => _BarisWilayah(
-                  lokasi: cari.hasil[i],
-                  onTap: () => _pilih(context, cari.hasil[i]),
+      body: LatarAtmosfer(
+        gelap: false,
+        child: Column(
+          children: [
+            if (cari.status == StatusDataWilayah.memuat)
+              const LinearProgressIndicator(),
+            Expanded(
+              child: switch (cari.status) {
+                StatusDataWilayah.gagal => KosongData(
+                  pesan: context.l10n.gagalMemuatDataWilayah,
                 ),
-              ),
-            },
-          ),
-        ],
+                StatusDataWilayah.memuat when !terlaluPendek => KosongData(
+                  pesan: context.l10n.memuatDataWilayah,
+                ),
+                _ when terlaluPendek => _Awal(
+                  onGps: () => _pakaiGps(context),
+                  onPilih: (l) => _pilih(context, l),
+                ),
+                _ when cari.hasil.isEmpty => KosongData(
+                  pesan: context.l10n.cariTidakAdaHasil,
+                ),
+                _ => ListView.builder(
+                  itemCount: cari.hasil.length,
+                  itemBuilder: (context, i) => _BarisWilayah(
+                    lokasi: cari.hasil[i],
+                    onTap: () => _pilih(context, cari.hasil[i]),
+                  ),
+                ),
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -104,21 +108,32 @@ class _Awal extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListView(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
       children: [
-        ListTile(
-          leading: const Icon(IkonApp.lokasiSaya),
-          title: Text(context.l10n.gunakanLokasiSaya),
-          onTap: onGps,
+        MasukLembut(
+          child: Card(
+            child: ListTile(
+              leading: const Icon(IkonApp.lokasiSaya),
+              title: Text(context.l10n.gunakanLokasiSaya),
+              onTap: onGps,
+            ),
+          ),
         ),
-        ListTile(
-          leading: const Icon(IkonApp.daftarWilayah),
-          title: Text(context.l10n.pilihDariDaftar),
-          subtitle: Text(context.l10n.pilihDariDaftarKeterangan),
-          trailing: const Icon(IkonApp.selengkapnya),
-          onTap: () async {
-            final lokasi = await bukaPilihWilayah(context);
-            if (lokasi != null) onPilih(lokasi);
-          },
+        const SizedBox(height: 8),
+        MasukLembut(
+          delay: const Duration(milliseconds: 70),
+          child: Card(
+            child: ListTile(
+              leading: const Icon(IkonApp.daftarWilayah),
+              title: Text(context.l10n.pilihDariDaftar),
+              subtitle: Text(context.l10n.pilihDariDaftarKeterangan),
+              trailing: const Icon(IkonApp.selengkapnya),
+              onTap: () async {
+                final lokasi = await bukaPilihWilayah(context);
+                if (lokasi != null) onPilih(lokasi);
+              },
+            ),
+          ),
         ),
         const Divider(),
         Padding(
@@ -129,7 +144,9 @@ class _Awal extends StatelessWidget {
           KosongData(pesan: context.l10n.belumAdaFavorit, rataTengah: false)
         else
           for (final l in favorit)
-            _BarisWilayah(lokasi: l, onTap: () => onPilih(l)),
+            Card(
+              child: _BarisWilayah(lokasi: l, onTap: () => onPilih(l)),
+            ),
         KosongData(pesan: context.l10n.cariMinimal, rataTengah: false),
       ],
     );

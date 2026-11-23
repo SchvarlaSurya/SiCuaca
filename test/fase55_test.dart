@@ -315,18 +315,30 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text(t.riwayatJudul), findsOneWidget);
         expect(find.text(t.statTerbesar), findsOneWidget);
-        await tester.tap(find.text(t.notifM6));
+        // Saring M6+ lewat menu filter, lalu buka grafik per minggu.
+        final jumlahAwal = find.text(t.riwayatJumlah(4)).evaluate().length;
+        await tester.tap(find.byIcon(IkonApp.saring));
         await tester.pumpAndSettle();
-        final chip = tester.widget<ChoiceChip>(
-          find.widgetWithText(ChoiceChip, t.notifM6),
-        );
-        expect(chip.selected, isTrue);
+        await tester.tap(find.text(t.minimalMagnitudo('6.0')));
+        await tester.pumpAndSettle();
+        expect(find.text(t.riwayatJumlah(4)).evaluate().length, jumlahAwal);
+        await tester.tap(find.byIcon(IkonApp.grafik));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(t.grafikPerMinggu));
+        await tester.pumpAndSettle();
+        expect(find.text(t.gempaPerMinggu), findsOneWidget);
+        expect(find.text(t.grafikCatatan), findsOneWidget);
+        await tester.tap(find.byType(BackButton));
+        await tester.pumpAndSettle();
         await tester.tap(find.byType(BackButton));
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(IkonApp.siaga));
         await tester.pumpAndSettle();
         expect(find.text(t.siagaJudul), findsOneWidget);
+        expect(find.text(t.siagaHeroJudul), findsOneWidget);
+        await tester.tap(find.text(t.siagaSebelum));
+        await tester.pumpAndSettle();
         expect(find.text(t.siagaSebelum1), findsOneWidget);
         await tester.scrollUntilVisible(
           find.text(t.tas1),

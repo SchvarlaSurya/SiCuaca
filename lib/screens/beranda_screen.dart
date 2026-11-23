@@ -13,6 +13,7 @@ import '../widgets/cuaca_saat_ini_card.dart';
 import '../widgets/gempa_terbaru_card.dart';
 import '../widgets/lokasi_banner.dart';
 import '../widgets/status_data.dart';
+import '../widgets/app_chrome.dart';
 
 /// Beranda: tiga bagian berjudul (cuaca, gempa, peringatan), masing-masing
 /// dengan tautan "Selengkapnya" ke tabnya. Informasi utama: suhu.
@@ -33,44 +34,75 @@ class BerandaScreen extends StatelessWidget {
     ].whereType<DateTime>().toList()..sort();
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.appName), actions: const [AksiWilayah()]),
-      body: RefreshIndicator(
-        onRefresh: () => Future.wait([cuaca.muatUlang(), gempa.muatTerbaru()]),
-        // Isi Beranda pendek (tiga bagian), jadi semuanya dibangun sekaligus.
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (waktuCache.isNotEmpty) ...[
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l.appName),
+            Text(
+              l.subjudulBeranda,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+        actions: const [AksiWilayah()],
+      ),
+      body: LatarAtmosfer(
+        gelap: false,
+        child: RefreshIndicator(
+          onRefresh: () =>
+              Future.wait([cuaca.muatUlang(), gempa.muatTerbaru()]),
+          // Isi Beranda pendek (tiga bagian), jadi semuanya dibangun sekaligus.
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (waktuCache.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  BannerOffline(diperbarui: waktuCache.first),
+                ],
                 const SizedBox(height: 8),
-                BannerOffline(diperbarui: waktuCache.first),
+                const LokasiBanner(),
+                MasukLembut(
+                  child: JudulBagian(
+                    l.cuacaSaatIni,
+                    onSelengkapnya: () => Navigasi.bukaTab(TabUtama.cuaca),
+                  ),
+                ),
+                const MasukLembut(
+                  delay: Duration(milliseconds: 70),
+                  child: CuacaSaatIniCard(),
+                ),
+                const SizedBox(height: 16),
+                const SizedBox(height: 4),
+                const SizedBox(height: 8),
+                MasukLembut(
+                  child: JudulBagian(
+                    l.gempaTerbaruJudul,
+                    onSelengkapnya: () => Navigasi.bukaTab(TabUtama.gempa),
+                  ),
+                ),
+                const MasukLembut(
+                  delay: Duration(milliseconds: 120),
+                  child: GempaTerbaruCard(),
+                ),
+                const SizedBox(height: 16),
+                const SizedBox(height: 4),
+                const SizedBox(height: 8),
+                MasukLembut(
+                  child: JudulBagian(
+                    l.navPeringatan,
+                    onSelengkapnya: () => Navigasi.bukaTab(TabUtama.peringatan),
+                  ),
+                ),
+                const MasukLembut(
+                  delay: Duration(milliseconds: 160),
+                  child: _RingkasPeringatan(),
+                ),
               ],
-              const SizedBox(height: 8),
-              const LokasiBanner(),
-              JudulBagian(
-                l.cuacaSaatIni,
-                onSelengkapnya: () => Navigasi.bukaTab(TabUtama.cuaca),
-              ),
-              const CuacaSaatIniCard(),
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 8),
-              JudulBagian(
-                l.gempaTerbaruJudul,
-                onSelengkapnya: () => Navigasi.bukaTab(TabUtama.gempa),
-              ),
-              const GempaTerbaruCard(),
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 8),
-              JudulBagian(
-                l.navPeringatan,
-                onSelengkapnya: () => Navigasi.bukaTab(TabUtama.peringatan),
-              ),
-              const _RingkasPeringatan(),
-            ],
+            ),
           ),
         ),
       ),

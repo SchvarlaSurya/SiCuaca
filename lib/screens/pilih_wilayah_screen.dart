@@ -6,6 +6,7 @@ import '../core/l10n.dart';
 import '../models/lokasi.dart';
 import '../services/wilayah_service.dart';
 import '../widgets/status_data.dart';
+import '../widgets/app_chrome.dart';
 
 /// Membuka pemilih wilayah bertingkat. Hasilnya desa/kelurahan yang
 /// dipilih, atau null bila dibatalkan.
@@ -117,12 +118,15 @@ class _PilihWilayahScreenState extends State<PilihWilayahScreen> {
         // BackButton memanggil maybePop, jadi PopScope di atas yang
         // memutuskan: naik satu tingkat atau keluar dari layar.
         appBar: AppBar(leading: const BackButton(), title: Text(judul)),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _Jejak(jejak: _jejak, onKembaliKe: _kembaliKe),
-            Expanded(child: isi),
-          ],
+        body: LatarAtmosfer(
+          gelap: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Jejak(jejak: _jejak, onKembaliKe: _kembaliKe),
+              Expanded(child: isi),
+            ],
+          ),
         ),
       ),
     );

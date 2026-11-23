@@ -9,6 +9,7 @@ import '../core/theme.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import 'badge_magnitudo.dart';
+import 'app_chrome.dart';
 import 'status_data.dart';
 import 'sumber_bmkg.dart';
 
@@ -56,7 +57,10 @@ class GempaTerbaruCard extends StatelessWidget {
               ),
             )
           : null,
-      child: InkWell(
+      child: TekanLembut(
+        borderRadius: BorderRadius.circular(
+          utama ? AppTheme.radiusHero : AppTheme.radiusKartu,
+        ),
         onTap: gempa == null ? null : () => Navigasi.bukaDetailGempa(gempa),
         child: Padding(padding: const EdgeInsets.all(16), child: isi),
       ),

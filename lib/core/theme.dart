@@ -18,31 +18,31 @@ class AppTheme {
   static const String hurufIsi = 'Inter';
 
   /// Sudut membulat: kartu utama (hero) dan kartu/tile biasa.
-  static const double radiusHero = 24;
-  static const double radiusKartu = 16;
-  static const double radiusTile = 14;
+  static const double radiusHero = 30;
+  static const double radiusKartu = 22;
+  static const double radiusTile = 18;
 
-  static const Color _primerTerang = Color(0xFF0B5CAD);
+  static const Color _primerTerang = Color(0xFF5B4BDB);
 
   static final ColorScheme skemaTerang =
       ColorScheme.fromSeed(seedColor: _primerTerang).copyWith(
         primary: _primerTerang,
         onPrimary: Colors.white,
-        primaryContainer: const Color(0xFFD3E4FF),
-        onPrimaryContainer: const Color(0xFF001D36),
+        primaryContainer: const Color(0xFFE9E5FF),
+        onPrimaryContainer: const Color(0xFF211456),
         // Banner offline: kuning lembut, bukan merah muda bawaan seed.
         tertiaryContainer: const Color(0xFFFFE7B3),
         onTertiaryContainer: const Color(0xFF261A00),
-        surface: const Color(0xFFF8F9FC),
-        onSurface: const Color(0xFF191C20),
-        onSurfaceVariant: const Color(0xFF41484F),
+        surface: const Color(0xFFF8F7FF),
+        onSurface: const Color(0xFF1D1B27),
+        onSurfaceVariant: const Color(0xFF625F70),
         surfaceContainerLowest: Colors.white,
-        surfaceContainerLow: const Color(0xFFF2F4F7),
-        surfaceContainer: const Color(0xFFECEEF2),
-        surfaceContainerHigh: const Color(0xFFE6E8EC),
-        surfaceContainerHighest: const Color(0xFFE0E2E6),
-        outline: const Color(0xFF71787F),
-        outlineVariant: const Color(0xFFD5DAE1),
+        surfaceContainerLow: const Color(0xFFF2F0FA),
+        surfaceContainer: const Color(0xFFEDEAF7),
+        surfaceContainerHigh: const Color(0xFFE7E3F1),
+        surfaceContainerHighest: const Color(0xFFE2DEEC), // primary 4,57:1
+        outline: const Color(0xFF7A7589),
+        outlineVariant: const Color(0xFFE0DDEA),
         surfaceTint: Colors.transparent,
       );
 
@@ -51,10 +51,10 @@ class AppTheme {
         seedColor: _primerTerang,
         brightness: Brightness.dark,
       ).copyWith(
-        primary: const Color(0xFFA3C9FF),
-        onPrimary: const Color(0xFF00315D),
-        primaryContainer: const Color(0xFF1A3D63),
-        onPrimaryContainer: const Color(0xFFD3E4FF),
+        primary: const Color(0xFFC9C1FF),
+        onPrimary: const Color(0xFF2C1E76),
+        primaryContainer: const Color(0xFF40328E),
+        onPrimaryContainer: const Color(0xFFE8E3FF),
         tertiaryContainer: const Color(0xFF4A3A10),
         onTertiaryContainer: const Color(0xFFFFE7B3),
         surface: const Color(0xFF111418),
@@ -134,6 +134,7 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         scrolledUnderElevation: 0,
         centerTitle: false,
+        toolbarHeight: 64,
         titleTextStyle: huruf.titleLarge?.copyWith(color: skema.onSurface),
       ),
       cardTheme: CardThemeData(
@@ -147,7 +148,7 @@ class AppTheme {
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: skema.surfaceContainer,
+        backgroundColor: skema.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         indicatorColor: skema.primaryContainer,
         iconTheme: WidgetStateProperty.resolveWith(
@@ -185,10 +186,20 @@ class AppTheme {
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(minimumSize: const Size(48, 48)),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(48, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48)),
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(48, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(minimumSize: const Size(48, 48)),

@@ -7,6 +7,7 @@ import '../core/theme.dart';
 import '../models/ambang_gempa.dart';
 import '../providers/notifikasi_provider.dart';
 import '../widgets/status_data.dart';
+import '../widgets/app_chrome.dart';
 
 /// Tab Peringatan: pengaturan ambang notifikasi gempa.
 class PeringatanScreen extends StatelessWidget {
@@ -38,84 +39,128 @@ class PeringatanScreen extends StatelessWidget {
     final bisaDiubah = notif.tersedia && !notif.memproses;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.navPeringatan)),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 8, bottom: 24),
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(child: JudulBagian(l.notifJudul)),
-                if (notif.memproses)
-                  const SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-              ],
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l.navPeringatan),
+            Text(
+              l.subjudulPeringatan,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-            child: Text(l.notifKeterangan, style: redup),
-          ),
-          if (!notif.tersedia)
-            _Kotak(pesan: l.notifBelumAktif, ikon: IkonApp.info),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Card(
-              clipBehavior: Clip.antiAlias,
-              child: RadioGroup<AmbangGempa>(
-                groupValue: notif.ambang,
-                onChanged: (a) {
-                  if (a != null) notif.pilih(a);
-                },
-                child: Column(
+          ],
+        ),
+      ),
+      body: LatarAtmosfer(
+        gelap: false,
+        child: ListView(
+          padding: const EdgeInsets.only(top: 8, bottom: 24),
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 12),
+              child: MasukLembut(child: _PeringatanIntro()),
+            ),
+            MasukLembut(
+              delay: const Duration(milliseconds: 80),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
                   children: [
-                    for (final a in AmbangGempa.values) ...[
-                      if (a != AmbangGempa.values.first)
-                        const Divider(indent: 16, endIndent: 16),
-                      RadioListTile<AmbangGempa>(
-                        value: a,
-                        enabled: bisaDiubah,
-                        title: Text(_label(l, a).$1),
-                        subtitle: Text(_label(l, a).$2),
+                    Expanded(child: JudulBagian(l.notifJudul)),
+                    if (notif.memproses)
+                      const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
                       ),
-                    ],
                   ],
                 ),
               ),
             ),
-          ),
-          if (notif.pesan != null && notif.tersedia)
-            _Kotak(
-              pesan: _pesan(l, notif.pesan!),
-              ikon: IkonApp.notifMati,
-              galat: true,
-              aksi: notif.izinDitolak
-                  ? TextButton(
-                      onPressed: notif.bukaPengaturan,
-                      child: Text(l.bukaPengaturanAplikasi),
-                    )
-                  : null,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              child: Text(l.notifKeterangan, style: redup),
             ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            child: Text(
-              [l.notifSumber, if (l.inggris) l.notifBahasaCatatan].join(' '),
-              style: redup,
+            if (!notif.tersedia)
+              _Kotak(pesan: l.notifBelumAktif, ikon: IkonApp.info),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                child: RadioGroup<AmbangGempa>(
+                  groupValue: notif.ambang,
+                  onChanged: (a) {
+                    if (a != null) notif.pilih(a);
+                  },
+                  child: Column(
+                    children: [
+                      for (final a in AmbangGempa.values) ...[
+                        if (a != AmbangGempa.values.first)
+                          const Divider(indent: 16, endIndent: 16),
+                        RadioListTile<AmbangGempa>(
+                          value: a,
+                          enabled: bisaDiubah,
+                          title: Text(_label(l, a).$1),
+                          subtitle: Text(_label(l, a).$2),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Divider(),
-          ),
-          ListTile(
-            leading: const Icon(IkonApp.peringatanDini),
-            title: Text(l.peringatanDiniSegera),
-            subtitle: Text(l.peringatanKeterangan),
-            enabled: false,
-          ),
+            if (notif.pesan != null && notif.tersedia)
+              _Kotak(
+                pesan: _pesan(l, notif.pesan!),
+                ikon: IkonApp.notifMati,
+                galat: true,
+                aksi: notif.izinDitolak
+                    ? TextButton(
+                        onPressed: notif.bukaPengaturan,
+                        child: Text(l.bukaPengaturanAplikasi),
+                      )
+                    : null,
+              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: Text(
+                [l.notifSumber, if (l.inggris) l.notifBahasaCatatan].join(' '),
+                style: redup,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(),
+            ),
+            ListTile(
+              leading: const Icon(IkonApp.peringatanDini),
+              title: Text(l.peringatanDiniSegera),
+              subtitle: Text(l.peringatanKeterangan),
+              enabled: false,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PeringatanIntro extends StatelessWidget {
+  const _PeringatanIntro();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(AppTheme.radiusKartu),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(IkonApp.notifAktif),
+          const SizedBox(width: 12),
+          Expanded(child: Text(context.l10n.peringatanIntro)),
         ],
       ),
     );

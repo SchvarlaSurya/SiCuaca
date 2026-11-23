@@ -8,6 +8,7 @@ import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import 'badge_magnitudo.dart';
+import 'app_chrome.dart';
 
 /// Satu baris gempa di daftar. Diketuk membuka halaman detail.
 class GempaItem extends StatelessWidget {
@@ -30,7 +31,8 @@ class GempaItem extends StatelessWidget {
         ? IkonApp.potensi
         : IkonApp.dirasakan;
 
-    return InkWell(
+    return TekanLembut(
+      borderRadius: BorderRadius.circular(18),
       onTap: () => Navigasi.bukaDetailGempa(gempa),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

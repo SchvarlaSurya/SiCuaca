@@ -492,11 +492,11 @@ class AppLocalizationsId extends AppLocalizations {
   String get semuaWilayah => 'Indonesia';
 
   @override
-  String get riwayatJudul => 'Riwayat gempa';
+  String get riwayatJudul => 'Riwayat Gempa';
 
   @override
   String get riwayatKosong =>
-      'Belum ada riwayat gempa. Buka tab Gempa saat online; gempa 30 hari terakhir akan tersimpan di sini.';
+      'Belum ada riwayat gempa. Muat data gempa terlebih dahulu.';
 
   @override
   String riwayatJumlah(int n) {
@@ -504,10 +504,10 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get riwayatTidakCocok => 'Tidak ada gempa yang cocok dengan saringan.';
+  String get riwayatTidakCocok => 'Tidak ada data yang cocok dengan filter.';
 
   @override
-  String get semuaMagnitudo => 'Semua';
+  String get semuaMagnitudo => 'Semua magnitudo';
 
   @override
   String get dalam100Km => 'Dalam 100 km';
@@ -522,7 +522,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get statTotal => 'Total';
 
   @override
-  String get siagaJudul => 'Siaga gempa';
+  String get siagaJudul => 'Siaga Gempa';
 
   @override
   String get siagaSebelum => 'Sebelum gempa';
@@ -667,4 +667,131 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get bagikanSumber => 'Sumber: BMKG · via SiCuaca';
+
+  @override
+  String get subjudulBeranda => 'Cuaca dan gempa untuk hari ini';
+
+  @override
+  String get subjudulCuaca => 'Prakiraan lokal dari BMKG';
+
+  @override
+  String get subjudulGempa => 'Informasi seismik terkini';
+
+  @override
+  String get subjudulPeringatan => 'Atur notifikasi yang kamu perlukan';
+
+  @override
+  String get subjudulPengaturan => 'Sesuaikan pengalaman SiCuaca';
+
+  @override
+  String get bandingkanFavorit => 'Bandingkan favorit';
+
+  @override
+  String get bandingkanJudul => 'Bandingkan cuaca';
+
+  @override
+  String bandingkanKeterangan(String n) {
+    return 'Membandingkan $n dari maksimal 3 wilayah favorit.';
+  }
+
+  @override
+  String get kartuCuaca => 'Kartu Cuaca';
+
+  @override
+  String get bukanResmi => 'SiCuaca bukan aplikasi resmi BMKG.';
+
+  @override
+  String ringkasanCuaca(
+    String lokasi,
+    String kondisi,
+    String suhu,
+    String catatan,
+  ) {
+    return 'Cuaca di $lokasi: $kondisi, $suhu. ${catatan}Sumber: BMKG. SiCuaca bukan aplikasi resmi BMKG.';
+  }
+
+  @override
+  String get bagikanKartuCuaca => 'Bagikan kartu cuaca';
+
+  @override
+  String get salinRingkasanTeks => 'Salin ringkasan teks';
+
+  @override
+  String get ringkasanCuacaDisalin => 'Ringkasan cuaca disalin';
+
+  @override
+  String get gempaSiagaJudul => 'Tetap siaga, tetap tenang';
+
+  @override
+  String get gempaSiagaKeterangan =>
+      'Pantau informasi resmi dan siapkan langkah aman.';
+
+  @override
+  String get pengaturanIntro =>
+      'Tampilan, bahasa, dan notifikasi tersimpan aman di perangkat ini.';
+
+  @override
+  String get peringatanIntro =>
+      'Pilih ambang magnitudo agar pemberitahuan yang diterima tetap relevan untukmu.';
+
+  @override
+  String get jejakAktivitas => 'Jejak aktivitas';
+
+  @override
+  String get cariWilayahGempa => 'Cari wilayah gempa';
+
+  @override
+  String get hapusPencarian => 'Hapus pencarian';
+
+  @override
+  String get rentangGrafik => 'Rentang grafik';
+
+  @override
+  String get grafikPerHari => 'Grafik per hari';
+
+  @override
+  String get grafikPerMinggu => 'Grafik per minggu';
+
+  @override
+  String get saringMagnitudo => 'Filter magnitudo';
+
+  @override
+  String minimalMagnitudo(String nilai) {
+    return 'Minimal M$nilai';
+  }
+
+  @override
+  String get gempaDalam100Km => 'Gempa dalam 100 km';
+
+  @override
+  String get gempaPerHari => 'Gempa per hari';
+
+  @override
+  String get gempaPerMinggu => 'Gempa per minggu';
+
+  @override
+  String get grafikCatatan =>
+      'Berdasarkan riwayat yang tersimpan di perangkat. Ini bukan jumlah seluruh kejadian BMKG.';
+
+  @override
+  String mingguKe(String n) {
+    return 'Minggu $n';
+  }
+
+  @override
+  String jumlahKejadian(int n) {
+    return '$n kejadian';
+  }
+
+  @override
+  String totalGrafik(int n) {
+    return 'Total pada grafik: $n kejadian';
+  }
+
+  @override
+  String get siagaHeroJudul => 'Kesiapsiagaan dimulai sebelum terjadi gempa.';
+
+  @override
+  String get siagaHeroKeterangan =>
+      'Pelajari langkah aman dan lengkapi tas siaga secara bertahap.';
 }

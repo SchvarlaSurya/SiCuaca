@@ -49,7 +49,7 @@ class HeroCuaca extends StatelessWidget {
 
     final kartu = Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 16, 8, 20),
+      padding: const EdgeInsets.fromLTRB(22, 20, 10, 22),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppTheme.radiusHero),
         color: polos ? scheme.primaryContainer : null,
@@ -58,8 +58,21 @@ class HeroCuaca extends StatelessWidget {
             : LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [gaya.atas, gaya.bawah],
+                colors: [
+                  const Color(0xFF302080),
+                  const Color(0xFF6250DB),
+                  gaya.bawah,
+                ],
               ),
+        boxShadow: polos
+            ? null
+            : [
+                BoxShadow(
+                  color: const Color(0xFF4E3BCC).withValues(alpha: .26),
+                  blurRadius: 26,
+                  offset: const Offset(0, 13),
+                ),
+              ],
       ),
       child: IconTheme(
         data: IconThemeData(color: teks),
@@ -75,11 +88,19 @@ class HeroCuaca extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          wilayah.desa,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: teks,
-                          ),
+                        Row(
+                          children: [
+                            Icon(IkonApp.tempat, size: 17, color: teks),
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                wilayah.desa,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: teks,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           wilayah.labelInduk,
@@ -132,6 +153,8 @@ class HeroCuaca extends StatelessWidget {
                       Format.suhu(entri.suhu),
                       style: theme.textTheme.displayLarge?.copyWith(
                         color: teks,
+                        fontSize: 72,
+                        letterSpacing: -3,
                       ),
                     ),
                   ),

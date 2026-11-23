@@ -12,6 +12,7 @@ import '../widgets/gempa_item.dart';
 import '../widgets/gempa_terbaru_card.dart';
 import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
+import '../widgets/app_chrome.dart';
 
 /// Tab Gempa: Terbaru, M 5.0+, Dirasakan.
 class GempaScreen extends StatelessWidget {
@@ -23,7 +24,16 @@ class GempaScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(context.l10n.navGempa),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(context.l10n.navGempa),
+              Text(
+                context.l10n.subjudulGempa,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
           actions: [
             IconButton(
               tooltip: context.l10n.siagaJudul,
@@ -52,8 +62,11 @@ class GempaScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
-          children: [_TabTerbaru(), _TabTerkini(), _TabDirasakan()],
+        body: const LatarAtmosfer(
+          gelap: false,
+          child: TabBarView(
+            children: [_TabTerbaru(), _TabTerkini(), _TabDirasakan()],
+          ),
         ),
       ),
     );
@@ -72,6 +85,8 @@ class _TabTerbaru extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
+          const MasukLembut(child: _GempaIntro()),
+          const SizedBox(height: 16),
           JudulBagian(context.l10n.gempaTerbaruJudul),
           _Keterangan(context.l10n.gempaTerbaruKeterangan),
           if (provider.terbaru.dariCache) ...[
@@ -83,7 +98,74 @@ class _TabTerbaru extends StatelessWidget {
             const AjakLokasi(),
             const SizedBox(height: 12),
           ],
-          const GempaTerbaruCard(utama: true),
+          const MasukLembut(
+            delay: Duration(milliseconds: 80),
+            child: GempaTerbaruCard(utama: true),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GempaIntro extends StatelessWidget {
+  const _GempaIntro();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF31227F), Color(0xFF6856D8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: scheme.primary.withValues(alpha: .22),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: .16),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(IkonApp.gempa, color: Colors.white),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.gempaSiagaJudul,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  context.l10n.gempaSiagaKeterangan,
+                  style: const TextStyle(
+                    color: Color(0xFFDCD7FF),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -135,6 +217,7 @@ class _DaftarGempa extends StatelessWidget {
     final daftar = keadaan.data ?? const <Gempa>[];
 
     final kepala = <Widget>[
+      const SizedBox(height: 8),
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
         child: _Keterangan(keterangan),

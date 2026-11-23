@@ -510,11 +510,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get semuaWilayah => 'Indonesia';
 
   @override
-  String get riwayatJudul => 'Earthquake history';
+  String get riwayatJudul => 'Earthquake History';
 
   @override
   String get riwayatKosong =>
-      'No earthquake history yet. Open the Earthquakes tab while online; earthquakes from the last 30 days will be kept here.';
+      'No earthquake history yet. Load earthquake data first.';
 
   @override
   String riwayatJumlah(int n) {
@@ -528,10 +528,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get riwayatTidakCocok => 'No earthquakes match the filter.';
+  String get riwayatTidakCocok => 'No data matches the filter.';
 
   @override
-  String get semuaMagnitudo => 'All';
+  String get semuaMagnitudo => 'All magnitudes';
 
   @override
   String get dalam100Km => 'Within 100 km';
@@ -546,7 +546,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statTotal => 'Total';
 
   @override
-  String get siagaJudul => 'Earthquake preparedness';
+  String get siagaJudul => 'Earthquake Preparedness';
 
   @override
   String get siagaSebelum => 'Before an earthquake';
@@ -692,4 +692,143 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bagikanSumber => 'Source: BMKG · via SiCuaca';
+
+  @override
+  String get subjudulBeranda => 'Weather and earthquakes for today';
+
+  @override
+  String get subjudulCuaca => 'Local forecast from BMKG';
+
+  @override
+  String get subjudulGempa => 'Latest seismic information';
+
+  @override
+  String get subjudulPeringatan => 'Set up the notifications you need';
+
+  @override
+  String get subjudulPengaturan => 'Customise your SiCuaca experience';
+
+  @override
+  String get bandingkanFavorit => 'Compare favourites';
+
+  @override
+  String get bandingkanJudul => 'Compare weather';
+
+  @override
+  String bandingkanKeterangan(String n) {
+    return 'Comparing $n of up to 3 favourite regions.';
+  }
+
+  @override
+  String get kartuCuaca => 'Weather card';
+
+  @override
+  String get bukanResmi => 'SiCuaca is not an official BMKG app.';
+
+  @override
+  String ringkasanCuaca(
+    String lokasi,
+    String kondisi,
+    String suhu,
+    String catatan,
+  ) {
+    return 'Weather in $lokasi: $kondisi, $suhu. ${catatan}Source: BMKG. SiCuaca is not an official BMKG app.';
+  }
+
+  @override
+  String get bagikanKartuCuaca => 'Share weather card';
+
+  @override
+  String get salinRingkasanTeks => 'Copy text summary';
+
+  @override
+  String get ringkasanCuacaDisalin => 'Weather summary copied';
+
+  @override
+  String get gempaSiagaJudul => 'Stay alert, stay calm';
+
+  @override
+  String get gempaSiagaKeterangan =>
+      'Follow official information and prepare safe steps.';
+
+  @override
+  String get pengaturanIntro =>
+      'Display, language, and notification choices are stored on this device.';
+
+  @override
+  String get peringatanIntro =>
+      'Choose a magnitude threshold so the alerts you get stay relevant to you.';
+
+  @override
+  String get jejakAktivitas => 'Activity trail';
+
+  @override
+  String get cariWilayahGempa => 'Search earthquake region';
+
+  @override
+  String get hapusPencarian => 'Clear search';
+
+  @override
+  String get rentangGrafik => 'Chart range';
+
+  @override
+  String get grafikPerHari => 'Daily chart';
+
+  @override
+  String get grafikPerMinggu => 'Weekly chart';
+
+  @override
+  String get saringMagnitudo => 'Filter by magnitude';
+
+  @override
+  String minimalMagnitudo(String nilai) {
+    return 'At least M$nilai';
+  }
+
+  @override
+  String get gempaDalam100Km => 'Earthquakes within 100 km';
+
+  @override
+  String get gempaPerHari => 'Earthquakes per day';
+
+  @override
+  String get gempaPerMinggu => 'Earthquakes per week';
+
+  @override
+  String get grafikCatatan =>
+      'Based on the history stored on this device. This is not the total of all BMKG events.';
+
+  @override
+  String mingguKe(String n) {
+    return 'Week $n';
+  }
+
+  @override
+  String jumlahKejadian(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n events',
+      one: '1 event',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String totalGrafik(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Total on chart: $n events',
+      one: 'Total on chart: 1 event',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get siagaHeroJudul => 'Preparedness starts before an earthquake.';
+
+  @override
+  String get siagaHeroKeterangan =>
+      'Learn the safe steps and complete your emergency bag bit by bit.';
 }

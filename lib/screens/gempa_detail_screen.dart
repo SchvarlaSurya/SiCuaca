@@ -13,6 +13,7 @@ import '../widgets/ajak_lokasi.dart';
 import '../widgets/badge_magnitudo.dart';
 import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
+import '../widgets/app_chrome.dart';
 
 /// Halaman detail gempa. Dibuka lewat [Navigasi.bukaDetailGempa] (dari
 /// daftar, kartu Beranda, maupun ketukan notifikasi). Semua isi dibangun
@@ -29,7 +30,6 @@ class GempaDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final jarak = context.watch<GempaProvider>().jarakKm(gempa);
     final lat = gempa.lat;
     final lon = gempa.lon;
@@ -81,100 +81,121 @@ class GempaDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: scheme.surfaceContainer,
-              borderRadius: BorderRadius.circular(AppTheme.radiusHero),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MagnitudoBesar(
-                  magnitudo: gempa.magnitudoAngka,
-                  teks: gempa.magnitudo,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  gempa.wilayah.isEmpty ? Format.tandaKosong : gempa.wilayah,
-                  style: theme.textTheme.titleMedium,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  [
-                    Format.waktuLengkap(l, gempa.waktuUtc),
-                    Format.waktuRelatif(l, gempa.waktuUtc, DateTime.now()),
-                  ].join(' · '),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: scheme.onSurfaceVariant,
+      body: LatarAtmosfer(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+          children: [
+            MasukLembut(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF2B1C78), Color(0xFF6651D7)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusHero),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          KisiTile(
-            children: [
-              TileInfo(
-                ikon: IkonApp.kedalaman,
-                label: l.kedalaman,
-                nilai: gempa.kedalaman,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MagnitudoBesar(
+                      magnitudo: gempa.magnitudoAngka,
+                      teks: gempa.magnitudo,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      gempa.wilayah.isEmpty
+                          ? Format.tandaKosong
+                          : gempa.wilayah,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      [
+                        Format.waktuLengkap(l, gempa.waktuUtc),
+                        Format.waktuRelatif(l, gempa.waktuUtc, DateTime.now()),
+                      ].join(' · '),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: const Color(0xFFE4DFFF),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              if (jarak != null)
-                TileInfo(
-                  ikon: IkonApp.jarak,
-                  label: l.jarakDariAnda,
-                  nilai: l.jarakKm(Format.jarak(l, jarak)),
-                ),
-            ],
-          ),
-          if (jarak == null && gempa.punyaKoordinat) ...[
-            const SizedBox(height: 8),
-            const AjakLokasi(),
-          ],
-          const SizedBox(height: 8),
-          Card(
-            child: Column(
-              children: [
-                _Baris(
-                  ikon: IkonApp.waktu,
-                  label: l.waktuKejadian,
-                  nilai: Format.waktuLengkap(l, gempa.waktuUtc),
-                ),
-                const Divider(indent: 48),
-                _Baris(
-                  ikon: IkonApp.koordinat,
-                  label: l.koordinat,
-                  nilai: teksKoordinat,
-                ),
-                if (gempa.potensi.isNotEmpty) ...[
-                  const Divider(indent: 48),
-                  _Baris(
-                    ikon: IkonApp.potensi,
-                    label: l.potensi,
-                    nilai: gempa.potensi,
-                  ),
-                ],
-                if (gempa.dirasakan.isNotEmpty) ...[
-                  const Divider(indent: 48),
-                  _Baris(
-                    ikon: IkonApp.dirasakan,
-                    label: l.dirasakanDi,
-                    nilai: gempa.dirasakan,
-                  ),
-                ],
-              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          JudulBagian(l.shakemapJudul),
-          _Shakemap(url: gempa.shakemapUrl),
-          const SizedBox(height: 16),
-          const SumberBmkg(),
-        ],
+            const SizedBox(height: 8),
+            MasukLembut(
+              delay: const Duration(milliseconds: 90),
+              child: KisiTile(
+                children: [
+                  TileInfo(
+                    ikon: IkonApp.kedalaman,
+                    label: l.kedalaman,
+                    nilai: gempa.kedalaman,
+                  ),
+                  if (jarak != null)
+                    TileInfo(
+                      ikon: IkonApp.jarak,
+                      label: l.jarakDariAnda,
+                      nilai: l.jarakKm(Format.jarak(l, jarak)),
+                    ),
+                ],
+              ),
+            ),
+            if (jarak == null && gempa.punyaKoordinat) ...[
+              const SizedBox(height: 8),
+              const AjakLokasi(),
+            ],
+            const SizedBox(height: 8),
+            MasukLembut(
+              delay: const Duration(milliseconds: 160),
+              child: Card(
+                child: Column(
+                  children: [
+                    _Baris(
+                      ikon: IkonApp.waktu,
+                      label: l.waktuKejadian,
+                      nilai: Format.waktuLengkap(l, gempa.waktuUtc),
+                    ),
+                    const Divider(indent: 48),
+                    _Baris(
+                      ikon: IkonApp.koordinat,
+                      label: l.koordinat,
+                      nilai: teksKoordinat,
+                    ),
+                    if (gempa.potensi.isNotEmpty) ...[
+                      const Divider(indent: 48),
+                      _Baris(
+                        ikon: IkonApp.potensi,
+                        label: l.potensi,
+                        nilai: gempa.potensi,
+                      ),
+                    ],
+                    if (gempa.dirasakan.isNotEmpty) ...[
+                      const Divider(indent: 48),
+                      _Baris(
+                        ikon: IkonApp.dirasakan,
+                        label: l.dirasakanDi,
+                        nilai: gempa.dirasakan,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            JudulBagian(l.shakemapJudul),
+            MasukLembut(
+              delay: const Duration(milliseconds: 220),
+              child: _Shakemap(url: gempa.shakemapUrl),
+            ),
+            const SizedBox(height: 16),
+            const SumberBmkg(),
+          ],
+        ),
       ),
     );
   }

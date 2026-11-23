@@ -4,6 +4,7 @@ import '../core/format.dart';
 import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../core/theme.dart';
+import 'app_chrome.dart';
 
 /// Widget status bersama untuk semua layar data: memuat (kerangka),
 /// gagal, kosong, dan banner offline.
@@ -44,18 +45,20 @@ class MemuatData extends StatelessWidget {
       liveRegion: true,
       label: pesan,
       child: ExcludeSemantics(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            blok,
-            const SizedBox(height: 12),
-            Text(
-              pesan,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+        child: MasukLembut(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              blok,
+              const SizedBox(height: 12),
+              Text(
+                pesan,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -141,13 +144,21 @@ class _KerangkaDaftar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var i = 0; i < 4; i++) ...[
-          if (i > 0) const SizedBox(height: 20),
-          const _KerangkaBaris(),
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(AppTheme.radiusKartu),
+      ),
+      child: Column(
+        children: [
+          for (var i = 0; i < 4; i++) ...[
+            if (i > 0) const SizedBox(height: 20),
+            const _KerangkaBaris(),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
@@ -227,8 +238,13 @@ class KosongData extends StatelessWidget {
       textAlign: rataTengah ? TextAlign.center : TextAlign.start,
       style: theme.textTheme.bodyMedium?.copyWith(color: warna),
     );
-    return Padding(
-      padding: const EdgeInsets.all(16),
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(AppTheme.radiusKartu),
+      ),
       child: rataTengah
           ? Column(
               mainAxisSize: MainAxisSize.min,

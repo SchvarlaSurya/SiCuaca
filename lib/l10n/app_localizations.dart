@@ -959,13 +959,13 @@ abstract class AppLocalizations {
   /// No description provided for @riwayatJudul.
   ///
   /// In id, this message translates to:
-  /// **'Riwayat gempa'**
+  /// **'Riwayat Gempa'**
   String get riwayatJudul;
 
   /// No description provided for @riwayatKosong.
   ///
   /// In id, this message translates to:
-  /// **'Belum ada riwayat gempa. Buka tab Gempa saat online; gempa 30 hari terakhir akan tersimpan di sini.'**
+  /// **'Belum ada riwayat gempa. Muat data gempa terlebih dahulu.'**
   String get riwayatKosong;
 
   /// No description provided for @riwayatJumlah.
@@ -977,13 +977,13 @@ abstract class AppLocalizations {
   /// No description provided for @riwayatTidakCocok.
   ///
   /// In id, this message translates to:
-  /// **'Tidak ada gempa yang cocok dengan saringan.'**
+  /// **'Tidak ada data yang cocok dengan filter.'**
   String get riwayatTidakCocok;
 
   /// No description provided for @semuaMagnitudo.
   ///
   /// In id, this message translates to:
-  /// **'Semua'**
+  /// **'Semua magnitudo'**
   String get semuaMagnitudo;
 
   /// No description provided for @dalam100Km.
@@ -1013,7 +1013,7 @@ abstract class AppLocalizations {
   /// No description provided for @siagaJudul.
   ///
   /// In id, this message translates to:
-  /// **'Siaga gempa'**
+  /// **'Siaga Gempa'**
   String get siagaJudul;
 
   /// No description provided for @siagaSebelum.
@@ -1272,6 +1272,221 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Sumber: BMKG · via SiCuaca'**
   String get bagikanSumber;
+
+  /// No description provided for @subjudulBeranda.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca dan gempa untuk hari ini'**
+  String get subjudulBeranda;
+
+  /// No description provided for @subjudulCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Prakiraan lokal dari BMKG'**
+  String get subjudulCuaca;
+
+  /// No description provided for @subjudulGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi seismik terkini'**
+  String get subjudulGempa;
+
+  /// No description provided for @subjudulPeringatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Atur notifikasi yang kamu perlukan'**
+  String get subjudulPeringatan;
+
+  /// No description provided for @subjudulPengaturan.
+  ///
+  /// In id, this message translates to:
+  /// **'Sesuaikan pengalaman SiCuaca'**
+  String get subjudulPengaturan;
+
+  /// No description provided for @bandingkanFavorit.
+  ///
+  /// In id, this message translates to:
+  /// **'Bandingkan favorit'**
+  String get bandingkanFavorit;
+
+  /// No description provided for @bandingkanJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Bandingkan cuaca'**
+  String get bandingkanJudul;
+
+  /// No description provided for @bandingkanKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Membandingkan {n} dari maksimal 3 wilayah favorit.'**
+  String bandingkanKeterangan(String n);
+
+  /// No description provided for @kartuCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Kartu Cuaca'**
+  String get kartuCuaca;
+
+  /// No description provided for @bukanResmi.
+  ///
+  /// In id, this message translates to:
+  /// **'SiCuaca bukan aplikasi resmi BMKG.'**
+  String get bukanResmi;
+
+  /// No description provided for @ringkasanCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca di {lokasi}: {kondisi}, {suhu}. {catatan}Sumber: BMKG. SiCuaca bukan aplikasi resmi BMKG.'**
+  String ringkasanCuaca(
+    String lokasi,
+    String kondisi,
+    String suhu,
+    String catatan,
+  );
+
+  /// No description provided for @bagikanKartuCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Bagikan kartu cuaca'**
+  String get bagikanKartuCuaca;
+
+  /// No description provided for @salinRingkasanTeks.
+  ///
+  /// In id, this message translates to:
+  /// **'Salin ringkasan teks'**
+  String get salinRingkasanTeks;
+
+  /// No description provided for @ringkasanCuacaDisalin.
+  ///
+  /// In id, this message translates to:
+  /// **'Ringkasan cuaca disalin'**
+  String get ringkasanCuacaDisalin;
+
+  /// No description provided for @gempaSiagaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Tetap siaga, tetap tenang'**
+  String get gempaSiagaJudul;
+
+  /// No description provided for @gempaSiagaKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pantau informasi resmi dan siapkan langkah aman.'**
+  String get gempaSiagaKeterangan;
+
+  /// No description provided for @pengaturanIntro.
+  ///
+  /// In id, this message translates to:
+  /// **'Tampilan, bahasa, dan notifikasi tersimpan aman di perangkat ini.'**
+  String get pengaturanIntro;
+
+  /// No description provided for @peringatanIntro.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih ambang magnitudo agar pemberitahuan yang diterima tetap relevan untukmu.'**
+  String get peringatanIntro;
+
+  /// No description provided for @jejakAktivitas.
+  ///
+  /// In id, this message translates to:
+  /// **'Jejak aktivitas'**
+  String get jejakAktivitas;
+
+  /// No description provided for @cariWilayahGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari wilayah gempa'**
+  String get cariWilayahGempa;
+
+  /// No description provided for @hapusPencarian.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus pencarian'**
+  String get hapusPencarian;
+
+  /// No description provided for @rentangGrafik.
+  ///
+  /// In id, this message translates to:
+  /// **'Rentang grafik'**
+  String get rentangGrafik;
+
+  /// No description provided for @grafikPerHari.
+  ///
+  /// In id, this message translates to:
+  /// **'Grafik per hari'**
+  String get grafikPerHari;
+
+  /// No description provided for @grafikPerMinggu.
+  ///
+  /// In id, this message translates to:
+  /// **'Grafik per minggu'**
+  String get grafikPerMinggu;
+
+  /// No description provided for @saringMagnitudo.
+  ///
+  /// In id, this message translates to:
+  /// **'Filter magnitudo'**
+  String get saringMagnitudo;
+
+  /// No description provided for @minimalMagnitudo.
+  ///
+  /// In id, this message translates to:
+  /// **'Minimal M{nilai}'**
+  String minimalMagnitudo(String nilai);
+
+  /// No description provided for @gempaDalam100Km.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa dalam 100 km'**
+  String get gempaDalam100Km;
+
+  /// No description provided for @gempaPerHari.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa per hari'**
+  String get gempaPerHari;
+
+  /// No description provided for @gempaPerMinggu.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa per minggu'**
+  String get gempaPerMinggu;
+
+  /// No description provided for @grafikCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Berdasarkan riwayat yang tersimpan di perangkat. Ini bukan jumlah seluruh kejadian BMKG.'**
+  String get grafikCatatan;
+
+  /// No description provided for @mingguKe.
+  ///
+  /// In id, this message translates to:
+  /// **'Minggu {n}'**
+  String mingguKe(String n);
+
+  /// No description provided for @jumlahKejadian.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} kejadian'**
+  String jumlahKejadian(int n);
+
+  /// No description provided for @totalGrafik.
+  ///
+  /// In id, this message translates to:
+  /// **'Total pada grafik: {n} kejadian'**
+  String totalGrafik(int n);
+
+  /// No description provided for @siagaHeroJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesiapsiagaan dimulai sebelum terjadi gempa.'**
+  String get siagaHeroJudul;
+
+  /// No description provided for @siagaHeroKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelajari langkah aman dan lengkapi tas siaga secara bertahap.'**
+  String get siagaHeroKeterangan;
 }
 
 class _AppLocalizationsDelegate
