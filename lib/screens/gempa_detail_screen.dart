@@ -43,20 +43,20 @@ class GempaDetailScreen extends StatelessWidget {
         title: Text(l.gempaDetailJudul),
         actions: [
           IconButton(
-            tooltip: 'Salin ringkasan',
-            icon: const Icon(Icons.share_outlined),
+            tooltip: l.salinRingkasan,
+            icon: const Icon(IkonApp.salin),
             onPressed: () async {
-              final teks =
-                  'Gempa M${gempa.magnitudo} terjadi ${gempa.wilayah} '
-                  'pada ${gempa.tanggal} ${gempa.jam}. Kedalaman ${gempa.kedalaman}. '
-                  'Sumber: BMKG.';
+              final teks = l.ringkasanGempa(
+                gempa.magnitudo,
+                gempa.wilayah,
+                Format.waktuLengkap(l, gempa.waktuUtc),
+                gempa.kedalaman,
+              );
               await Clipboard.setData(ClipboardData(text: teks));
               if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Ringkasan disalin ke clipboard'),
-                  ),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(l.ringkasanDisalin)));
               }
             },
           ),

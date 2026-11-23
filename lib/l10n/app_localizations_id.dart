@@ -490,4 +490,124 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get semuaWilayah => 'Indonesia';
+
+  @override
+  String get riwayatJudul => 'Riwayat gempa';
+
+  @override
+  String get riwayatKosong =>
+      'Belum ada riwayat gempa. Buka tab Gempa saat online; gempa 30 hari terakhir akan tersimpan di sini.';
+
+  @override
+  String riwayatJumlah(int n) {
+    return '$n kejadian ditampilkan';
+  }
+
+  @override
+  String get riwayatTidakCocok => 'Tidak ada gempa yang cocok dengan saringan.';
+
+  @override
+  String get semuaMagnitudo => 'Semua';
+
+  @override
+  String get dalam100Km => 'Dalam 100 km';
+
+  @override
+  String get statTerbesar => 'Terbesar';
+
+  @override
+  String get statTerdekat => 'Terdekat';
+
+  @override
+  String get statTotal => 'Total';
+
+  @override
+  String get siagaJudul => 'Siaga gempa';
+
+  @override
+  String get siagaSebelum => 'Sebelum gempa';
+
+  @override
+  String get siagaSebelum1 => 'Kenali jalur evakuasi dan titik kumpul.';
+
+  @override
+  String get siagaSebelum2 => 'Amankan benda berat agar tidak jatuh.';
+
+  @override
+  String get siagaSebelum3 => 'Siapkan tas siaga dan simpan nomor darurat.';
+
+  @override
+  String get siagaSaat => 'Saat gempa';
+
+  @override
+  String get siagaSaat1 => 'Merunduk, lindungi kepala, dan bertahan.';
+
+  @override
+  String get siagaSaat2 => 'Jauhi kaca, lemari, dan benda yang mudah jatuh.';
+
+  @override
+  String get siagaSaat3 => 'Jangan menggunakan lift.';
+
+  @override
+  String get siagaSetelah => 'Setelah gempa';
+
+  @override
+  String get siagaSetelah1 =>
+      'Keluar dengan tertib setelah guncangan berhenti.';
+
+  @override
+  String get siagaSetelah2 => 'Periksa kondisi diri dan orang sekitar.';
+
+  @override
+  String get siagaSetelah3 =>
+      'Jika berada di pantai dan guncangan kuat, segera menuju tempat tinggi.';
+
+  @override
+  String tasSiagaJudul(String selesai, String total) {
+    return 'Checklist tas siaga ($selesai/$total)';
+  }
+
+  @override
+  String get tas1 => 'Air minum';
+
+  @override
+  String get tas2 => 'Makanan tahan lama';
+
+  @override
+  String get tas3 => 'Senter dan baterai';
+
+  @override
+  String get tas4 => 'Kotak P3K dan obat pribadi';
+
+  @override
+  String get tas5 => 'Dokumen penting';
+
+  @override
+  String get tas6 => 'Peluit';
+
+  @override
+  String get tas7 => 'Masker';
+
+  @override
+  String get tas8 => 'Power bank';
+
+  @override
+  String get siagaCatatan =>
+      'Panduan ini bersifat edukasi. Ikuti arahan resmi pemerintah dan BMKG saat keadaan darurat.';
+
+  @override
+  String get salinRingkasan => 'Salin ringkasan';
+
+  @override
+  String get ringkasanDisalin => 'Ringkasan disalin ke clipboard.';
+
+  @override
+  String ringkasanGempa(
+    String magnitudo,
+    String wilayah,
+    String waktu,
+    String kedalaman,
+  ) {
+    return 'Gempa M $magnitudo di $wilayah, $waktu. Kedalaman $kedalaman. Sumber: BMKG.';
+  }
 }

@@ -53,6 +53,10 @@ abstract final class IkonApp {
   static const IconData dirasakan = Icons.groups_rounded;
   static const IconData jarak = Icons.near_me_rounded;
   static const IconData gambarTidakAda = Icons.image_not_supported_rounded;
+  static const IconData riwayat = Icons.history_rounded;
+  static const IconData siaga = Icons.health_and_safety_rounded;
+  static const IconData panduan = Icons.check_circle_rounded;
+  static const IconData salin = Icons.content_copy_rounded;
 
   // Peringatan dan Tentang.
   static const IconData notifAktif = Icons.notifications_active_rounded;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
@@ -25,8 +26,8 @@ class GempaScreen extends StatelessWidget {
           title: Text(context.l10n.navGempa),
           actions: [
             IconButton(
-              tooltip: 'Siaga gempa',
-              icon: const Icon(Icons.health_and_safety_outlined),
+              tooltip: context.l10n.siagaJudul,
+              icon: const Icon(IkonApp.siaga),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const SiagaGempaScreen(),
@@ -34,8 +35,8 @@ class GempaScreen extends StatelessWidget {
               ),
             ),
             IconButton(
-              tooltip: 'Riwayat gempa',
-              icon: const Icon(Icons.history),
+              tooltip: context.l10n.riwayatJudul,
+              icon: const Icon(IkonApp.riwayat),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const RiwayatGempaScreen(),

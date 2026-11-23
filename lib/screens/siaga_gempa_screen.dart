@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../core/ikon.dart';
+import '../core/l10n.dart';
+import '../widgets/status_data.dart';
+
+/// Panduan kesiapsiagaan gempa dan checklist tas siaga (tersimpan di
+/// perangkat).
 class SiagaGempaScreen extends StatefulWidget {
   const SiagaGempaScreen({super.key});
+
   @override
   State<SiagaGempaScreen> createState() => _SiagaGempaScreenState();
 }
 
 class _SiagaGempaScreenState extends State<SiagaGempaScreen> {
   static const _key = 'checklist_tas_siaga';
-  final _items = const [
-    'Air minum',
-    'Makanan tahan lama',
-    'Senter dan baterai',
-    'Kotak P3K dan obat pribadi',
-    'Dokumen penting',
-    'Peluit',
-    'Masker',
-    'Power bank',
-  ];
+
+  /// Jumlah butir tas siaga. Indeks butir disimpan, jadi urutan teks di
+  /// [_tas] tidak boleh diubah.
+  static const _jumlahTas = 8;
+
   Set<int> _selesai = {};
 
   @override
@@ -29,10 +31,8 @@ class _SiagaGempaScreenState extends State<SiagaGempaScreen> {
 
   Future<void> _muat() async {
     final p = await SharedPreferences.getInstance();
-    if (mounted)
-      setState(
-        () => _selesai = (p.getStringList(_key) ?? []).map(int.parse).toSet(),
-      );
+    final tersimpan = (p.getStringList(_key) ?? []).map(int.parse).toSet();
+    if (mounted) setState(() => _selesai = tersimpan);
   }
 
   Future<void> _toggle(int i) async {
@@ -43,74 +43,103 @@ class _SiagaGempaScreenState extends State<SiagaGempaScreen> {
     await p.setStringList(_key, next.map((e) => '$e').toList());
   }
 
+  static List<String> _tas(AppLocalizations l) => [
+    l.tas1,
+    l.tas2,
+    l.tas3,
+    l.tas4,
+    l.tas5,
+    l.tas6,
+    l.tas7,
+    l.tas8,
+  ];
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Siaga Gempa')),
-    body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _Panduan(
-          title: 'Sebelum gempa',
-          items: const [
-            'Kenali jalur evakuasi dan titik kumpul.',
-            'Amankan benda berat agar tidak jatuh.',
-            'Siapkan tas siaga dan simpan nomor darurat.',
-          ],
-        ),
-        _Panduan(
-          title: 'Saat gempa',
-          items: const [
-            'Merunduk, lindungi kepala, dan bertahan.',
-            'Jauhi kaca, lemari, dan benda yang mudah jatuh.',
-            'Jangan menggunakan lift.',
-          ],
-        ),
-        _Panduan(
-          title: 'Setelah gempa',
-          items: const [
-            'Keluar dengan tertib setelah guncangan berhenti.',
-            'Periksa kondisi diri dan orang sekitar.',
-            'Jika berada di pantai dan guncangan kuat, segera menuju tempat tinggi.',
-          ],
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'Checklist tas siaga (${_selesai.length}/${_items.length})',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 4),
-        for (var i = 0; i < _items.length; i++)
-          CheckboxListTile(
-            value: _selesai.contains(i),
-            onChanged: (_) => _toggle(i),
-            title: Text(_items[i]),
-            contentPadding: EdgeInsets.zero,
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final theme = Theme.of(context);
+    final tas = _tas(l);
+    assert(tas.length == _jumlahTas);
+
+    return Scaffold(
+      appBar: AppBar(title: Text(l.siagaJudul)),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+        children: [
+          _Panduan(
+            judul: l.siagaSebelum,
+            butir: [l.siagaSebelum1, l.siagaSebelum2, l.siagaSebelum3],
+            terbuka: true,
           ),
-        const SizedBox(height: 8),
-        Text(
-          'Panduan ini bersifat edukasi. Ikuti arahan resmi pemerintah dan BMKG saat keadaan darurat.',
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
-    ),
-  );
+          const SizedBox(height: 8),
+          _Panduan(
+            judul: l.siagaSaat,
+            butir: [l.siagaSaat1, l.siagaSaat2, l.siagaSaat3],
+          ),
+          const SizedBox(height: 8),
+          _Panduan(
+            judul: l.siagaSetelah,
+            butir: [l.siagaSetelah1, l.siagaSetelah2, l.siagaSetelah3],
+          ),
+          const SizedBox(height: 8),
+          JudulBagian(l.tasSiagaJudul('${_selesai.length}', '$_jumlahTas')),
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                for (var i = 0; i < tas.length; i++) ...[
+                  if (i > 0) const Divider(indent: 16, endIndent: 16),
+                  CheckboxListTile(
+                    value: _selesai.contains(i),
+                    onChanged: (_) => _toggle(i),
+                    title: Text(tas[i]),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l.siagaCatatan,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _Panduan extends StatelessWidget {
-  const _Panduan({required this.title, required this.items});
-  final String title;
-  final List<String> items;
+  const _Panduan({
+    required this.judul,
+    required this.butir,
+    this.terbuka = false,
+  });
+
+  final String judul;
+  final List<String> butir;
+  final bool terbuka;
+
   @override
-  Widget build(BuildContext context) => Card(
-    child: ExpansionTile(
-      title: Text(title),
-      children: [
-        for (final item in items)
-          ListTile(
-            leading: const Icon(Icons.check_circle_outline),
-            title: Text(item),
-          ),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        initiallyExpanded: terbuka,
+        shape: const Border(),
+        collapsedShape: const Border(),
+        title: Text(judul, style: theme.textTheme.titleMedium),
+        children: [
+          for (final teks in butir)
+            ListTile(
+              leading: Icon(IkonApp.panduan, color: theme.colorScheme.primary),
+              title: Text(teks),
+            ),
+        ],
+      ),
+    );
+  }
 }

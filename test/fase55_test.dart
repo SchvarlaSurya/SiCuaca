@@ -285,4 +285,62 @@ void main() {
       expect(prefs.getString('tema'), 'gelap');
     });
   });
+
+  group('Riwayat dan siaga gempa', () {
+    for (final bahasa in [PilihanBahasa.indonesia, PilihanBahasa.inggris]) {
+      testWidgets('360 dp + huruf 1,3x, dua bahasa (${bahasa.name})', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 3;
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final t = lookupAppLocalizations(bahasa.locale!);
+
+        await tester.pumpWidget(
+          buatApp(
+            gps: _gpsJakarta,
+            pengaturan: PengaturanProvider(
+              PreferencesService(),
+              bahasa: bahasa,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(IkonApp.gempa).last);
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(IkonApp.riwayat));
+        await tester.pumpAndSettle();
+        expect(find.text(t.riwayatJudul), findsOneWidget);
+        expect(find.text(t.statTerbesar), findsOneWidget);
+        await tester.tap(find.text(t.notifM6));
+        await tester.pumpAndSettle();
+        final chip = tester.widget<ChoiceChip>(
+          find.widgetWithText(ChoiceChip, t.notifM6),
+        );
+        expect(chip.selected, isTrue);
+        await tester.tap(find.byType(BackButton));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(IkonApp.siaga));
+        await tester.pumpAndSettle();
+        expect(find.text(t.siagaJudul), findsOneWidget);
+        expect(find.text(t.siagaSebelum1), findsOneWidget);
+        await tester.scrollUntilVisible(
+          find.text(t.tas1),
+          200,
+          scrollable: find.byType(Scrollable).last,
+        );
+        await tester.tap(find.text(t.tas1));
+        await tester.pumpAndSettle();
+        final kotak = tester.widget<CheckboxListTile>(
+          find.widgetWithText(CheckboxListTile, t.tas1),
+        );
+        expect(kotak.value, isTrue);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  });
 }

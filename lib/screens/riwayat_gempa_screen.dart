@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core/format.dart';
+import '../core/ikon.dart';
+import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import '../widgets/gempa_item.dart';
+import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
 
 /// Riwayat gempa yang pernah dimuat, termasuk saat aplikasi sedang offline.
@@ -15,17 +19,9 @@ class RiwayatGempaScreen extends StatelessWidget {
     final provider = context.watch<GempaProvider>();
     final daftar = provider.riwayat;
     return Scaffold(
-      appBar: AppBar(title: const Text('Riwayat Gempa')),
+      appBar: AppBar(title: Text(context.l10n.riwayatJudul)),
       body: daftar.isEmpty
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'Belum ada riwayat gempa. Muat data gempa terlebih dahulu.',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            )
+          ? Center(child: KosongData(pesan: context.l10n.riwayatKosong))
           : _IsiRiwayat(daftar: daftar),
     );
   }
@@ -33,6 +29,7 @@ class RiwayatGempaScreen extends StatelessWidget {
 
 class _IsiRiwayat extends StatefulWidget {
   const _IsiRiwayat({required this.daftar});
+
   final List<Gempa> daftar;
 
   @override
@@ -40,19 +37,24 @@ class _IsiRiwayat extends StatefulWidget {
 }
 
 class _IsiRiwayatState extends State<_IsiRiwayat> {
+  /// Batas bawah magnitudo; null = semua.
   double? _minimum;
   bool _hanyaDekat = false;
 
+  static const double _radiusDekatKm = 100;
+
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<GempaProvider>();
+    final l = context.l10n;
+    final provider = context.watch<GempaProvider>();
     final hasil = widget.daftar.where((gempa) {
       final mag = gempa.magnitudoAngka;
-      if (_minimum != null && (mag == null || mag < _minimum!)) return false;
-      if (_hanyaDekat &&
-          provider.jarakKm(gempa) != null &&
-          provider.jarakKm(gempa)! > 100)
+      final minimum = _minimum;
+      if (minimum != null && (mag == null || mag < minimum)) return false;
+      final jarak = provider.jarakKm(gempa);
+      if (_hanyaDekat && jarak != null && jarak > _radiusDekatKm) {
         return false;
+      }
       return true;
     }).toList();
     final terbesar = hasil
@@ -63,97 +65,83 @@ class _IsiRiwayatState extends State<_IsiRiwayat> {
         .map(provider.jarakKm)
         .whereType<double>()
         .fold<double?>(null, (a, b) => a == null || b < a ? b : a);
+
+    final pilihanMagnitudo = <double?, String>{
+      null: l.semuaMagnitudo,
+      4: l.notifM4,
+      5: l.notifM5,
+      6: l.notifM6,
+    };
+
     return ListView(
-      padding: const EdgeInsets.only(top: 12, bottom: 24),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-          child: Row(
-            children: [
-              Expanded(child: Text('${hasil.length} kejadian ditampilkan')),
-              PopupMenuButton<double?>(
-                tooltip: 'Filter magnitudo',
-                icon: const Icon(Icons.filter_list),
-                onSelected: (value) => setState(() => _minimum = value),
-                itemBuilder: (_) => const [
-                  PopupMenuItem(value: null, child: Text('Semua magnitudo')),
-                  PopupMenuItem(value: 4, child: Text('Minimal M4.0')),
-                  PopupMenuItem(value: 5, child: Text('Minimal M5.0')),
-                  PopupMenuItem(value: 6, child: Text('Minimal M6.0')),
-                ],
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final e in pilihanMagnitudo.entries)
+              ChoiceChip(
+                label: Text(e.value),
+                selected: _minimum == e.key,
+                onSelected: (_) => setState(() => _minimum = e.key),
               ),
-              IconButton(
-                tooltip: 'Gempa dalam 100 km',
-                icon: Icon(
-                  _hanyaDekat ? Icons.near_me : Icons.near_me_outlined,
-                ),
-                onPressed: () => setState(() => _hanyaDekat = !_hanyaDekat),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              _Statistik(
-                label: 'Terbesar',
-                value: terbesar == null
-                    ? '-'
-                    : 'M${terbesar.toStringAsFixed(1)}',
-              ),
-              const SizedBox(width: 8),
-              _Statistik(
-                label: 'Terdekat',
-                value: terdekat == null
-                    ? '-'
-                    : '${terdekat.toStringAsFixed(0)} km',
-              ),
-              const SizedBox(width: 8),
-              _Statistik(label: 'Total', value: '${hasil.length}'),
-            ],
-          ),
+            // Tanpa posisi GPS jarak tidak bisa dihitung, jadi saringan
+            // jarak dinonaktifkan.
+            FilterChip(
+              avatar: const Icon(IkonApp.jarak, size: 18),
+              label: Text(l.dalam100Km),
+              selected: _hanyaDekat,
+              onSelected: provider.adaPosisi
+                  ? (v) => setState(() => _hanyaDekat = v)
+                  : null,
+            ),
+          ],
         ),
         const SizedBox(height: 12),
-        for (var i = 0; i < hasil.length; i++) ...[
-          if (i > 0) const Divider(indent: 92, endIndent: 16),
-          GempaItem(gempa: hasil[i]),
-        ],
+        KisiTile(
+          children: [
+            TileInfo(
+              ikon: IkonApp.gempa,
+              label: l.statTerbesar,
+              nilai: terbesar == null
+                  ? Format.tandaKosong
+                  : 'M ${Format.desimal(l, terbesar)}',
+            ),
+            TileInfo(
+              ikon: IkonApp.jarak,
+              label: l.statTerdekat,
+              nilai: terdekat == null
+                  ? Format.tandaKosong
+                  : '${Format.jarak(l, terdekat)} km',
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l.riwayatJumlah(hasil.length),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
         if (hasil.isEmpty)
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Text(
-              'Tidak ada data yang cocok dengan filter.',
-              textAlign: TextAlign.center,
+          KosongData(pesan: l.riwayatTidakCocok)
+        else
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                for (var i = 0; i < hasil.length; i++) ...[
+                  if (i > 0) const Divider(indent: 92, endIndent: 16),
+                  GempaItem(gempa: hasil[i]),
+                ],
+              ],
             ),
           ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
-          child: SumberBmkg(),
-        ),
+        const SizedBox(height: 12),
+        const SumberBmkg(),
       ],
-    );
-  }
-}
-
-class _Statistik extends StatelessWidget {
-  const _Statistik({required this.label, required this.value});
-  final String label;
-  final String value;
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-          child: Column(
-            children: [
-              Text(value, style: Theme.of(context).textTheme.titleMedium),
-              Text(label, style: Theme.of(context).textTheme.labelSmall),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

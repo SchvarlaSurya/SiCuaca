@@ -508,4 +508,131 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get semuaWilayah => 'Indonesia';
+
+  @override
+  String get riwayatJudul => 'Earthquake history';
+
+  @override
+  String get riwayatKosong =>
+      'No earthquake history yet. Open the Earthquakes tab while online; earthquakes from the last 30 days will be kept here.';
+
+  @override
+  String riwayatJumlah(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n events shown',
+      one: '1 event shown',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get riwayatTidakCocok => 'No earthquakes match the filter.';
+
+  @override
+  String get semuaMagnitudo => 'All';
+
+  @override
+  String get dalam100Km => 'Within 100 km';
+
+  @override
+  String get statTerbesar => 'Largest';
+
+  @override
+  String get statTerdekat => 'Nearest';
+
+  @override
+  String get statTotal => 'Total';
+
+  @override
+  String get siagaJudul => 'Earthquake preparedness';
+
+  @override
+  String get siagaSebelum => 'Before an earthquake';
+
+  @override
+  String get siagaSebelum1 => 'Know the evacuation routes and assembly points.';
+
+  @override
+  String get siagaSebelum2 => 'Secure heavy objects so they cannot fall.';
+
+  @override
+  String get siagaSebelum3 =>
+      'Prepare an emergency bag and save emergency numbers.';
+
+  @override
+  String get siagaSaat => 'During an earthquake';
+
+  @override
+  String get siagaSaat1 => 'Drop, cover your head, and hold on.';
+
+  @override
+  String get siagaSaat2 =>
+      'Stay away from glass, cabinets, and objects that can fall.';
+
+  @override
+  String get siagaSaat3 => 'Do not use the lift.';
+
+  @override
+  String get siagaSetelah => 'After an earthquake';
+
+  @override
+  String get siagaSetelah1 => 'Leave calmly once the shaking stops.';
+
+  @override
+  String get siagaSetelah2 => 'Check yourself and the people around you.';
+
+  @override
+  String get siagaSetelah3 =>
+      'If you are near the coast and the shaking was strong, move to high ground at once.';
+
+  @override
+  String tasSiagaJudul(String selesai, String total) {
+    return 'Emergency bag checklist ($selesai/$total)';
+  }
+
+  @override
+  String get tas1 => 'Drinking water';
+
+  @override
+  String get tas2 => 'Long-lasting food';
+
+  @override
+  String get tas3 => 'Torch and batteries';
+
+  @override
+  String get tas4 => 'First aid kit and personal medicine';
+
+  @override
+  String get tas5 => 'Important documents';
+
+  @override
+  String get tas6 => 'Whistle';
+
+  @override
+  String get tas7 => 'Face mask';
+
+  @override
+  String get tas8 => 'Power bank';
+
+  @override
+  String get siagaCatatan =>
+      'This guide is for education. Follow official instructions from the government and BMKG during an emergency.';
+
+  @override
+  String get salinRingkasan => 'Copy summary';
+
+  @override
+  String get ringkasanDisalin => 'Summary copied to the clipboard.';
+
+  @override
+  String ringkasanGempa(
+    String magnitudo,
+    String wilayah,
+    String waktu,
+    String kedalaman,
+  ) {
+    return 'M $magnitudo earthquake at $wilayah, $waktu. Depth $kedalaman. Source: BMKG.';
+  }
 }

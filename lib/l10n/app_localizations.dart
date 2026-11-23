@@ -955,6 +955,221 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Indonesia'**
   String get semuaWilayah;
+
+  /// No description provided for @riwayatJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat gempa'**
+  String get riwayatJudul;
+
+  /// No description provided for @riwayatKosong.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada riwayat gempa. Buka tab Gempa saat online; gempa 30 hari terakhir akan tersimpan di sini.'**
+  String get riwayatKosong;
+
+  /// No description provided for @riwayatJumlah.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} kejadian ditampilkan'**
+  String riwayatJumlah(int n);
+
+  /// No description provided for @riwayatTidakCocok.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada gempa yang cocok dengan saringan.'**
+  String get riwayatTidakCocok;
+
+  /// No description provided for @semuaMagnitudo.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua'**
+  String get semuaMagnitudo;
+
+  /// No description provided for @dalam100Km.
+  ///
+  /// In id, this message translates to:
+  /// **'Dalam 100 km'**
+  String get dalam100Km;
+
+  /// No description provided for @statTerbesar.
+  ///
+  /// In id, this message translates to:
+  /// **'Terbesar'**
+  String get statTerbesar;
+
+  /// No description provided for @statTerdekat.
+  ///
+  /// In id, this message translates to:
+  /// **'Terdekat'**
+  String get statTerdekat;
+
+  /// No description provided for @statTotal.
+  ///
+  /// In id, this message translates to:
+  /// **'Total'**
+  String get statTotal;
+
+  /// No description provided for @siagaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Siaga gempa'**
+  String get siagaJudul;
+
+  /// No description provided for @siagaSebelum.
+  ///
+  /// In id, this message translates to:
+  /// **'Sebelum gempa'**
+  String get siagaSebelum;
+
+  /// No description provided for @siagaSebelum1.
+  ///
+  /// In id, this message translates to:
+  /// **'Kenali jalur evakuasi dan titik kumpul.'**
+  String get siagaSebelum1;
+
+  /// No description provided for @siagaSebelum2.
+  ///
+  /// In id, this message translates to:
+  /// **'Amankan benda berat agar tidak jatuh.'**
+  String get siagaSebelum2;
+
+  /// No description provided for @siagaSebelum3.
+  ///
+  /// In id, this message translates to:
+  /// **'Siapkan tas siaga dan simpan nomor darurat.'**
+  String get siagaSebelum3;
+
+  /// No description provided for @siagaSaat.
+  ///
+  /// In id, this message translates to:
+  /// **'Saat gempa'**
+  String get siagaSaat;
+
+  /// No description provided for @siagaSaat1.
+  ///
+  /// In id, this message translates to:
+  /// **'Merunduk, lindungi kepala, dan bertahan.'**
+  String get siagaSaat1;
+
+  /// No description provided for @siagaSaat2.
+  ///
+  /// In id, this message translates to:
+  /// **'Jauhi kaca, lemari, dan benda yang mudah jatuh.'**
+  String get siagaSaat2;
+
+  /// No description provided for @siagaSaat3.
+  ///
+  /// In id, this message translates to:
+  /// **'Jangan menggunakan lift.'**
+  String get siagaSaat3;
+
+  /// No description provided for @siagaSetelah.
+  ///
+  /// In id, this message translates to:
+  /// **'Setelah gempa'**
+  String get siagaSetelah;
+
+  /// No description provided for @siagaSetelah1.
+  ///
+  /// In id, this message translates to:
+  /// **'Keluar dengan tertib setelah guncangan berhenti.'**
+  String get siagaSetelah1;
+
+  /// No description provided for @siagaSetelah2.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa kondisi diri dan orang sekitar.'**
+  String get siagaSetelah2;
+
+  /// No description provided for @siagaSetelah3.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika berada di pantai dan guncangan kuat, segera menuju tempat tinggi.'**
+  String get siagaSetelah3;
+
+  /// No description provided for @tasSiagaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Checklist tas siaga ({selesai}/{total})'**
+  String tasSiagaJudul(String selesai, String total);
+
+  /// No description provided for @tas1.
+  ///
+  /// In id, this message translates to:
+  /// **'Air minum'**
+  String get tas1;
+
+  /// No description provided for @tas2.
+  ///
+  /// In id, this message translates to:
+  /// **'Makanan tahan lama'**
+  String get tas2;
+
+  /// No description provided for @tas3.
+  ///
+  /// In id, this message translates to:
+  /// **'Senter dan baterai'**
+  String get tas3;
+
+  /// No description provided for @tas4.
+  ///
+  /// In id, this message translates to:
+  /// **'Kotak P3K dan obat pribadi'**
+  String get tas4;
+
+  /// No description provided for @tas5.
+  ///
+  /// In id, this message translates to:
+  /// **'Dokumen penting'**
+  String get tas5;
+
+  /// No description provided for @tas6.
+  ///
+  /// In id, this message translates to:
+  /// **'Peluit'**
+  String get tas6;
+
+  /// No description provided for @tas7.
+  ///
+  /// In id, this message translates to:
+  /// **'Masker'**
+  String get tas7;
+
+  /// No description provided for @tas8.
+  ///
+  /// In id, this message translates to:
+  /// **'Power bank'**
+  String get tas8;
+
+  /// No description provided for @siagaCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Panduan ini bersifat edukasi. Ikuti arahan resmi pemerintah dan BMKG saat keadaan darurat.'**
+  String get siagaCatatan;
+
+  /// No description provided for @salinRingkasan.
+  ///
+  /// In id, this message translates to:
+  /// **'Salin ringkasan'**
+  String get salinRingkasan;
+
+  /// No description provided for @ringkasanDisalin.
+  ///
+  /// In id, this message translates to:
+  /// **'Ringkasan disalin ke clipboard.'**
+  String get ringkasanDisalin;
+
+  /// No description provided for @ringkasanGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa M {magnitudo} di {wilayah}, {waktu}. Kedalaman {kedalaman}. Sumber: BMKG.'**
+  String ringkasanGempa(
+    String magnitudo,
+    String wilayah,
+    String waktu,
+    String kedalaman,
+  );
 }
 
 class _AppLocalizationsDelegate
