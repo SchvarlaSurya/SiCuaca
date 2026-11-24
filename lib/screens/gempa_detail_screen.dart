@@ -15,6 +15,7 @@ import '../widgets/badge_magnitudo.dart';
 import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
 import '../widgets/app_chrome.dart';
+import '../widgets/tombol_kaca.dart';
 
 /// Halaman detail gempa. Dibuka lewat [Navigasi.bukaDetailGempa] (dari
 /// daftar, kartu Beranda, maupun ketukan notifikasi). Semua isi dibangun
@@ -44,14 +45,14 @@ class GempaDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.gempaDetailJudul),
         actions: [
-          IconButton(
+          TombolKaca(
             icon: const IkonDuo(IkonApp.bagikan),
             tooltip: l.bagikanGempa,
             onPressed: () => ShareService.bagikanTeks(
               susunRingkasanGempa(l, gempa, jarakKm: jarak),
             ),
           ),
-          IconButton(
+          TombolKaca(
             tooltip: l.salinRingkasan,
             icon: const IkonDuo(IkonApp.salin),
             onPressed: () async {

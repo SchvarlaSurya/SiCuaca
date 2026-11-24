@@ -9,6 +9,7 @@ import '../widgets/app_chrome.dart';
 import '../widgets/badge_magnitudo.dart';
 import '../widgets/status_data.dart';
 import '../widgets/pencet_lembut.dart';
+import '../widgets/tombol_kaca.dart';
 
 /// Riwayat notifikasi gempa yang pernah diterima perangkat (tersimpan lokal,
 /// maksimal 50). Diketuk membuka detail gempa; tarik untuk menyegarkan.
@@ -151,7 +152,7 @@ class _RiwayatNotifikasiScreenState extends State<RiwayatNotifikasiScreen> {
         title: Text(l.riwayatNotifJudul),
         actions: [
           if (daftar != null && daftar.isNotEmpty)
-            IconButton(
+            TombolKaca(
               tooltip: l.hapusRiwayat,
               onPressed: _hapusSemua,
               icon: const IkonDuo(IkonApp.hapusSemua),

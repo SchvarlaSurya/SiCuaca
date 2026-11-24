@@ -14,6 +14,7 @@ import '../widgets/gempa_terbaru_card.dart';
 import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
 import '../widgets/app_chrome.dart';
+import '../widgets/tombol_kaca.dart';
 
 /// Tab Gempa: Terbaru, M 5.0+, Dirasakan.
 class GempaScreen extends StatelessWidget {
@@ -36,12 +37,12 @@ class GempaScreen extends StatelessWidget {
             ],
           ),
           actions: [
-            IconButton(
+            TombolKaca(
               tooltip: context.l10n.navPeringatan,
               icon: const IkonDuo(IkonApp.peringatan),
               onPressed: Navigasi.bukaPeringatan,
             ),
-            IconButton(
+            TombolKaca(
               tooltip: context.l10n.siagaJudul,
               icon: const IkonDuo(IkonApp.siaga),
               onPressed: () => Navigator.of(context).push(
@@ -50,7 +51,7 @@ class GempaScreen extends StatelessWidget {
                 ),
               ),
             ),
-            IconButton(
+            TombolKaca(
               tooltip: context.l10n.riwayatJudul,
               icon: const IkonDuo(IkonApp.riwayat),
               onPressed: () => Navigator.of(context).push(

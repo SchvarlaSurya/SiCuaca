@@ -14,6 +14,7 @@ import '../widgets/filter_gempa_sheet.dart';
 import '../widgets/gempa_item.dart';
 import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
+import '../widgets/tombol_kaca.dart';
 
 /// Riwayat gempa yang pernah dimuat atau diterima di perangkat ini.
 ///
@@ -65,20 +66,43 @@ class _RiwayatGempaScreenState extends State<RiwayatGempaScreen> {
       appBar: AppBar(
         title: Text(l.riwayatJudul),
         actions: [
-          PopupMenuButton<String>(
-            tooltip: l.rentangGrafik,
-            icon: const IkonDuo(IkonApp.grafik),
-            onSelected: (v) => _bukaGrafik(context, p, v),
-            itemBuilder: (_) => [
-              PopupMenuItem(value: 'hari', child: Text(l.grafikPerHari)),
-              PopupMenuItem(value: 'minggu', child: Text(l.grafikPerMinggu)),
-            ],
+          Builder(
+            builder: (tombol) => TombolKaca(
+              tooltip: l.rentangGrafik,
+              icon: const IkonDuo(IkonApp.grafik),
+              onPressed: () async {
+                // Menu muncul tepat di bawah tombol kaca.
+                final kotak = tombol.findRenderObject()! as RenderBox;
+                final layar =
+                    Navigator.of(tombol).overlay!.context.findRenderObject()!
+                        as RenderBox;
+                final kiriAtas = kotak.localToGlobal(
+                  Offset(0, kotak.size.height),
+                  ancestor: layar,
+                );
+                final v = await showMenu<String>(
+                  context: tombol,
+                  position: RelativeRect.fromRect(
+                    kiriAtas & kotak.size,
+                    Offset.zero & layar.size,
+                  ),
+                  items: [
+                    PopupMenuItem(value: 'hari', child: Text(l.grafikPerHari)),
+                    PopupMenuItem(
+                      value: 'minggu',
+                      child: Text(l.grafikPerMinggu),
+                    ),
+                  ],
+                );
+                if (v != null && context.mounted) _bukaGrafik(context, p, v);
+              },
+            ),
           ),
           Badge(
             isLabelVisible: n > 0,
             label: Text('$n'),
             offset: const Offset(-6, 6),
-            child: IconButton(
+            child: TombolKaca(
               tooltip: n > 0 ? l.filterAktifJumlah('$n') : l.filterJudul,
               icon: const IkonDuo(IkonApp.saring),
               onPressed: () => _bukaFilter(p),

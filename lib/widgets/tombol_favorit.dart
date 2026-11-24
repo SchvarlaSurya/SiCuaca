@@ -5,6 +5,7 @@ import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../models/lokasi.dart';
 import '../providers/favorit_provider.dart';
+import 'tombol_kaca.dart';
 
 class TombolFavorit extends StatelessWidget {
   const TombolFavorit({super.key, required this.lokasi});
@@ -15,15 +16,11 @@ class TombolFavorit extends StatelessWidget {
   Widget build(BuildContext context) {
     final favorit = context.watch<FavoritProvider>();
     final aktif = favorit.isFavorit(lokasi);
-    return IconButton(
+    return TombolKaca(
       tooltip: aktif ? context.l10n.hapusFavorit : context.l10n.tambahFavorit,
-      isSelected: aktif,
+      aktif: aktif,
       onPressed: () => favorit.toggle(lokasi),
-      icon: const IkonDuo(IkonApp.bukanFavorit),
-      selectedIcon: IkonDuo(
-        IkonApp.favorit,
-        color: Theme.of(context).colorScheme.primary,
-      ),
+      icon: IkonDuo(aktif ? IkonApp.favorit : IkonApp.bukanFavorit),
     );
   }
 }

@@ -133,16 +133,18 @@ class _NavigasiBawah extends StatelessWidget {
       // Pil: kaca gelap pekat dengan tepi menyala tipis (di kedua tema).
       settings: LiquidGlassSettings.ios27Dark.copyWith(
         glassColor: const Color(0xE60B0C10),
-        thickness: 26,
+        thickness: 18,
+        refractiveIndex: 1.12,
       ),
       // Lensa kapsul (radius bawaan = penuh), sedikit membesar saat digeser.
       indicatorExpansion: const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 6,
       ),
+      // Refraksi lensa diturunkan supaya lebih halus, tidak terlalu melengkung.
       indicatorSettings: LiquidGlassSettings.ios27Indicator.copyWith(
-        thickness: 30,
-        refractiveIndex: 1.22,
+        thickness: 22,
+        refractiveIndex: 1.1,
       ),
       tabs: [
         tab(

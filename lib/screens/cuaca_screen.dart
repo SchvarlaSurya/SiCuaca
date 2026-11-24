@@ -23,6 +23,7 @@ import '../widgets/tombol_favorit.dart';
 import '../widgets/app_chrome.dart';
 import 'perbandingan_cuaca_screen.dart';
 import '../widgets/pencet_lembut.dart';
+import '../widgets/tombol_kaca.dart';
 
 /// Prakiraan cuaca: kartu hero (jam terdekat), lalu prakiraan per 3 jam
 /// dengan satu tab per tanggal. Semuanya satu daftar gulir, sehingga tarik
@@ -53,7 +54,7 @@ class CuacaScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
+          TombolKaca(
             tooltip: context.l10n.bandingkanFavorit,
             icon: const IkonDuo(IkonApp.bandingkan),
             onPressed: () => Navigator.of(context).push(
@@ -64,7 +65,7 @@ class CuacaScreen extends StatelessWidget {
           ),
           if (berhasil) TombolFavorit(lokasi: wilayah),
           if (berhasil)
-            IconButton(
+            TombolKaca(
               tooltip: context.l10n.bagikanCuaca,
               icon: const IkonDuo(IkonApp.bagikan),
               onPressed: () => _bukaKartuCuaca(

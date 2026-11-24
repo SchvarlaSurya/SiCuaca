@@ -6,6 +6,7 @@ import '../core/l10n.dart';
 import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
 import '../screens/pencarian_screen.dart';
+import 'tombol_kaca.dart';
 
 /// Tombol AppBar: gunakan lokasi GPS dan cari wilayah.
 class AksiWilayah extends StatelessWidget {
@@ -17,7 +18,7 @@ class AksiWilayah extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _AksiBulat(
+        TombolKaca(
           tooltip: context.l10n.gunakanLokasiSaya,
           onPressed: mencari
               ? null
@@ -29,7 +30,7 @@ class AksiWilayah extends StatelessWidget {
                 )
               : const IkonDuo(IkonApp.lokasiSaya),
         ),
-        _AksiBulat(
+        TombolKaca(
           tooltip: context.l10n.cariWilayah,
           onPressed: () => bukaPencarian(context),
           icon: const IkonDuo(IkonApp.cari),
@@ -37,24 +38,4 @@ class AksiWilayah extends StatelessWidget {
       ],
     );
   }
-}
-
-class _AksiBulat extends StatelessWidget {
-  const _AksiBulat({
-    required this.tooltip,
-    required this.onPressed,
-    required this.icon,
-  });
-  final String tooltip;
-  final VoidCallback? onPressed;
-  final Widget icon;
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(right: 4),
-    child: Material(
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      shape: const CircleBorder(),
-      child: IconButton(tooltip: tooltip, onPressed: onPressed, icon: icon),
-    ),
-  );
 }

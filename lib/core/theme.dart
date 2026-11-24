@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/tombol_kaca.dart';
+import 'ikon.dart';
 
 /// Token tampilan SiCuaca (arah "Dashboard Nusantara", Material 3).
 ///
@@ -142,6 +144,13 @@ class AppTheme {
 
     return dasar.copyWith(
       pageTransitionsTheme: _transisiHalaman,
+      // Tombol kembali/tutup di semua AppBar: lingkaran kaca cair.
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (_) =>
+            const LingkaranKaca(child: Icon(Icons.arrow_back_rounded)),
+        closeButtonIconBuilder: (_) =>
+            const LingkaranKaca(child: IkonDuo(IkonApp.tutup)),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: skema.surface,
         foregroundColor: skema.onSurface,
