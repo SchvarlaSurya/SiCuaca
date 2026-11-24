@@ -1607,6 +1607,144 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Turunkan {nama}'**
   String turunkanBagian(String nama);
+
+  /// No description provided for @riwayatBiasLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Dari data yang tersimpan di perangkat ini'**
+  String get riwayatBiasLabel;
+
+  /// No description provided for @riwayatRentangData.
+  ///
+  /// In id, this message translates to:
+  /// **'Data tersimpan: {mulai} – {akhir}'**
+  String riwayatRentangData(String mulai, String akhir);
+
+  /// No description provided for @riwayatBiasCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'BMKG hanya menyediakan daftar gempa terbaru, jadi riwayat ini hanya berisi gempa yang pernah dimuat atau diterima di perangkat ini. Angkanya bukan statistik lengkap kejadian gempa di Indonesia.'**
+  String get riwayatBiasCatatan;
+
+  /// No description provided for @riwayatDariTotal.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} dari {total} data tersimpan'**
+  String riwayatDariTotal(String n, String total);
+
+  /// No description provided for @statJumlahGempa.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah gempa'**
+  String get statJumlahGempa;
+
+  /// No description provided for @statLokasiTidakAda.
+  ///
+  /// In id, this message translates to:
+  /// **'Lokasi tidak tersedia'**
+  String get statLokasiTidakAda;
+
+  /// No description provided for @statLabelBias.
+  ///
+  /// In id, this message translates to:
+  /// **'Statistik dari data yang tersimpan di perangkat ini'**
+  String get statLabelBias;
+
+  /// No description provided for @riwayatGagalMuat.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat gempa tidak bisa dibaca dari penyimpanan perangkat. Coba lagi.'**
+  String get riwayatGagalMuat;
+
+  /// No description provided for @riwayatKosongCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat terisi otomatis saat data gempa BMKG dimuat atau notifikasi gempa diterima.'**
+  String get riwayatKosongCatatan;
+
+  /// No description provided for @filterJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Filter riwayat'**
+  String get filterJudul;
+
+  /// No description provided for @filterTanggal.
+  ///
+  /// In id, this message translates to:
+  /// **'Rentang tanggal'**
+  String get filterTanggal;
+
+  /// No description provided for @filterSemuaTanggal.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua tanggal'**
+  String get filterSemuaTanggal;
+
+  /// No description provided for @filterHariTerakhir.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} hari terakhir'**
+  String filterHariTerakhir(String n);
+
+  /// No description provided for @filterPilihTanggal.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih tanggal'**
+  String get filterPilihTanggal;
+
+  /// No description provided for @filterPilihTanggalBantuan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih rentang tanggal kejadian'**
+  String get filterPilihTanggalBantuan;
+
+  /// No description provided for @filterMagnitudo.
+  ///
+  /// In id, this message translates to:
+  /// **'Magnitudo minimum'**
+  String get filterMagnitudo;
+
+  /// No description provided for @filterJarak.
+  ///
+  /// In id, this message translates to:
+  /// **'Jarak maksimum dari Anda'**
+  String get filterJarak;
+
+  /// No description provided for @filterSemuaJarak.
+  ///
+  /// In id, this message translates to:
+  /// **'Semua jarak'**
+  String get filterSemuaJarak;
+
+  /// No description provided for @filterJarakKm.
+  ///
+  /// In id, this message translates to:
+  /// **'{km} km'**
+  String filterJarakKm(String km);
+
+  /// No description provided for @filterJarakNonaktif.
+  ///
+  /// In id, this message translates to:
+  /// **'Filter jarak tidak bisa dipakai karena lokasi Anda belum diketahui. Aktifkan lokasi untuk memakainya.'**
+  String get filterJarakNonaktif;
+
+  /// No description provided for @filterTerapkan.
+  ///
+  /// In id, this message translates to:
+  /// **'Terapkan'**
+  String get filterTerapkan;
+
+  /// No description provided for @filterSetelUlang.
+  ///
+  /// In id, this message translates to:
+  /// **'Setel ulang'**
+  String get filterSetelUlang;
+
+  /// No description provided for @filterAktifJumlah.
+  ///
+  /// In id, this message translates to:
+  /// **'Filter aktif: {n}'**
+  String filterAktifJumlah(String n);
 }
 
 class _AppLocalizationsDelegate

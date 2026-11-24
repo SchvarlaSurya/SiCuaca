@@ -878,4 +878,88 @@ class AppLocalizationsId extends AppLocalizations {
   String turunkanBagian(String nama) {
     return 'Turunkan $nama';
   }
+
+  @override
+  String get riwayatBiasLabel => 'Dari data yang tersimpan di perangkat ini';
+
+  @override
+  String riwayatRentangData(String mulai, String akhir) {
+    return 'Data tersimpan: $mulai – $akhir';
+  }
+
+  @override
+  String get riwayatBiasCatatan =>
+      'BMKG hanya menyediakan daftar gempa terbaru, jadi riwayat ini hanya berisi gempa yang pernah dimuat atau diterima di perangkat ini. Angkanya bukan statistik lengkap kejadian gempa di Indonesia.';
+
+  @override
+  String riwayatDariTotal(String n, String total) {
+    return '$n dari $total data tersimpan';
+  }
+
+  @override
+  String get statJumlahGempa => 'Jumlah gempa';
+
+  @override
+  String get statLokasiTidakAda => 'Lokasi tidak tersedia';
+
+  @override
+  String get statLabelBias =>
+      'Statistik dari data yang tersimpan di perangkat ini';
+
+  @override
+  String get riwayatGagalMuat =>
+      'Riwayat gempa tidak bisa dibaca dari penyimpanan perangkat. Coba lagi.';
+
+  @override
+  String get riwayatKosongCatatan =>
+      'Riwayat terisi otomatis saat data gempa BMKG dimuat atau notifikasi gempa diterima.';
+
+  @override
+  String get filterJudul => 'Filter riwayat';
+
+  @override
+  String get filterTanggal => 'Rentang tanggal';
+
+  @override
+  String get filterSemuaTanggal => 'Semua tanggal';
+
+  @override
+  String filterHariTerakhir(String n) {
+    return '$n hari terakhir';
+  }
+
+  @override
+  String get filterPilihTanggal => 'Pilih tanggal';
+
+  @override
+  String get filterPilihTanggalBantuan => 'Pilih rentang tanggal kejadian';
+
+  @override
+  String get filterMagnitudo => 'Magnitudo minimum';
+
+  @override
+  String get filterJarak => 'Jarak maksimum dari Anda';
+
+  @override
+  String get filterSemuaJarak => 'Semua jarak';
+
+  @override
+  String filterJarakKm(String km) {
+    return '$km km';
+  }
+
+  @override
+  String get filterJarakNonaktif =>
+      'Filter jarak tidak bisa dipakai karena lokasi Anda belum diketahui. Aktifkan lokasi untuk memakainya.';
+
+  @override
+  String get filterTerapkan => 'Terapkan';
+
+  @override
+  String get filterSetelUlang => 'Setel ulang';
+
+  @override
+  String filterAktifJumlah(String n) {
+    return 'Filter aktif: $n';
+  }
 }

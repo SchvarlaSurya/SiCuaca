@@ -914,4 +914,87 @@ class AppLocalizationsEn extends AppLocalizations {
   String turunkanBagian(String nama) {
     return 'Move $nama down';
   }
+
+  @override
+  String get riwayatBiasLabel => 'From data stored on this device';
+
+  @override
+  String riwayatRentangData(String mulai, String akhir) {
+    return 'Stored data: $mulai – $akhir';
+  }
+
+  @override
+  String get riwayatBiasCatatan =>
+      'BMKG only provides a short list of recent earthquakes, so this history only holds earthquakes this device has loaded or received. The numbers are not complete statistics of earthquakes in Indonesia.';
+
+  @override
+  String riwayatDariTotal(String n, String total) {
+    return '$n of $total stored records';
+  }
+
+  @override
+  String get statJumlahGempa => 'Earthquakes';
+
+  @override
+  String get statLokasiTidakAda => 'Location unavailable';
+
+  @override
+  String get statLabelBias => 'Statistics from data stored on this device';
+
+  @override
+  String get riwayatGagalMuat =>
+      'The earthquake history could not be read from device storage. Try again.';
+
+  @override
+  String get riwayatKosongCatatan =>
+      'History fills automatically when BMKG earthquake data is loaded or an earthquake notification is received.';
+
+  @override
+  String get filterJudul => 'Filter history';
+
+  @override
+  String get filterTanggal => 'Date range';
+
+  @override
+  String get filterSemuaTanggal => 'All dates';
+
+  @override
+  String filterHariTerakhir(String n) {
+    return 'Last $n days';
+  }
+
+  @override
+  String get filterPilihTanggal => 'Pick dates';
+
+  @override
+  String get filterPilihTanggalBantuan => 'Pick the date range of the events';
+
+  @override
+  String get filterMagnitudo => 'Minimum magnitude';
+
+  @override
+  String get filterJarak => 'Maximum distance from you';
+
+  @override
+  String get filterSemuaJarak => 'Any distance';
+
+  @override
+  String filterJarakKm(String km) {
+    return '$km km';
+  }
+
+  @override
+  String get filterJarakNonaktif =>
+      'The distance filter is unavailable because your location is not known. Turn on location to use it.';
+
+  @override
+  String get filterTerapkan => 'Apply';
+
+  @override
+  String get filterSetelUlang => 'Reset';
+
+  @override
+  String filterAktifJumlah(String n) {
+    return 'Active filters: $n';
+  }
 }

@@ -12,6 +12,7 @@ import 'providers/gempa_provider.dart';
 import 'providers/lokasi_provider.dart';
 import 'providers/notifikasi_provider.dart';
 import 'providers/pengaturan_provider.dart';
+import 'providers/riwayat_gempa_provider.dart';
 import 'providers/weather_provider.dart';
 import 'screens/main_shell.dart';
 import 'screens/onboarding_screen.dart';
@@ -21,6 +22,8 @@ import 'services/cache_service.dart';
 import 'services/gps_service.dart';
 import 'services/notifikasi_service.dart';
 import 'services/preferences_service.dart';
+import 'services/riwayat_gempa_repository.dart';
+import 'services/riwayat_gempa_sqflite.dart';
 import 'services/wilayah_service.dart';
 
 Future<void> main() async {
@@ -43,7 +46,10 @@ Future<void> main() async {
   });
 
   // Firebase + handler pesan latar belakang harus siap sebelum runApp.
-  final notifikasi = NotifikasiService();
+  // Riwayat gempa disiapkan lebih dulu agar notifikasi yang membuka
+  // aplikasi (diketuk saat tertutup) langsung tercatat.
+  final riwayatGempa = RiwayatGempaRepository(buatPenyimpananRiwayat());
+  final notifikasi = NotifikasiService()..riwayatGempa = riwayatGempa;
   await notifikasi.mulai();
 
   // Pilihan bahasa/tema dimuat sebelum frame pertama agar tidak berkedip.
@@ -55,6 +61,7 @@ Future<void> main() async {
   runApp(
     SiCuacaApp(
       notifikasiService: notifikasi,
+      riwayatGempa: riwayatGempa,
       preferencesService: preferences,
       pengaturan: pengaturan,
       sudahOnboarding: sudahOnboarding,
@@ -72,6 +79,7 @@ class SiCuacaApp extends StatelessWidget {
     this.preferencesService,
     this.notifikasiService,
     this.cacheService,
+    this.riwayatGempa,
     this.pengaturan,
     this.sudahOnboarding = true,
   });
@@ -82,6 +90,7 @@ class SiCuacaApp extends StatelessWidget {
   final PreferencesService? preferencesService;
   final NotifikasiService? notifikasiService;
   final CacheService? cacheService;
+  final RiwayatGempaRepository? riwayatGempa;
   final PengaturanProvider? pengaturan;
   final bool sudahOnboarding;
 
@@ -124,12 +133,27 @@ class SiCuacaApp extends StatelessWidget {
             context.read<LokasiProvider>(),
           )..mulai(),
         ),
+        ChangeNotifierProvider<RiwayatGempaRepository>(
+          create: (_) =>
+              riwayatGempa ?? RiwayatGempaRepository(buatPenyimpananRiwayat()),
+        ),
         ChangeNotifierProvider<GempaProvider>(
           create: (context) => GempaProvider(
             context.read<BmkgRepository>(),
             context.read<LokasiProvider>(),
+            context.read<RiwayatGempaRepository>(),
             cacheService ?? CacheService(),
           )..mulai(),
+        ),
+        ChangeNotifierProvider<RiwayatGempaProvider>(
+          create: (context) {
+            final lokasi = context.read<LokasiProvider>();
+            return RiwayatGempaProvider(
+              context.read<RiwayatGempaRepository>(),
+              posisi: () => lokasi.posisi,
+              ubahPosisi: lokasi,
+            )..muat();
+          },
         ),
         ChangeNotifierProvider<NotifikasiProvider>(
           create: (context) => NotifikasiProvider(

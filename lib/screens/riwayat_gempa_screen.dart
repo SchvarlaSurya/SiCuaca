@@ -1,214 +1,369 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../core/format.dart';
 import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
-import '../widgets/gempa_item.dart';
-import '../widgets/sumber_bmkg.dart';
+import '../providers/riwayat_gempa_provider.dart';
+import '../widgets/ajak_lokasi.dart';
 import '../widgets/app_chrome.dart';
+import '../widgets/filter_gempa_sheet.dart';
+import '../widgets/gempa_item.dart';
+import '../widgets/status_data.dart';
+import '../widgets/sumber_bmkg.dart';
 
-/// Riwayat gempa yang pernah dimuat, termasuk saat aplikasi sedang offline.
-class RiwayatGempaScreen extends StatelessWidget {
+/// Riwayat gempa yang pernah dimuat atau diterima di perangkat ini.
+///
+/// Riwayat BUKAN catatan lengkap kejadian BMKG (BMKG hanya memberi daftar
+/// pendek), jadi setiap angka diberi label "dari data yang tersimpan di
+/// perangkat ini" beserta rentang tanggal data yang benar-benar ada.
+class RiwayatGempaScreen extends StatefulWidget {
   const RiwayatGempaScreen({super.key});
 
   @override
+  State<RiwayatGempaScreen> createState() => _RiwayatGempaScreenState();
+}
+
+class _RiwayatGempaScreenState extends State<RiwayatGempaScreen> {
+  final TextEditingController _cari = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _cari.text = context.read<RiwayatGempaProvider>().filter.kataKunci;
+  }
+
+  @override
+  void dispose() {
+    _cari.dispose();
+    super.dispose();
+  }
+
+  Future<void> _bukaFilter(RiwayatGempaProvider p) async {
+    final baru = await bukaFilterRiwayat(
+      context,
+      awal: p.filter,
+      adaLokasi: p.adaLokasi,
+      rentang: p.rentangData,
+    );
+    if (baru == null) return;
+    // Kata kunci dikelola kolom cari, bukan lembar filter.
+    p.aturFilter(baru.denganKataKunci(p.filter.kataKunci));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final provider = context.watch<GempaProvider>();
-    final daftar = provider.riwayat;
+    final l = context.l10n;
+    final p = context.watch<RiwayatGempaProvider>();
+    final gempa = context.watch<GempaProvider>();
+    final n = p.filter.jumlahSaringan;
+
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.riwayatJudul)),
+      appBar: AppBar(
+        title: Text(l.riwayatJudul),
+        actions: [
+          PopupMenuButton<String>(
+            tooltip: l.rentangGrafik,
+            icon: const IkonDuo(IkonApp.grafik),
+            onSelected: (v) => _bukaGrafik(context, p, v),
+            itemBuilder: (_) => [
+              PopupMenuItem(value: 'hari', child: Text(l.grafikPerHari)),
+              PopupMenuItem(value: 'minggu', child: Text(l.grafikPerMinggu)),
+            ],
+          ),
+          Badge(
+            isLabelVisible: n > 0,
+            label: Text('$n'),
+            offset: const Offset(-6, 6),
+            child: IconButton(
+              tooltip: n > 0 ? l.filterAktifJumlah('$n') : l.filterJudul,
+              icon: const IkonDuo(IkonApp.saring),
+              onPressed: () => _bukaFilter(p),
+            ),
+          ),
+        ],
+      ),
       body: LatarAtmosfer(
         gelap: false,
-        child: daftar.isEmpty
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Text(
-                    context.l10n.riwayatKosong,
-                    textAlign: TextAlign.center,
+        child: RefreshIndicator(
+          onRefresh: () => context.read<GempaProvider>().muatSemua(),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              8,
+              16,
+              24 + MediaQuery.paddingOf(context).bottom,
+            ),
+            children: [
+              if (gempa.terbaru.dariCache) ...[
+                BannerOffline(diperbarui: gempa.terbaru.diperbarui),
+                const SizedBox(height: 12),
+              ],
+              ..._isi(context, p),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _isi(BuildContext context, RiwayatGempaProvider p) {
+    final l = context.l10n;
+    final theme = Theme.of(context);
+
+    switch (p.status) {
+      case StatusRiwayat.memuat:
+        return [
+          MemuatData(pesan: l.memuatGempa, bentuk: BentukKerangka.daftar),
+        ];
+      case StatusRiwayat.gagal:
+        return [GagalMuat(pesan: l.riwayatGagalMuat, onCobaLagi: p.muat)];
+      case StatusRiwayat.siap:
+        break;
+    }
+
+    final kartuBias = _KartuBias(rentang: p.rentangData);
+    if (p.jumlahTersimpan == 0) {
+      return [
+        kartuBias,
+        const SizedBox(height: 8),
+        KosongData(pesan: l.riwayatKosong),
+        Text(
+          l.riwayatKosongCatatan,
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 16),
+        const _Atribusi(),
+      ];
+    }
+
+    final s = p.statistik;
+    return [
+      kartuBias,
+      const SizedBox(height: 12),
+      MasukLembut(
+        child: TextField(
+          controller: _cari,
+          decoration: InputDecoration(
+            prefixIcon: const IkonDuo(IkonApp.cari),
+            hintText: l.cariWilayahGempa,
+            suffixIcon: p.filter.kataKunci.isEmpty
+                ? null
+                : IconButton(
+                    tooltip: l.hapusPencarian,
+                    icon: const IkonDuo(IkonApp.hapus),
+                    onPressed: () {
+                      _cari.clear();
+                      p.aturFilter(p.filter.denganKataKunci(''));
+                    },
                   ),
-                ),
-              )
-            : _IsiRiwayat(daftar: daftar),
+            border: const OutlineInputBorder(),
+          ),
+          onChanged: (v) => p.aturFilter(p.filter.denganKataKunci(v)),
+        ),
+      ),
+      if (p.filter.jumlahSaringan > 0) ...[
+        const SizedBox(height: 8),
+        _SaringanAktif(provider: p),
+      ],
+      const SizedBox(height: 16),
+      Text(
+        l.statLabelBias,
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      const SizedBox(height: 8),
+      KisiTile(
+        children: [
+          TileInfo(
+            ikon: IkonApp.riwayat,
+            label: l.statJumlahGempa,
+            nilai: '${s.jumlah}',
+          ),
+          TileInfo(
+            ikon: IkonApp.gempa,
+            label: l.statTerbesar,
+            nilai: s.terbesar == null
+                ? Format.tandaKosong
+                : 'M${s.terbesar!.magnitudo}',
+          ),
+          TileInfo(
+            ikon: IkonApp.jarak,
+            label: l.statTerdekat,
+            nilai: !s.adaLokasi
+                ? l.statLokasiTidakAda
+                : s.jarakTerdekatKm == null
+                ? Format.tandaKosong
+                : l.jarakKm(Format.jarak(l, s.jarakTerdekatKm!)),
+          ),
+        ],
+      ),
+      if (!s.adaLokasi) ...[const SizedBox(height: 8), const AjakLokasi()],
+      const SizedBox(height: 12),
+      Text(
+        l.riwayatDariTotal('${p.hasil.length}', '${p.jumlahTersimpan}'),
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      const SizedBox(height: 8),
+      if (p.hasil.isEmpty)
+        KosongData(pesan: l.riwayatTidakCocok)
+      else
+        Card(
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            children: [
+              for (var i = 0; i < p.hasil.length; i++) ...[
+                if (i > 0) const Divider(indent: 92, endIndent: 16),
+                GempaItem(gempa: p.hasil[i].gempa),
+              ],
+            ],
+          ),
+        ),
+      const SizedBox(height: 16),
+      const _Atribusi(),
+    ];
+  }
+
+  void _bukaGrafik(BuildContext context, RiwayatGempaProvider p, String mode) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => GrafikGempaScreen(
+          daftar: [for (final b in p.hasil) b.gempa],
+          mingguan: mode == 'minggu',
+          rentang: p.rentangData,
+        ),
       ),
     );
   }
 }
 
-class _IsiRiwayat extends StatefulWidget {
-  const _IsiRiwayat({required this.daftar});
-  final List<Gempa> daftar;
+/// Label bias: dari mana angka-angka ini, dan rentang data yang ada.
+class _KartuBias extends StatelessWidget {
+  const _KartuBias({required this.rentang});
 
-  @override
-  State<_IsiRiwayat> createState() => _IsiRiwayatState();
-}
-
-class _IsiRiwayatState extends State<_IsiRiwayat> {
-  double? _minimum;
-  bool _hanyaDekat = false;
-  String _query = '';
+  final RentangData? rentang;
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final provider = context.read<GempaProvider>();
-    final hasil = widget.daftar.where((gempa) {
-      if (_query.isNotEmpty &&
-          !gempa.wilayah.toLowerCase().contains(_query.trim().toLowerCase())) {
-        return false;
-      }
-      final mag = gempa.magnitudoAngka;
-      if (_minimum != null && (mag == null || mag < _minimum!)) return false;
-      if (_hanyaDekat &&
-          provider.jarakKm(gempa) != null &&
-          provider.jarakKm(gempa)! > 100) {
-        return false;
-      }
-      return true;
-    }).toList();
-    final terbesar = hasil
-        .map((e) => e.magnitudoAngka)
-        .whereType<double>()
-        .fold<double?>(null, (a, b) => a == null || b > a ? b : a);
-    final terdekat = hasil
-        .map(provider.jarakKm)
-        .whereType<double>()
-        .fold<double?>(null, (a, b) => a == null || b < a ? b : a);
-    return ListView(
-      padding: const EdgeInsets.only(top: 12, bottom: 24),
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-          child: MasukLembut(
-            child: Text(
-              l.jejakAktivitas,
-              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
-            ),
-          ),
-        ),
-        MasukLembut(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: const IkonDuo(IkonApp.cari),
-                hintText: l.cariWilayahGempa,
-                suffixIcon: _query.isEmpty
-                    ? null
-                    : IconButton(
-                        tooltip: l.hapusPencarian,
-                        icon: const IkonDuo(IkonApp.hapus),
-                        onPressed: () => setState(() => _query = ''),
-                      ),
-                border: const OutlineInputBorder(),
-              ),
-              onChanged: (value) => setState(() => _query = value),
-            ),
-          ),
-        ),
-        MasukLembut(
-          delay: const Duration(milliseconds: 80),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: Row(
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final fmt = DateFormat('d MMM yyyy', l.localeName);
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: scheme.primaryContainer,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IkonDuo(IkonApp.info, color: scheme.onPrimaryContainer),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: Text(l.riwayatJumlah(hasil.length))),
-                PopupMenuButton<String>(
-                  tooltip: l.rentangGrafik,
-                  icon: const IkonDuo(IkonApp.grafik),
-                  onSelected: (value) =>
-                      _bukaGrafik(context, widget.daftar, value),
-                  itemBuilder: (_) => [
-                    PopupMenuItem(value: 'hari', child: Text(l.grafikPerHari)),
-                    PopupMenuItem(
-                      value: 'minggu',
-                      child: Text(l.grafikPerMinggu),
-                    ),
-                  ],
-                ),
-                PopupMenuButton<double?>(
-                  tooltip: l.saringMagnitudo,
-                  icon: const IkonDuo(IkonApp.saring),
-                  onSelected: (value) => setState(() => _minimum = value),
-                  itemBuilder: (_) => [
-                    PopupMenuItem(value: null, child: Text(l.semuaMagnitudo)),
-                    for (final m in const [4.0, 5.0, 6.0])
-                      PopupMenuItem(
-                        value: m,
-                        child: Text(l.minimalMagnitudo(m.toStringAsFixed(1))),
-                      ),
-                  ],
-                ),
-                IconButton(
-                  tooltip: l.gempaDalam100Km,
-                  isSelected: _hanyaDekat,
-                  icon: IkonDuo(
-                    IkonApp.jarak,
-                    color: _hanyaDekat
-                        ? Theme.of(context).colorScheme.primary
-                        : null,
+                Text(
+                  l.riwayatBiasLabel,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: scheme.onPrimaryContainer,
                   ),
-                  onPressed: () => setState(() => _hanyaDekat = !_hanyaDekat),
+                ),
+                if (rentang != null)
+                  Text(
+                    l.riwayatRentangData(
+                      fmt.format(rentang!.tertua),
+                      fmt.format(rentang!.terbaru),
+                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: scheme.onPrimaryContainer,
+                    ),
+                  ),
+                const SizedBox(height: 4),
+                Text(
+                  l.riwayatBiasCatatan,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onPrimaryContainer,
+                  ),
                 ),
               ],
             ),
           ),
-        ),
-        MasukLembut(
-          delay: const Duration(milliseconds: 140),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                _Statistik(
-                  label: l.statTerbesar,
-                  value: terbesar == null
-                      ? Format.tandaKosong
-                      : 'M${Format.desimal(l, terbesar)}',
-                ),
-                const SizedBox(width: 8),
-                _Statistik(
-                  label: l.statTerdekat,
-                  value: terdekat == null
-                      ? Format.tandaKosong
-                      : '${Format.jarak(l, terdekat)} km',
-                ),
-                const SizedBox(width: 8),
-                _Statistik(label: l.statTotal, value: '${hasil.length}'),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        for (var i = 0; i < hasil.length; i++) ...[
-          if (i > 0) const Divider(indent: 92, endIndent: 16),
-          GempaItem(gempa: hasil[i]),
         ],
-        if (hasil.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(l.riwayatTidakCocok, textAlign: TextAlign.center),
+      ),
+    );
+  }
+}
+
+/// Chip saringan yang sedang aktif, masing-masing bisa dilepas.
+class _SaringanAktif extends StatelessWidget {
+  const _SaringanAktif({required this.provider});
+
+  final RiwayatGempaProvider provider;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final f = provider.filter;
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        if (f.rentangTanggal)
+          InputChip(
+            label: Text(ringkasTanggal(l, f)),
+            onDeleted: () => provider.aturFilter(f.tanpa(tanggal: true)),
           ),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
-          child: SumberBmkg(),
+        if (f.magnitudoMin != null)
+          InputChip(
+            label: Text(l.minimalMagnitudo(f.magnitudoMin!.toStringAsFixed(1))),
+            onDeleted: () => provider.aturFilter(f.tanpa(magnitudo: true)),
+          ),
+        if (f.jarakMaksKm != null)
+          InputChip(
+            label: Text(l.filterJarakKm(f.jarakMaksKm!.toStringAsFixed(0))),
+            onDeleted: () => provider.aturFilter(f.tanpa(jarak: true)),
+          ),
+        TextButton(
+          onPressed: provider.setelUlangFilter,
+          child: Text(l.filterSetelUlang),
         ),
       ],
     );
   }
 }
 
-void _bukaGrafik(BuildContext context, List<Gempa> daftar, String mode) {
-  Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) =>
-          GrafikGempaScreen(daftar: daftar, mingguan: mode == 'minggu'),
-    ),
-  );
+class _Atribusi extends StatelessWidget {
+  const _Atribusi();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SumberBmkg(),
+        Text(
+          context.l10n.bukanResmi,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 class GrafikGempaScreen extends StatelessWidget {
@@ -216,9 +371,12 @@ class GrafikGempaScreen extends StatelessWidget {
     super.key,
     required this.daftar,
     required this.mingguan,
+    this.rentang,
   });
+
   final List<Gempa> daftar;
   final bool mingguan;
+  final RentangData? rentang;
 
   @override
   Widget build(BuildContext context) {
@@ -242,84 +400,83 @@ class GrafikGempaScreen extends StatelessWidget {
       }
     }
     final maxValue = bins.fold<int>(0, (a, b) => a > b ? a : b);
+    final fmt = DateFormat('d MMM yyyy', l.localeName);
     return Scaffold(
       appBar: AppBar(title: Text(mingguan ? l.gempaPerMinggu : l.gempaPerHari)),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Text(l.grafikCatatan),
-          const SizedBox(height: 20),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  for (var i = 0; i < bins.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 7),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 62,
-                            child: Text(
-                              mingguan
-                                  ? l.mingguKe('${bins.length - i}')
-                                  : DateFormat('dd/MM', l.localeName).format(
-                                      DateTime(
-                                        now.year,
-                                        now.month,
-                                        now.day,
-                                      ).subtract(
-                                        Duration(days: bins.length - 1 - i),
+      body: LatarAtmosfer(
+        gelap: false,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text(
+              l.statLabelBias,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            if (rentang != null)
+              Text(
+                l.riwayatRentangData(
+                  fmt.format(rentang!.tertua),
+                  fmt.format(rentang!.terbaru),
+                ),
+              ),
+            const SizedBox(height: 4),
+            Text(l.grafikCatatan),
+            const SizedBox(height: 20),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    for (var i = 0; i < bins.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 7),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 72,
+                              child: Text(
+                                mingguan
+                                    ? l.mingguKe('${bins.length - i}')
+                                    : DateFormat('dd/MM', l.localeName).format(
+                                        DateTime(
+                                          now.year,
+                                          now.month,
+                                          now.day,
+                                        ).subtract(
+                                          Duration(days: bins.length - 1 - i),
+                                        ),
                                       ),
-                                    ),
-                              style: Theme.of(context).textTheme.labelSmall,
-                            ),
-                          ),
-                          Expanded(
-                            child: Semantics(
-                              label: l.jumlahKejadian(bins[i]),
-                              child: LinearProgressIndicator(
-                                value: maxValue == 0 ? 0 : bins[i] / maxValue,
-                                minHeight: 18,
+                                style: Theme.of(context).textTheme.labelSmall,
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: 36,
-                            child: Text('${bins[i]}', textAlign: TextAlign.end),
-                          ),
-                        ],
+                            Expanded(
+                              child: Semantics(
+                                label: l.jumlahKejadian(bins[i]),
+                                child: LinearProgressIndicator(
+                                  value: maxValue == 0 ? 0 : bins[i] / maxValue,
+                                  minHeight: 18,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 36,
+                              child: Text(
+                                '${bins[i]}',
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  const SizedBox(height: 8),
-                  Text(l.totalGrafik(bins.fold<int>(0, (a, b) => a + b))),
-                ],
+                    const SizedBox(height: 8),
+                    Text(l.totalGrafik(bins.fold<int>(0, (a, b) => a + b))),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Statistik extends StatelessWidget {
-  const _Statistik({required this.label, required this.value});
-  final String label;
-  final String value;
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-          child: Column(
-            children: [
-              Text(value, style: Theme.of(context).textTheme.titleMedium),
-              Text(label, style: Theme.of(context).textTheme.labelSmall),
-            ],
-          ),
+            const SizedBox(height: 16),
+            const _Atribusi(),
+          ],
         ),
       ),
     );

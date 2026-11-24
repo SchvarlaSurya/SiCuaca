@@ -10,6 +10,7 @@ import '../core/constants.dart';
 import '../core/l10n.dart';
 import '../models/ambang_gempa.dart';
 import '../models/gempa.dart';
+import 'riwayat_gempa_repository.dart';
 import 'riwayat_notifikasi_service.dart';
 
 /// Handler pesan FCM saat aplikasi di latar belakang atau tertutup.
@@ -32,6 +33,10 @@ class PembukaNotifikasi {
   void Function(Gempa gempa)? _buka;
   Gempa? _tertunda;
 
+  /// Riwayat gempa di perangkat. Gempa dari notifikasi yang diketuk dicatat
+  /// di sini (isolate utama, aman untuk database).
+  RiwayatGempaRepository? riwayat;
+
   /// Dipanggil sekali setelah navigator siap.
   void pasang(void Function(Gempa gempa) buka) {
     _buka = buka;
@@ -50,6 +55,7 @@ class PembukaNotifikasi {
     // Ketukan juga dicatat: notifikasi latar belakang yang tiba saat
     // handler tidak sempat menulis tetap masuk riwayat. Duplikat diabaikan.
     RiwayatNotifikasiService().catat(data);
+    riwayat?.catat([gempa], sumber: 'notifikasi');
     final buka = _buka;
     if (buka == null) {
       _tertunda = gempa;
@@ -89,6 +95,12 @@ class NotifikasiService {
 
   /// Penerus ketukan notifikasi ke halaman detail gempa.
   final PembukaNotifikasi pembuka = PembukaNotifikasi();
+
+  /// Riwayat gempa; diisi dari main(). Menerima gempa dari notifikasi yang
+  /// tiba saat aplikasi terbuka dan yang diketuk. Handler latar belakang FCM
+  /// SENGAJA tidak menulis ke sini: isolate itu terpisah dan inisialisasi
+  /// database di sana belum terbukti di perangkat (Fase 6B).
+  set riwayatGempa(RiwayatGempaRepository? r) => pembuka.riwayat = r;
 
   /// Channel gempa. Nama/deskripsinya mengikuti bahasa perangkat saat
   /// aplikasi dibuka (pilihan bahasa di aplikasi belum diketahui di sini).
@@ -159,6 +171,10 @@ class NotifikasiService {
 
   Future<void> _tampilkanDiDepan(RemoteMessage message) async {
     await RiwayatNotifikasiService().catat(message.data);
+    final gempa = Gempa.dariPayload(message.data);
+    if (gempa != null) {
+      await pembuka.riwayat?.catat([gempa], sumber: 'notifikasi');
+    }
     final notif = message.notification;
     if (notif == null) return;
     try {

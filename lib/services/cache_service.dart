@@ -75,12 +75,12 @@ class CacheService {
     } catch (_) {}
   }
 
-  Future<void> simpanRiwayatGempa(Iterable<Gempa> daftar) async {
+  /// Riwayat gempa versi lama (shared_preferences). Dipertahankan hanya untuk
+  /// dipindahkan satu kali ke database; lihat RiwayatGempaRepository.
+  Future<void> hapusRiwayatGempa() async {
     try {
-      final json = daftar.map((gempa) => gempa.toJson()).toList();
-      await (await _prefs).setString(
+      await (await _prefs).remove(
         '${PrefsKeys.cache}${PrefsKeys.riwayatGempa}',
-        jsonEncode(json),
       );
     } catch (_) {}
   }
