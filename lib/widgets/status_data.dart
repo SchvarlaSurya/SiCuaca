@@ -241,24 +241,38 @@ class KosongData extends StatelessWidget {
       textAlign: rataTengah ? TextAlign.center : TextAlign.start,
       style: theme.textTheme.bodyMedium?.copyWith(color: warna),
     );
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(AppTheme.radiusKartu),
+    // Selalu selebar ruang yang tersedia dan setinggi isinya (di atas), apa
+    // pun induknya: di dalam Expanded/Center kartu tidak lagi menyusut
+    // selebar teks atau memanjang setinggi layar.
+    return LayoutBuilder(
+      builder: (context, batas) => Align(
+        alignment: Alignment.topCenter,
+        heightFactor: 1,
+        child: Container(
+          width: batas.hasBoundedWidth ? double.infinity : null,
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(AppTheme.radiusKartu),
+          ),
+          child: _isi(warna, teks),
+        ),
       ),
-      child: rataTengah
-          ? Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IkonDuo(IkonApp.kosong, color: warna, size: 32),
-                const SizedBox(height: 8),
-                teks,
-              ],
-            )
-          : teks,
     );
+  }
+
+  Widget _isi(Color warna, Widget teks) {
+    return rataTengah
+        ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IkonDuo(IkonApp.kosong, color: warna, size: 32),
+              const SizedBox(height: 8),
+              teks,
+            ],
+          )
+        : teks;
   }
 }
 

@@ -259,4 +259,31 @@ void main() {
       expect(tengah, lessThan(akhir * .9));
     });
   });
+
+  testWidgets('pencarian tanpa hasil: kartu "tidak ada wilayah" selebar layar '
+      'dan tidak memanjang (360 dp, huruf 1,3x)', (tester) async {
+    tester.view.physicalSize = const Size(1080, 1920);
+    tester.view.devicePixelRatio = 3;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.view.reset);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    await tester.pumpWidget(buatApp(gps: _gps, offline: true));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip(l.cariWilayah));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'qwxzqwxz');
+    await tester.pumpAndSettle();
+
+    final teks = find.text(l.cariTidakAdaHasil);
+    expect(teks, findsOneWidget);
+    final kartu = find
+        .ancestor(of: teks, matching: find.byType(Container))
+        .first;
+    final ukuran = tester.getSize(kartu);
+    // Selebar layar 360 dp (ukuran luar, termasuk margin 16 kiri-kanan).
+    expect(ukuran.width, closeTo(360, 1));
+    expect(ukuran.height, lessThan(300));
+    expect(tester.takeException(), isNull);
+  });
 }
