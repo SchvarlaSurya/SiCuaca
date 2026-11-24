@@ -286,4 +286,25 @@ void main() {
     expect(ukuran.height, lessThan(300));
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('ikon tombol atas digambar di atas kaca (bukan di dalam lapisan '
+      'kaca) dan tampil penuh setelah pindah halaman', (tester) async {
+    await tester.pumpWidget(buatApp(gps: _gps, offline: true));
+    await tester.pumpAndSettle();
+    for (final tab in ['gempa', 'beranda', 'gempa']) {
+      await tester.tap(navTab(tab));
+      await tester.pumpAndSettle();
+    }
+    final ikon = find.byIcon(IkonApp.riwayat);
+    expect(ikon, findsOneWidget);
+    expect(
+      find.ancestor(of: ikon, matching: find.byType(GlassIconButton)),
+      findsNothing,
+    );
+    for (final o in tester.widgetList<Opacity>(
+      find.ancestor(of: ikon, matching: find.byType(Opacity)),
+    )) {
+      expect(o.opacity, 1);
+    }
+  });
 }

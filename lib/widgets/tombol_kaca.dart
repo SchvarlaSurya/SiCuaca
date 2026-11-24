@@ -72,20 +72,45 @@ class TombolKaca extends StatelessWidget {
         message: tooltip,
         child: _JeliTekan(
           nyala: onPressed != null,
-          child: GlassIconButton(
-            icon: _IkonBerganti(
-              masuk: _DalamGrup.ikonMasukDari(context),
-              child: icon,
+          child: SizedBox.square(
+            dimension: ukuran,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                GlassIconButton(
+                  // Ikon digambar DI ATAS kaca (lapisan terpisah di bawah),
+                  // bukan di dalamnya: lapisan kaca bisa menyimpan tampilan
+                  // isinya, sehingga ikon yang sedang beranimasi kadang
+                  // tersimpan saat masih transparan dan tidak muncul.
+                  icon: const SizedBox.shrink(),
+                  onPressed: onPressed,
+                  size: ukuran,
+                  // Efek tekan diambil alih _JeliTekan.
+                  interactionScale: 1,
+                  useOwnLayer: true,
+                  semanticLabel: tooltip,
+                  settings: _kacaTombol(context),
+                ),
+                IgnorePointer(
+                  child: ExcludeSemantics(
+                    child: IconTheme.merge(
+                      data: IconThemeData(
+                        size: 24,
+                        color: onPressed == null
+                            ? scheme.onSurface.withValues(alpha: .38)
+                            : aktif
+                            ? scheme.primary
+                            : scheme.onSurface,
+                      ),
+                      child: _IkonBerganti(
+                        masuk: _DalamGrup.ikonMasukDari(context),
+                        child: icon,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            onPressed: onPressed,
-            size: ukuran,
-            iconSize: 24,
-            // Efek tekan diambil alih _JeliTekan.
-            interactionScale: 1,
-            useOwnLayer: true,
-            semanticLabel: tooltip,
-            iconColor: aktif ? scheme.primary : scheme.onSurface,
-            settings: _kacaTombol(context),
           ),
         ),
       ),
