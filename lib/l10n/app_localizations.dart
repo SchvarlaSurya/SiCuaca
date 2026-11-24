@@ -2489,6 +2489,12 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Sangat ekstrem'**
   String get gelombangSangatEkstrem;
+
+  /// No description provided for @menuTautanCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'↗ membuka halaman resmi BMKG.'**
+  String get menuTautanCatatan;
 }
 
 class _AppLocalizationsDelegate

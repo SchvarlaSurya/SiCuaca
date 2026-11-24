@@ -408,5 +408,6 @@
   "gelombangTinggi": "High",
   "gelombangSangatTinggi": "Very high",
   "gelombangEkstrem": "Extreme",
-  "gelombangSangatEkstrem": "Very extreme"
+  "gelombangSangatEkstrem": "Very extreme",
+  "menuTautanCatatan": "↗ opens the official BMKG page."
 }

@@ -1436,4 +1436,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gelombangSangatEkstrem => 'Very extreme';
+
+  @override
+  String get menuTautanCatatan => '↗ opens the official BMKG page.';
 }

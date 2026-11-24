@@ -112,8 +112,9 @@ void main() {
 
     expect(find.text(l.cuacaSaatIni), findsOneWidget);
     expect(find.text('Gambir'), findsWidgets);
-    // Kartu cuaca dan kartu gempa terbaru masing-masing mencantumkan sumber.
-    expect(find.text(l.sumberBmkg), findsNWidgets(2));
+    // Kartu cuaca, menu layanan BMKG, dan kartu gempa terbaru masing-masing
+    // mencantumkan sumber.
+    expect(find.text(l.sumberBmkg), findsNWidgets(3));
     // Posisi GPS tersedia: jarak gempa terbaru ke pengguna tampil.
     expect(find.textContaining('km dari Anda'), findsOneWidget);
     final tersimpan = await PreferencesService().wilayahTerakhir();

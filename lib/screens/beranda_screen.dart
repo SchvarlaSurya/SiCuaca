@@ -14,6 +14,7 @@ import '../widgets/aksi_wilayah.dart';
 import '../widgets/cuaca_saat_ini_card.dart';
 import '../widgets/gempa_terbaru_card.dart';
 import '../widgets/lokasi_banner.dart';
+import '../widgets/menu_layanan.dart';
 import '../widgets/status_data.dart';
 import '../widgets/app_chrome.dart';
 
@@ -116,7 +117,7 @@ List<Widget> _bagian(BuildContext context, SeksiBeranda seksi, int indeks) {
     SeksiBeranda.layanan => (
       l.layananJudul,
       Navigasi.bukaLayanan,
-      const _KartuLayanan() as Widget,
+      const MenuLayanan() as Widget,
     ),
   };
   return [
@@ -163,26 +164,6 @@ class _KartuSiaga extends StatelessWidget {
         ),
         trailing: const IkonDuo(IkonApp.selengkapnya),
         onTap: Navigasi.bukaSiaga,
-      ),
-    );
-  }
-}
-
-/// Pintu masuk ke Layanan BMKG lainnya (cuaca maritim dan tautan resmi).
-class _KartuLayanan extends StatelessWidget {
-  const _KartuLayanan();
-
-  @override
-  Widget build(BuildContext context) {
-    final l = context.l10n;
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        leading: const IkonDuo(IkonApp.layanan),
-        title: Text(l.layananJudul),
-        subtitle: Text(l.layananRingkas),
-        trailing: const IkonDuo(IkonApp.selengkapnya),
-        onTap: Navigasi.bukaLayanan,
       ),
     );
   }

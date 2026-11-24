@@ -194,8 +194,9 @@ void main() {
     final l = lookupAppLocalizations(const Locale('id'));
     final tautan = find.text(l.selengkapnya);
     expect(tautan, findsNWidgets(SeksiBeranda.values.length));
-    await tester.ensureVisible(tautan.at(1));
-    await tester.tap(tautan.at(1));
+    final iGempa = SeksiBeranda.values.indexOf(SeksiBeranda.gempa);
+    await tester.ensureVisible(tautan.at(iGempa));
+    await tester.tap(tautan.at(iGempa));
     await tester.pumpAndSettle();
     expect(find.text(l.gempaTerbaruKeterangan), findsOneWidget);
   });
@@ -631,21 +632,23 @@ void main() {
   group('P3: urutan bagian Beranda', () {
     test('normalkanUrutan: lengkap, tanpa duplikat, nama asing dibuang', () {
       expect(PengaturanProvider.normalkanUrutan(null), SeksiBeranda.values);
+      // Bagian yang belum disebut ditambahkan di akhir, menurut urutan bawaan
+      // (cuaca, layanan, gempa, peringatan, siaga).
       expect(PengaturanProvider.normalkanUrutan(['peringatan', 'cuaca']), [
         SeksiBeranda.peringatan,
         SeksiBeranda.cuaca,
+        SeksiBeranda.layanan,
         SeksiBeranda.gempa,
         SeksiBeranda.siaga,
-        SeksiBeranda.layanan,
       ]);
       expect(
         PengaturanProvider.normalkanUrutan(['gempa', 'gempa', 'x', 'cuaca']),
         [
           SeksiBeranda.gempa,
           SeksiBeranda.cuaca,
+          SeksiBeranda.layanan,
           SeksiBeranda.peringatan,
           SeksiBeranda.siaga,
-          SeksiBeranda.layanan,
         ],
       );
       // Urutan lama (tiga bagian) dari versi sebelumnya tetap valid: bagian
@@ -656,8 +659,8 @@ void main() {
           SeksiBeranda.gempa,
           SeksiBeranda.peringatan,
           SeksiBeranda.cuaca,
-          SeksiBeranda.siaga,
           SeksiBeranda.layanan,
+          SeksiBeranda.siaga,
         ],
       );
     });
@@ -706,14 +709,16 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text(l.urutanBerandaKeterangan), findsOneWidget);
 
-      // Turunkan "Cuaca": urutan jadi Gempa, Cuaca, Peringatan.
-      await tester.tap(find.byTooltip(l.turunkanBagian(l.cuacaSaatIni)));
-      await tester.pumpAndSettle();
-      // Tombol naik pada bagian pertama dinonaktifkan.
+      // Turunkan "Cuaca" dua kali: urutan jadi Layanan, Gempa, Cuaca, ...
+      for (var i = 0; i < 2; i++) {
+        await tester.tap(find.byTooltip(l.turunkanBagian(l.cuacaSaatIni)));
+        await tester.pumpAndSettle();
+      }
+      // Tombol naik pada bagian pertama (menu layanan) dinonaktifkan.
       final naikPertama = tester.widget<IconButton>(
         find
             .ancestor(
-              of: find.byTooltip(l.naikkanBagian(l.gempaTerbaruJudul)),
+              of: find.byTooltip(l.naikkanBagian(l.layananJudul)),
               matching: find.byType(IconButton),
             )
             .first,

@@ -25,7 +25,7 @@ enum PilihanTema {
 }
 
 /// Bagian-bagian di Beranda yang urutannya bisa diatur pengguna.
-enum SeksiBeranda { cuaca, gempa, peringatan, siaga, layanan }
+enum SeksiBeranda { cuaca, layanan, gempa, peringatan, siaga }
 
 /// Pilihan bahasa, tema, dan urutan bagian Beranda, tersimpan di perangkat.
 class PengaturanProvider extends ChangeNotifier {

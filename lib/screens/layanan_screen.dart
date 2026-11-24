@@ -8,6 +8,82 @@ import '../widgets/app_chrome.dart';
 import '../widgets/sumber_bmkg.dart';
 import 'maritim_screen.dart';
 
+/// Satu layanan BMKG tambahan. [url] null = dibuka di dalam SiCuaca
+/// (Cuaca maritim); selain itu membuka halaman resmi BMKG.
+class ItemLayanan {
+  const ItemLayanan({
+    required this.kunci,
+    required this.ikon,
+    required this.judul,
+    required this.keterangan,
+    this.url,
+  });
+
+  final String kunci;
+  final IconData ikon;
+  final String judul;
+  final String keterangan;
+  final String? url;
+
+  bool get tautanKeluar => url != null;
+
+  void buka(BuildContext context) {
+    final u = url;
+    if (u == null) {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (_) => const MaritimScreen()));
+    } else {
+      TautanResmiBmkg.buka(context, u);
+    }
+  }
+}
+
+/// Enam layanan, dipakai bersama oleh kisi menu Beranda dan halaman ini.
+List<ItemLayanan> daftarLayanan(AppLocalizations l) => [
+  ItemLayanan(
+    kunci: 'maritim',
+    ikon: IkonApp.kapal,
+    judul: l.layananMaritimJudul,
+    keterangan: l.layananMaritimKet,
+  ),
+  ItemLayanan(
+    kunci: 'radar',
+    ikon: IkonApp.radar,
+    judul: l.layananRadarJudul,
+    keterangan: l.layananRadarKet,
+    url: TautanResmi.radar,
+  ),
+  ItemLayanan(
+    kunci: 'penerbangan',
+    ikon: IkonApp.pesawat,
+    judul: l.layananPenerbanganJudul,
+    keterangan: l.layananPenerbanganKet,
+    url: TautanResmi.penerbangan,
+  ),
+  ItemLayanan(
+    kunci: 'titikPanas',
+    ikon: IkonApp.titikPanas,
+    judul: l.layananTitikPanasJudul,
+    keterangan: l.layananTitikPanasKet,
+    url: TautanResmi.titikPanas,
+  ),
+  ItemLayanan(
+    kunci: 'iklim',
+    ikon: IkonApp.iklim,
+    judul: l.layananIklimJudul,
+    keterangan: l.layananIklimKet,
+    url: TautanResmi.iklim,
+  ),
+  ItemLayanan(
+    kunci: 'siaranPers',
+    ikon: IkonApp.koran,
+    judul: l.layananSiaranPersJudul,
+    keterangan: l.layananSiaranPersKet,
+    url: TautanResmi.siaranPers,
+  ),
+];
+
 /// Layanan BMKG yang belum ada di layar utama SiCuaca.
 ///
 /// Hanya Cuaca maritim yang datanya diambil lewat API resmi BMKG. Layanan
@@ -21,44 +97,7 @@ class LayananScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final theme = Theme.of(context);
-
-    final tautan = [
-      (
-        kunci: 'radar',
-        ikon: IkonApp.radar,
-        judul: l.layananRadarJudul,
-        ket: l.layananRadarKet,
-        url: TautanResmi.radar,
-      ),
-      (
-        kunci: 'penerbangan',
-        ikon: IkonApp.pesawat,
-        judul: l.layananPenerbanganJudul,
-        ket: l.layananPenerbanganKet,
-        url: TautanResmi.penerbangan,
-      ),
-      (
-        kunci: 'titikPanas',
-        ikon: IkonApp.titikPanas,
-        judul: l.layananTitikPanasJudul,
-        ket: l.layananTitikPanasKet,
-        url: TautanResmi.titikPanas,
-      ),
-      (
-        kunci: 'iklim',
-        ikon: IkonApp.iklim,
-        judul: l.layananIklimJudul,
-        ket: l.layananIklimKet,
-        url: TautanResmi.iklim,
-      ),
-      (
-        kunci: 'siaranPers',
-        ikon: IkonApp.koran,
-        judul: l.layananSiaranPersJudul,
-        ket: l.layananSiaranPersKet,
-        url: TautanResmi.siaranPers,
-      ),
-    ];
+    final semua = daftarLayanan(l);
 
     return Scaffold(
       appBar: AppBar(title: Text(l.layananJudul)),
@@ -72,29 +111,16 @@ class LayananScreen extends StatelessWidget {
             24 + MediaQuery.paddingOf(context).bottom,
           ),
           children: [
-            MasukLembut(
-              child: _KartuLayanan(
-                key: const ValueKey('layanan.maritim'),
-                ikon: IkonApp.kapal,
-                judul: l.layananMaritimJudul,
-                keterangan: l.layananMaritimKet,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const MaritimScreen(),
-                  ),
-                ),
-              ),
-            ),
-            for (final (i, t) in tautan.indexed)
+            for (final (i, t) in semua.indexed)
               MasukLembut(
-                delay: Duration(milliseconds: 50 * (i + 1)),
+                delay: Duration(milliseconds: 50 * i),
                 child: _KartuLayanan(
                   key: ValueKey('layanan.${t.kunci}'),
                   ikon: t.ikon,
                   judul: t.judul,
-                  keterangan: t.ket,
-                  tautanKeluar: true,
-                  onTap: () => TautanResmiBmkg.buka(context, t.url),
+                  keterangan: t.keterangan,
+                  tautanKeluar: t.tautanKeluar,
+                  onTap: () => t.buka(context),
                 ),
               ),
             const SizedBox(height: 16),

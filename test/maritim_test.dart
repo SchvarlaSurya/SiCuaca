@@ -434,6 +434,62 @@ void main() {
       });
     }
 
+    for (final bahasa in [PilihanBahasa.indonesia, PilihanBahasa.inggris]) {
+      testWidgets('menu layanan di Beranda: 6 tombol, 360 dp + huruf 1,3x, '
+          'langsung membuka layanan (${bahasa.name})', (tester) async {
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 3;
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+        await tester.pumpWidget(
+          buatApp(
+            gps: _jakarta,
+            pengaturan: PengaturanProvider(
+              PreferencesService(),
+              bahasa: bahasa,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        const kunci = [
+          'maritim',
+          'radar',
+          'penerbangan',
+          'titikPanas',
+          'iklim',
+          'siaranPers',
+        ];
+        final siaran = find.byKey(const ValueKey('menu.siaranPers'));
+        await tester.scrollUntilVisible(
+          siaran,
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        for (final k in kunci) {
+          expect(find.byKey(ValueKey('menu.$k')), findsOneWidget);
+        }
+        // Menu ada tepat di bawah Cuaca (urutan bawaan).
+        final t = bahasa == PilihanBahasa.inggris ? en : l;
+        expect(
+          tester.getTopLeft(find.text(t.layananJudul)).dy,
+          lessThan(tester.getTopLeft(find.text(t.gempaTerbaruJudul)).dy),
+        );
+
+        await _ketuk(tester, siaran);
+        expect(dibuka.single.toString(), TautanResmi.siaranPers);
+
+        await _ketuk(
+          tester,
+          find.byKey(const ValueKey('menu.maritim')),
+          arah: -200,
+        );
+        expect(find.byType(MaritimScreen), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    }
+
     testWidgets('tanpa lokasi: pilih perairan lewat pencarian', (tester) async {
       await tester.pumpWidget(buatApp(gps: const HasilGps(StatusGps.ditolak)));
       await tester.pumpAndSettle();

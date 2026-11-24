@@ -1404,4 +1404,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get gelombangSangatEkstrem => 'Sangat ekstrem';
+
+  @override
+  String get menuTautanCatatan => '↗ membuka halaman resmi BMKG.';
 }
