@@ -9,6 +9,7 @@ import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
 import '../services/share_service.dart';
 import 'grafik_suhu.dart';
+import 'angka_berhitung.dart';
 import 'ikon_cuaca.dart';
 import 'status_data.dart';
 
@@ -157,8 +158,8 @@ class HeroCuaca extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: Text(
-                      Format.suhu(entri.suhu),
+                    child: SuhuBerhitung(
+                      nilai: entri.suhu,
                       style: theme.textTheme.displayLarge?.copyWith(
                         color: teks,
                         fontSize: 72,

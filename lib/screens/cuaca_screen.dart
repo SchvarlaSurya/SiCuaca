@@ -22,6 +22,7 @@ import '../widgets/status_data.dart';
 import '../widgets/tombol_favorit.dart';
 import '../widgets/app_chrome.dart';
 import 'perbandingan_cuaca_screen.dart';
+import '../widgets/pencet_lembut.dart';
 
 /// Prakiraan cuaca: kartu hero (jam terdekat), lalu prakiraan per 3 jam
 /// dengan satu tab per tanggal. Semuanya satu daftar gulir, sehingga tarik
@@ -234,10 +235,12 @@ class KartuCuacaScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          FilledButton.icon(
-            icon: const IkonDuo(IkonApp.bagikan),
-            label: Text(l.bagikanKartuCuaca),
-            onPressed: () => _bagikan(context, teks),
+          PencetLembut(
+            child: FilledButton.icon(
+              icon: const IkonDuo(IkonApp.bagikan),
+              label: Text(l.bagikanKartuCuaca),
+              onPressed: () => _bagikan(context, teks),
+            ),
           ),
           TextButton.icon(
             icon: const IkonDuo(IkonApp.salin),

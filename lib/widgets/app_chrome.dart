@@ -19,17 +19,30 @@ class MasukLembut extends StatefulWidget {
 
 class _MasukLembutState extends State<MasukLembut>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 420),
-  );
+  static const _durasi = Duration(milliseconds: 420);
+
+  // Dibuat di initState (bukan lazy): kalau pengguna memilih "kurangi gerakan"
+  // controller tidak pernah dipakai, dan membuatnya baru saat dispose()
+  // melanggar aturan ticker.
+  late final AnimationController _controller;
+  late final Animation<double> _kurva;
 
   @override
   void initState() {
     super.initState();
-    Future<void>.delayed(widget.delay, () {
-      if (mounted) _controller.forward();
-    });
+    // Jeda awal ikut dalam durasi controller (lewat Interval), jadi tidak ada
+    // Timer terpisah yang bisa tertinggal setelah widget dilepas.
+    final total = _durasi + widget.delay;
+    _controller = AnimationController(vsync: this, duration: total);
+    _kurva = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(
+        widget.delay.inMilliseconds / total.inMilliseconds,
+        1,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+    _controller.forward();
   }
 
   @override
@@ -41,17 +54,13 @@ class _MasukLembutState extends State<MasukLembut>
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).disableAnimations) return widget.child;
-    final curve = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    );
     return FadeTransition(
-      opacity: curve,
+      opacity: _kurva,
       child: SlideTransition(
         position: Tween<Offset>(
           begin: const Offset(0, .035),
           end: Offset.zero,
-        ).animate(curve),
+        ).animate(_kurva),
         child: widget.child,
       ),
     );

@@ -1208,4 +1208,18 @@ class AppLocalizationsId extends AppLocalizations {
   String tasProgresBeranda(String n, String total) {
     return 'Tas siaga: $n dari $total siap';
   }
+
+  @override
+  String get splashTagline => 'Cuaca dan gempa dari data terbuka BMKG';
+
+  @override
+  String get onboardingSiagaJudul => 'Siap Siaga Gempa';
+
+  @override
+  String get onboardingSiagaDeskripsi =>
+      'Pelajari langkah aman sebelum, saat, dan setelah gempa, lalu lengkapi tas siaga Anda. Isinya bersumber dari BMKG dan BNPB.';
+
+  @override
+  String get onboardingSumber =>
+      'Sumber data: BMKG. SiCuaca bukan aplikasi resmi BMKG.';
 }

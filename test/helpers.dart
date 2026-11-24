@@ -112,8 +112,10 @@ Widget buatApp({
   PengaturanProvider? pengaturan,
   bool sudahOnboarding = true,
   RiwayatGempaRepository? riwayatGempa,
+  bool splash = false,
 }) => SiCuacaApp(
   sudahOnboarding: sudahOnboarding,
+  tampilkanSplash: splash,
   // Memori, bukan SQLite: pengujian widget tidak punya platform channel.
   riwayatGempa: riwayatGempa ?? RiwayatGempaRepository(MemoriRiwayatStore()),
   apiService: api ?? FakeApi(offline: offline),

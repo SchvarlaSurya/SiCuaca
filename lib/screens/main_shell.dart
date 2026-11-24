@@ -13,6 +13,7 @@ import '../providers/weather_provider.dart';
 import '../services/notifikasi_service.dart';
 import '../widgets/app_chrome.dart';
 import '../widgets/ikon_cuaca.dart';
+import '../widgets/transisi_tab.dart';
 import 'beranda_screen.dart';
 import 'cuaca_screen.dart';
 import 'gempa_screen.dart';
@@ -22,8 +23,9 @@ import 'pengaturan_screen.dart';
 /// data langsung (suhu sekarang dan magnitudo gempa terbaru) di tempat
 /// ikonnya.
 ///
-/// Memakai [IndexedStack] supaya semua tab tetap hidup di memori, jadi state
-/// (posisi scroll, data yang sudah dimuat) tidak hilang saat berpindah tab.
+/// Memakai [TransisiTab] (tumpukan seperti IndexedStack) supaya semua tab tetap
+/// hidup di memori, jadi state (posisi scroll, data yang sudah dimuat) tidak
+/// hilang saat berpindah tab, dengan transisi halus saat pindah.
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -63,7 +65,7 @@ class _MainShellState extends State<MainShell> {
         // pill-nya. Scaffold menambahkan tinggi navbar ke padding bawah
         // MediaQuery; daftar di tiap tab memakai itu sebagai jarak bawah.
         extendBody: true,
-        body: IndexedStack(index: indeks, children: _halaman),
+        body: TransisiTab(indeks: indeks, anak: _halaman),
         bottomNavigationBar: _NavigasiBawah(indeks: indeks),
       ),
     );

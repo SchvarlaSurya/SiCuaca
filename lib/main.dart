@@ -26,6 +26,7 @@ import 'services/preferences_service.dart';
 import 'services/riwayat_gempa_repository.dart';
 import 'services/riwayat_gempa_sqflite.dart';
 import 'services/wilayah_service.dart';
+import 'widgets/splash_gerbang.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +67,7 @@ Future<void> main() async {
       preferencesService: preferences,
       pengaturan: pengaturan,
       sudahOnboarding: sudahOnboarding,
+      tampilkanSplash: true,
     ),
   );
 }
@@ -83,6 +85,7 @@ class SiCuacaApp extends StatelessWidget {
     this.riwayatGempa,
     this.pengaturan,
     this.sudahOnboarding = true,
+    this.tampilkanSplash = false,
   });
 
   final ApiService? apiService;
@@ -94,6 +97,9 @@ class SiCuacaApp extends StatelessWidget {
   final RiwayatGempaRepository? riwayatGempa;
   final PengaturanProvider? pengaturan;
   final bool sudahOnboarding;
+
+  /// Splash dalam aplikasi; hanya dinyalakan dari [main] (tes mematikannya).
+  final bool tampilkanSplash;
 
   @override
   Widget build(BuildContext context) {
@@ -171,15 +177,22 @@ class SiCuacaApp extends StatelessWidget {
               FavoritProvider(context.read<PreferencesService>())..muat(),
         ),
       ],
-      child: _Aplikasi(sudahOnboarding: sudahOnboarding),
+      child: _Aplikasi(
+        sudahOnboarding: sudahOnboarding,
+        tampilkanSplash: tampilkanSplash,
+      ),
     );
   }
 }
 
 class _Aplikasi extends StatefulWidget {
-  const _Aplikasi({required this.sudahOnboarding});
+  const _Aplikasi({
+    required this.sudahOnboarding,
+    required this.tampilkanSplash,
+  });
 
   final bool sudahOnboarding;
+  final bool tampilkanSplash;
 
   @override
   State<_Aplikasi> createState() => _AplikasiState();
@@ -225,9 +238,12 @@ class _AplikasiState extends State<_Aplikasi> {
         }
         return bahasaDidukung.first;
       },
-      home: _sudahOnboarding
-          ? const MainShell()
-          : OnboardingScreen(onSelesai: _selesaiOnboarding),
+      home: SplashGerbang(
+        aktif: widget.tampilkanSplash,
+        child: _sudahOnboarding
+            ? const MainShell()
+            : OnboardingScreen(onSelesai: _selesaiOnboarding),
+      ),
     );
   }
 }

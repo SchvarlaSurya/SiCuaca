@@ -346,8 +346,13 @@ void main() {
         expect(find.text(t.onboardingGempaJudul), findsOneWidget);
         await tester.tap(find.text(t.onboardingLanjut));
         await tester.pumpAndSettle();
+        expect(find.text(t.onboardingSiagaJudul), findsOneWidget);
+        await tester.tap(find.text(t.onboardingLanjut));
+        await tester.pumpAndSettle();
         expect(find.text(t.onboardingWilayahJudul), findsOneWidget);
         expect(find.text(t.onboardingLewati), findsNothing);
+        // Halaman terakhir menegaskan sumber BMKG dan bukan aplikasi resmi.
+        expect(find.text(t.onboardingSumber), findsOneWidget);
 
         await tester.tap(find.text(t.onboardingMulai));
         await tester.pumpAndSettle();

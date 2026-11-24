@@ -1239,4 +1239,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String tasProgresBeranda(String n, String total) {
     return 'Emergency bag: $n of $total ready';
   }
+
+  @override
+  String get splashTagline => 'Weather and earthquakes from BMKG open data';
+
+  @override
+  String get onboardingSiagaJudul => 'Earthquake Preparedness';
+
+  @override
+  String get onboardingSiagaDeskripsi =>
+      'Learn safe steps before, during, and after an earthquake, then build your emergency bag. Content comes from BMKG and BNPB.';
+
+  @override
+  String get onboardingSumber =>
+      'Data source: BMKG. SiCuaca is not an official BMKG app.';
 }

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../providers/riwayat_gempa_provider.dart';
+import 'pencet_lembut.dart';
 
 /// Membuka lembar filter riwayat. Mengembalikan saringan baru bila pengguna
 /// menekan "Terapkan" atau "Setel ulang"; null bila ditutup tanpa memilih.
@@ -231,17 +232,21 @@ class _FilterGempaSheetState extends State<FilterGempaSheet> {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
-                    onPressed: () =>
-                        Navigator.of(context).pop(const FilterRiwayat()),
-                    child: Text(l.filterSetelUlang),
+                  child: PencetLembut(
+                    child: OutlinedButton(
+                      onPressed: () =>
+                          Navigator.of(context).pop(const FilterRiwayat()),
+                      child: Text(l.filterSetelUlang),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: FilledButton(
-                    onPressed: () => Navigator.of(context).pop(_f),
-                    child: Text(l.filterTerapkan),
+                  child: PencetLembut(
+                    child: FilledButton(
+                      onPressed: () => Navigator.of(context).pop(_f),
+                      child: Text(l.filterTerapkan),
+                    ),
                   ),
                 ),
               ],

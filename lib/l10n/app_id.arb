@@ -390,5 +390,9 @@
   "tasProgres": "{n} dari {total} siap",
   "@tasProgres": {"placeholders": {"n": {"type": "String"}, "total": {"type": "String"}}},
   "tasProgresBeranda": "Tas siaga: {n} dari {total} siap",
-  "@tasProgresBeranda": {"placeholders": {"n": {"type": "String"}, "total": {"type": "String"}}}
+  "@tasProgresBeranda": {"placeholders": {"n": {"type": "String"}, "total": {"type": "String"}}},
+  "splashTagline": "Cuaca dan gempa dari data terbuka BMKG",
+  "onboardingSiagaJudul": "Siap Siaga Gempa",
+  "onboardingSiagaDeskripsi": "Pelajari langkah aman sebelum, saat, dan setelah gempa, lalu lengkapi tas siaga Anda. Isinya bersumber dari BMKG dan BNPB.",
+  "onboardingSumber": "Sumber data: BMKG. SiCuaca bukan aplikasi resmi BMKG."
 }

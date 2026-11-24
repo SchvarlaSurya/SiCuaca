@@ -12,6 +12,7 @@ import '../services/preferences_service.dart';
 import '../widgets/ikon_cuaca.dart';
 import '../widgets/sumber_bmkg.dart';
 import '../widgets/app_chrome.dart';
+import '../widgets/pencet_lembut.dart';
 
 class PerbandinganCuacaScreen extends StatefulWidget {
   const PerbandinganCuacaScreen({super.key});
@@ -61,9 +62,11 @@ class _PerbandinganCuacaScreenState extends State<PerbandinganCuacaScreen> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
-                      OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(context.l10n.cariWilayah),
+                      PencetLembut(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(context.l10n.cariWilayah),
+                        ),
                       ),
                     ],
                   ),

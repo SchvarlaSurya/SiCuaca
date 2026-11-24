@@ -9,6 +9,7 @@ import '../providers/lokasi_provider.dart';
 import '../providers/weather_provider.dart';
 import '../screens/pencarian_screen.dart';
 import 'status_data.dart';
+import 'pencet_lembut.dart';
 
 /// Tampilan untuk status cuaca selain "berhasil": belum ada wilayah,
 /// loading, atau error. Dipakai di Beranda dan tab Cuaca.
@@ -33,9 +34,11 @@ class StatusCuacaView extends StatelessWidget {
       StatusCuaca.error => GagalMuat(
         pesan: l.pesanGalat(cuaca.galat),
         onCobaLagi: cuaca.muatUlang,
-        aksiTambahan: OutlinedButton(
-          onPressed: () => bukaPencarian(context),
-          child: Text(l.gantiWilayah),
+        aksiTambahan: PencetLembut(
+          child: OutlinedButton(
+            onPressed: () => bukaPencarian(context),
+            child: Text(l.gantiWilayah),
+          ),
         ),
       ),
       StatusCuaca.belumAdaWilayah ||
@@ -67,15 +70,19 @@ class _PilihWilayah extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            FilledButton.icon(
-              onPressed: context.read<WeatherProvider>().pakaiLokasiGps,
-              icon: const IkonDuo(IkonApp.lokasiSaya),
-              label: Text(l.gunakanLokasiSaya),
+            PencetLembut(
+              child: FilledButton.icon(
+                onPressed: context.read<WeatherProvider>().pakaiLokasiGps,
+                icon: const IkonDuo(IkonApp.lokasiSaya),
+                label: Text(l.gunakanLokasiSaya),
+              ),
             ),
-            OutlinedButton.icon(
-              onPressed: () => bukaPencarian(context),
-              icon: const IkonDuo(IkonApp.cari),
-              label: Text(l.cariWilayah),
+            PencetLembut(
+              child: OutlinedButton.icon(
+                onPressed: () => bukaPencarian(context),
+                icon: const IkonDuo(IkonApp.cari),
+                label: Text(l.cariWilayah),
+              ),
             ),
           ],
         ),
@@ -116,10 +123,12 @@ class DataTidakTersedia extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        OutlinedButton.icon(
-          onPressed: () => bukaPencarian(context),
-          icon: const IkonDuo(IkonApp.cari),
-          label: Text(l.gantiWilayah),
+        PencetLembut(
+          child: OutlinedButton.icon(
+            onPressed: () => bukaPencarian(context),
+            icon: const IkonDuo(IkonApp.cari),
+            label: Text(l.gantiWilayah),
+          ),
         ),
       ],
     );

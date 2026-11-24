@@ -5,6 +5,7 @@ import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../providers/pengaturan_provider.dart';
 import '../widgets/app_chrome.dart';
+import '../widgets/pencet_lembut.dart';
 
 /// Mengatur urutan bagian Beranda. Bisa diseret (gagang di kanan) atau
 /// memakai tombol panah, supaya tetap bisa dipakai tanpa gestur seret.
@@ -108,12 +109,14 @@ class UrutanBerandaScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerLeft,
-              child: OutlinedButton.icon(
-                onPressed: pengaturan.urutanBerandaBawaan
-                    ? null
-                    : pengaturan.setelUlangUrutanBeranda,
-                icon: const IkonDuo(IkonApp.setelUlang),
-                label: Text(l.setelUlangUrutan),
+              child: PencetLembut(
+                child: OutlinedButton.icon(
+                  onPressed: pengaturan.urutanBerandaBawaan
+                      ? null
+                      : pengaturan.setelUlangUrutanBeranda,
+                  icon: const IkonDuo(IkonApp.setelUlang),
+                  label: Text(l.setelUlangUrutan),
+                ),
               ),
             ),
           ],

@@ -5,6 +5,7 @@ import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../core/theme.dart';
 import 'app_chrome.dart';
+import 'pencet_lembut.dart';
 
 /// Widget status bersama untuk semua layar data: memuat (kerangka),
 /// gagal, kosong, dan banner offline.
@@ -210,10 +211,12 @@ class GagalMuat extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            FilledButton.icon(
-              onPressed: onCobaLagi,
-              icon: const IkonDuo(IkonApp.muatUlang),
-              label: Text(context.l10n.cobaLagi),
+            PencetLembut(
+              child: FilledButton.icon(
+                onPressed: onCobaLagi,
+                icon: const IkonDuo(IkonApp.muatUlang),
+                label: Text(context.l10n.cobaLagi),
+              ),
             ),
             ?aksiTambahan,
           ],

@@ -2147,6 +2147,30 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Tas siaga: {n} dari {total} siap'**
   String tasProgresBeranda(String n, String total);
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca dan gempa dari data terbuka BMKG'**
+  String get splashTagline;
+
+  /// No description provided for @onboardingSiagaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Siap Siaga Gempa'**
+  String get onboardingSiagaJudul;
+
+  /// No description provided for @onboardingSiagaDeskripsi.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelajari langkah aman sebelum, saat, dan setelah gempa, lalu lengkapi tas siaga Anda. Isinya bersumber dari BMKG dan BNPB.'**
+  String get onboardingSiagaDeskripsi;
+
+  /// No description provided for @onboardingSumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Sumber data: BMKG. SiCuaca bukan aplikasi resmi BMKG.'**
+  String get onboardingSumber;
 }
 
 class _AppLocalizationsDelegate

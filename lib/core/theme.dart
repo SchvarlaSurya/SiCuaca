@@ -118,6 +118,19 @@ class AppTheme {
     );
   }();
 
+  /// Transisi antar halaman: memudar sambil bergeser tipis (gaya Material 3),
+  /// sama di semua platform. Dimatikan saat "kurangi gerakan".
+  static const PageTransitionsTheme _transisiHalaman = PageTransitionsTheme(
+    builders: {
+      TargetPlatform.android: _TransisiHalaman(),
+      TargetPlatform.iOS: _TransisiHalaman(),
+      TargetPlatform.macOS: _TransisiHalaman(),
+      TargetPlatform.windows: _TransisiHalaman(),
+      TargetPlatform.linux: _TransisiHalaman(),
+      TargetPlatform.fuchsia: _TransisiHalaman(),
+    },
+  );
+
   static ThemeData _build(ColorScheme skema) {
     final dasar = ThemeData(
       colorScheme: skema,
@@ -128,6 +141,7 @@ class AppTheme {
     final huruf = dasar.textTheme;
 
     return dasar.copyWith(
+      pageTransitionsTheme: _transisiHalaman,
       appBarTheme: AppBarTheme(
         backgroundColor: skema.surface,
         foregroundColor: skema.onSurface,
@@ -204,6 +218,30 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
       ),
+    );
+  }
+}
+
+class _TransisiHalaman extends PageTransitionsBuilder {
+  const _TransisiHalaman();
+
+  static const _dasar = FadeForwardsPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    if (MediaQuery.of(context).disableAnimations) return child;
+    return _dasar.buildTransitions<T>(
+      route,
+      context,
+      animation,
+      secondaryAnimation,
+      child,
     );
   }
 }
