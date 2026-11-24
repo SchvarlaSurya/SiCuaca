@@ -28,6 +28,19 @@ enum KondisiLangit {
   }
 }
 
+/// Aksen lapisan kedua (isian) ikon cuaca duotone. Hanya penguat visual:
+/// garis ikon tetap memakai warna teks/tema, dan kondisi selalu juga
+/// ditulis sebagai teks.
+Color aksenKondisi(KondisiLangit kondisi, {required bool malam}) =>
+    switch (kondisi) {
+      KondisiLangit.cerah =>
+        malam ? const Color(0xFFF2D27A) : const Color(0xFFF5B400),
+      KondisiLangit.berawan => const Color(0xFF8FA8D6),
+      KondisiLangit.kabut => const Color(0xFFA7AFBC),
+      KondisiLangit.hujan => const Color(0xFF3B8BEB),
+      KondisiLangit.petir => const Color(0xFF8E5CF7),
+    };
+
 /// Warna kartu hero cuaca.
 class GayaHero {
   const GayaHero(this.atas, this.bawah, this.teks, this.redup);

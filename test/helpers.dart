@@ -1,8 +1,10 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 
+import 'package:app/core/ikon.dart';
 import 'package:app/core/constants.dart';
 import 'package:app/core/exceptions.dart';
 import 'package:app/core/l10n.dart';
@@ -121,3 +123,15 @@ Widget buatApp({
       PengaturanProvider(PreferencesService(), bahasa: PilihanBahasa.indonesia),
   preferencesService: PreferencesService(),
 );
+
+/// Tab di navigasi bawah: 'beranda', 'cuaca', 'gempa', 'pengaturan'.
+/// Dicari lewat key karena tab Cuaca dan Gempa menampilkan data, bukan ikon.
+Finder navTab(String nama) => find.byKey(ValueKey('nav.$nama'));
+
+/// Membuka pengaturan notifikasi lewat tombol lonceng di tab Gempa.
+Future<void> bukaPeringatan(WidgetTester tester) async {
+  await tester.tap(navTab('gempa'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byIcon(IkonApp.peringatan));
+  await tester.pumpAndSettle();
+}

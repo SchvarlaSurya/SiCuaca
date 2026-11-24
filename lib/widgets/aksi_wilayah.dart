@@ -27,12 +27,12 @@ class AksiWilayah extends StatelessWidget {
                   dimension: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Icon(IkonApp.lokasiSaya),
+              : const IkonDuo(IkonApp.lokasiSaya),
         ),
         _AksiBulat(
           tooltip: context.l10n.cariWilayah,
           onPressed: () => bukaPencarian(context),
-          icon: const Icon(IkonApp.cari),
+          icon: const IkonDuo(IkonApp.cari),
         ),
       ],
     );

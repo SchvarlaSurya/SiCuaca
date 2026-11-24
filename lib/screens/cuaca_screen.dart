@@ -53,7 +53,7 @@ class CuacaScreen extends StatelessWidget {
         actions: [
           IconButton(
             tooltip: context.l10n.bandingkanFavorit,
-            icon: const Icon(IkonApp.bandingkan),
+            icon: const IkonDuo(IkonApp.bandingkan),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => const PerbandinganCuacaScreen(),
@@ -64,7 +64,7 @@ class CuacaScreen extends StatelessWidget {
           if (berhasil)
             IconButton(
               tooltip: context.l10n.bagikanCuaca,
-              icon: const Icon(IkonApp.bagikan),
+              icon: const IkonDuo(IkonApp.bagikan),
               onPressed: () => _bukaKartuCuaca(
                 context,
                 wilayah,
@@ -229,12 +229,12 @@ class KartuCuacaScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
-            icon: const Icon(IkonApp.bagikan),
+            icon: const IkonDuo(IkonApp.bagikan),
             label: Text(l.bagikanKartuCuaca),
             onPressed: () => _bagikan(context, teks),
           ),
           TextButton.icon(
-            icon: const Icon(IkonApp.salin),
+            icon: const IkonDuo(IkonApp.salin),
             label: Text(l.salinRingkasanTeks),
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: teks));
@@ -492,7 +492,7 @@ class _Info extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(ikon, size: 14, color: gaya?.color),
+        IkonDuo(ikon, size: 14, color: gaya?.color),
         const SizedBox(width: 3),
         Flexible(child: Text(teks, style: gaya)),
       ],

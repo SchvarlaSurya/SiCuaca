@@ -46,7 +46,6 @@ dependencies:
   intl: ^0.20.2
   package_info_plus: ^10.2.2
   share_plus: ^13.3.1
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,6 +74,7 @@ flutter:
     - assets/data/LICENSE-wilayah.txt
     - assets/fonts/OFL-Inter.txt
     - assets/fonts/OFL-PlusJakartaSans.txt
+    - assets/fonts/LICENSE-Phosphor.txt
 
   # Huruf di-bundle (SIL OFL 1.1), tidak diunduh saat aplikasi berjalan.
   fonts:
@@ -84,6 +84,13 @@ flutter:
           weight: 600
         - asset: assets/fonts/PlusJakartaSans-Bold.ttf
           weight: 700
+    # Ikon Phosphor (MIT): gaya duotone + isian untuk bintang favorit.
+    - family: PhosphorDuotone
+      fonts:
+        - asset: assets/fonts/Phosphor-Duotone.ttf
+    - family: PhosphorFill
+      fonts:
+        - asset: assets/fonts/Phosphor-Fill.ttf
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter-Regular.ttf

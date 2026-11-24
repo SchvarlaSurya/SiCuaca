@@ -194,7 +194,7 @@ class GagalMuat extends StatelessWidget {
                 color: scheme.errorContainer,
                 shape: BoxShape.circle,
               ),
-              child: Icon(ikon, color: scheme.onErrorContainer),
+              child: IkonDuo(ikon, color: scheme.onErrorContainer),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -212,7 +212,7 @@ class GagalMuat extends StatelessWidget {
           children: [
             FilledButton.icon(
               onPressed: onCobaLagi,
-              icon: const Icon(IkonApp.muatUlang),
+              icon: const IkonDuo(IkonApp.muatUlang),
               label: Text(context.l10n.cobaLagi),
             ),
             ?aksiTambahan,
@@ -249,7 +249,7 @@ class KosongData extends StatelessWidget {
           ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(IkonApp.kosong, color: warna, size: 32),
+                IkonDuo(IkonApp.kosong, color: warna, size: 32),
                 const SizedBox(height: 8),
                 teks,
               ],
@@ -282,7 +282,7 @@ class BannerOffline extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(IkonApp.offline, size: 20, color: warna),
+          IkonDuo(IkonApp.offline, size: 20, color: warna),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -358,7 +358,7 @@ class JudulBagian extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(context.l10n.selengkapnya),
-                  const Icon(IkonApp.selengkapnya, size: 20),
+                  const IkonDuo(IkonApp.selengkapnya, size: 20),
                 ],
               ),
             )
@@ -398,7 +398,7 @@ class TileInfo extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(ikon, size: 18, color: scheme.onSurfaceVariant),
+              IkonDuo(ikon, size: 18, color: scheme.onSurfaceVariant),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(

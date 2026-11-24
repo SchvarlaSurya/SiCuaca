@@ -151,7 +151,7 @@ class _Jejak extends StatelessWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           for (var i = 0; i < bagian.length; i++) ...[
-            if (i > 0) const Icon(IkonApp.selengkapnya, size: 18),
+            if (i > 0) const IkonDuo(IkonApp.selengkapnya, size: 18),
             TextButton(
               onPressed: i == bagian.length - 1 ? null : () => onKembaliKe(i),
               child: Text(bagian[i]),
@@ -195,7 +195,7 @@ class _Daftar extends StatelessWidget {
               child: TextField(
                 controller: saring,
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(IkonApp.saring),
+                  prefixIcon: const IkonDuo(IkonApp.saring),
                   hintText: l.saringDaftar,
                   border: const OutlineInputBorder(),
                   isDense: true,
@@ -216,7 +216,7 @@ class _Daftar extends StatelessWidget {
                           title: Text(s.nama),
                           trailing: s.desa
                               ? null
-                              : const Icon(IkonApp.selengkapnya),
+                              : const IkonDuo(IkonApp.selengkapnya),
                           onTap: () => onPilih(s),
                         );
                       },

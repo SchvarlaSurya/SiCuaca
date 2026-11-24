@@ -113,7 +113,7 @@ class _Awal extends StatelessWidget {
         MasukLembut(
           child: Card(
             child: ListTile(
-              leading: const Icon(IkonApp.lokasiSaya),
+              leading: const IkonDuo(IkonApp.lokasiSaya),
               title: Text(context.l10n.gunakanLokasiSaya),
               onTap: onGps,
             ),
@@ -124,10 +124,10 @@ class _Awal extends StatelessWidget {
           delay: const Duration(milliseconds: 70),
           child: Card(
             child: ListTile(
-              leading: const Icon(IkonApp.daftarWilayah),
+              leading: const IkonDuo(IkonApp.daftarWilayah),
               title: Text(context.l10n.pilihDariDaftar),
               subtitle: Text(context.l10n.pilihDariDaftarKeterangan),
-              trailing: const Icon(IkonApp.selengkapnya),
+              trailing: const IkonDuo(IkonApp.selengkapnya),
               onTap: () async {
                 final lokasi = await bukaPilihWilayah(context);
                 if (lokasi != null) onPilih(lokasi);
@@ -168,7 +168,7 @@ class _BarisWilayah extends StatelessWidget {
     ].where((s) => s.isNotEmpty).join(', ');
 
     return ListTile(
-      leading: const Icon(IkonApp.tempat),
+      leading: const IkonDuo(IkonApp.tempat),
       title: Text(lokasi.desa),
       subtitle: Text(induk),
       trailing: TombolFavorit(lokasi: lokasi),

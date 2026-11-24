@@ -33,7 +33,7 @@ class LokasiBanner extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(IkonApp.lokasiMati, color: scheme.onSecondaryContainer),
+                IkonDuo(IkonApp.lokasiMati, color: scheme.onSecondaryContainer),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -44,7 +44,7 @@ class LokasiBanner extends StatelessWidget {
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   onPressed: lokasi.reset,
-                  icon: const Icon(IkonApp.tutup),
+                  icon: const IkonDuo(IkonApp.tutup),
                   color: scheme.onSecondaryContainer,
                 ),
               ],

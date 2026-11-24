@@ -94,7 +94,7 @@ class BerandaScreen extends StatelessWidget {
                 MasukLembut(
                   child: JudulBagian(
                     l.navPeringatan,
-                    onSelengkapnya: () => Navigasi.bukaTab(TabUtama.peringatan),
+                    onSelengkapnya: Navigasi.bukaPeringatan,
                   ),
                 ),
                 const MasukLembut(
@@ -129,13 +129,13 @@ class _RingkasPeringatan extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
-        leading: Icon(
+        leading: IkonDuo(
           ambang == AmbangGempa.mati ? IkonApp.notifMati : IkonApp.notifAktif,
         ),
         title: Text(l.notifJudul),
         subtitle: Text(status),
-        trailing: const Icon(IkonApp.selengkapnya),
-        onTap: () => Navigasi.bukaTab(TabUtama.peringatan),
+        trailing: const IkonDuo(IkonApp.selengkapnya),
+        onTap: Navigasi.bukaPeringatan,
       ),
     );
   }

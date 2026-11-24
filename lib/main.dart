@@ -34,6 +34,7 @@ Future<void> main() async {
     for (final (nama, berkas) in const [
       ('Inter', 'assets/fonts/OFL-Inter.txt'),
       ('Plus Jakarta Sans', 'assets/fonts/OFL-PlusJakartaSans.txt'),
+      ('Phosphor Icons', 'assets/fonts/LICENSE-Phosphor.txt'),
     ]) {
       yield LicenseEntryWithLineBreaks([
         nama,

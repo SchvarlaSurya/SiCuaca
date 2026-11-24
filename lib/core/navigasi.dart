@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../models/gempa.dart';
 import '../screens/gempa_detail_screen.dart';
+import '../screens/peringatan_screen.dart';
 
 /// Urutan tab di navigasi bawah.
 abstract final class TabUtama {
   static const int beranda = 0;
   static const int cuaca = 1;
   static const int gempa = 2;
-  static const int peringatan = 3;
-  static const int pengaturan = 4;
+  static const int pengaturan = 3;
 }
 
 /// Titik navigasi terpusat. Dipakai juga dari luar pohon widget (ketukan
@@ -27,6 +27,14 @@ class Navigasi {
 
   /// Pindah ke tab [indeks] (lihat [TabUtama]).
   static void bukaTab(int indeks) => tabAktif.value = indeks;
+
+  /// Membuka pengaturan notifikasi gempa (dulu tab sendiri, sekarang
+  /// dibuka dari tab Gempa dan Beranda).
+  static void bukaPeringatan() {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute<void>(builder: (_) => const PeringatanScreen()),
+    );
+  }
 
   /// Membuka halaman detail gempa. Mengembalikan false bila navigator belum
   /// siap (pemanggil boleh mencoba lagi nanti).

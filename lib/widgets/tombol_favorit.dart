@@ -19,8 +19,8 @@ class TombolFavorit extends StatelessWidget {
       tooltip: aktif ? context.l10n.hapusFavorit : context.l10n.tambahFavorit,
       isSelected: aktif,
       onPressed: () => favorit.toggle(lokasi),
-      icon: const Icon(IkonApp.bukanFavorit),
-      selectedIcon: Icon(
+      icon: const IkonDuo(IkonApp.bukanFavorit),
+      selectedIcon: IkonDuo(
         IkonApp.favorit,
         color: Theme.of(context).colorScheme.primary,
       ),

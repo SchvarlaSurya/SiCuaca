@@ -97,20 +97,20 @@ class PengaturanScreen extends StatelessWidget {
               judul: l.tentangJudul,
               children: [
                 ListTile(
-                  leading: const Icon(IkonApp.info),
+                  leading: const IkonDuo(IkonApp.info),
                   title: Text(l.appName),
                   subtitle: Text(l.tentangSumber),
                 ),
                 ListTile(
-                  leading: const Icon(IkonApp.peta),
+                  leading: const IkonDuo(IkonApp.peta),
                   title: Text(l.lisensiDataWilayah),
                   subtitle: Text(l.tentangDataWilayah),
                 ),
                 ListTile(
-                  leading: const Icon(IkonApp.info),
+                  leading: const IkonDuo(IkonApp.info),
                   title: Text(l.panduanAplikasi),
                   subtitle: Text(l.panduanAplikasiKeterangan),
-                  trailing: const Icon(IkonApp.selengkapnya),
+                  trailing: const IkonDuo(IkonApp.selengkapnya),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => OnboardingScreen(
@@ -120,9 +120,9 @@ class PengaturanScreen extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(IkonApp.lisensi),
+                  leading: const IkonDuo(IkonApp.lisensi),
                   title: Text(l.lisensiSumberTerbuka),
-                  trailing: const Icon(IkonApp.selengkapnya),
+                  trailing: const IkonDuo(IkonApp.selengkapnya),
                   onTap: () => showLicensePage(
                     context: context,
                     applicationName: l.appName,
@@ -159,7 +159,7 @@ class _PengaturanIntro extends StatelessWidget {
               color: scheme.primaryContainer,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(IkonApp.setelan, color: scheme.primary),
+            child: IkonDuo(IkonApp.setelan, color: scheme.primary),
           ),
           const SizedBox(width: 12),
           Expanded(child: Text(context.l10n.pengaturanIntro)),
@@ -249,7 +249,7 @@ class _Pilihan<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(ikon),
+      leading: IkonDuo(ikon),
       title: Text(judul),
       subtitle: Text(keterangan ?? pilihan[nilai] ?? ''),
       enabled: aktif,
@@ -269,7 +269,7 @@ class _Versi extends StatelessWidget {
       builder: (context, snap) {
         final info = snap.data;
         return ListTile(
-          leading: const Icon(IkonApp.versi),
+          leading: const IkonDuo(IkonApp.versi),
           title: Text(l.tentangVersi),
           subtitle: Text(
             info == null

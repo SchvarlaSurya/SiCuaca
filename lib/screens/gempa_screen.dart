@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../core/ikon.dart';
 import '../core/l10n.dart';
+import '../core/navigasi.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import 'riwayat_gempa_screen.dart';
@@ -36,8 +37,13 @@ class GempaScreen extends StatelessWidget {
           ),
           actions: [
             IconButton(
+              tooltip: context.l10n.navPeringatan,
+              icon: const IkonDuo(IkonApp.peringatan),
+              onPressed: Navigasi.bukaPeringatan,
+            ),
+            IconButton(
               tooltip: context.l10n.siagaJudul,
-              icon: const Icon(IkonApp.siaga),
+              icon: const IkonDuo(IkonApp.siaga),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const SiagaGempaScreen(),
@@ -46,7 +52,7 @@ class GempaScreen extends StatelessWidget {
             ),
             IconButton(
               tooltip: context.l10n.riwayatJudul,
-              icon: const Icon(IkonApp.riwayat),
+              icon: const IkonDuo(IkonApp.riwayat),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const RiwayatGempaScreen(),
@@ -140,7 +146,7 @@ class _GempaIntro extends StatelessWidget {
               color: Colors.white.withValues(alpha: .16),
               shape: BoxShape.circle,
             ),
-            child: const Icon(IkonApp.gempa, color: Colors.white),
+            child: const IkonDuo(IkonApp.gempa, color: Colors.white),
           ),
           const SizedBox(width: 14),
           Expanded(

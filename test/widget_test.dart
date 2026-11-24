@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'helpers.dart';
 
-import 'package:app/core/ikon.dart';
 import 'package:app/models/ambang_gempa.dart';
 import 'package:app/models/lokasi.dart';
 import 'package:app/models/prakiraan.dart';
@@ -120,7 +119,7 @@ void main() {
     final tersimpan = await PreferencesService().wilayahTerakhir();
     expect(tersimpan?.adm4, '31.71.01.1001');
 
-    await tester.tap(find.byIcon(IkonApp.cuaca).last);
+    await tester.tap(navTab('cuaca'));
     await tester.pumpAndSettle();
     expect(find.byType(Tab), findsNWidgets(3));
   });
@@ -215,8 +214,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(IkonApp.peringatan).last);
-      await tester.pumpAndSettle();
+      await bukaPeringatan(tester);
       await tester.tap(find.text(l.notifM5));
       await tester.pumpAndSettle();
 
@@ -239,7 +237,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(IkonApp.gempa).last);
+      await tester.tap(navTab('gempa'));
       await tester.pumpAndSettle();
       expect(find.text(l.gempaTerbaruJudul), findsWidgets);
 
@@ -281,7 +279,7 @@ void main() {
       await tester.pumpWidget(buatApp(gps: const HasilGps(StatusGps.ditolak)));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(IkonApp.gempa).last);
+      await tester.tap(navTab('gempa'));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.gempaTabTerkini));
       await tester.pumpAndSettle();
@@ -300,7 +298,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(IkonApp.gempa).last);
+      await tester.tap(navTab('gempa'));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.gempaTabDirasakan));
       await tester.pumpAndSettle();

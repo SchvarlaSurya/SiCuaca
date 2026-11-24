@@ -127,7 +127,7 @@ class _SiagaHero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(IkonApp.siaga, color: Colors.white, size: 30),
+          const IkonDuo(IkonApp.siaga, color: Colors.white, size: 30),
           const SizedBox(height: 14),
           Text(
             l.siagaHeroJudul,
@@ -160,7 +160,7 @@ class _Panduan extends StatelessWidget {
       title: Text(title),
       children: [
         for (final item in items)
-          ListTile(leading: const Icon(IkonApp.panduan), title: Text(item)),
+          ListTile(leading: const IkonDuo(IkonApp.panduan), title: Text(item)),
       ],
     ),
   );

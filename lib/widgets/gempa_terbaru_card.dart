@@ -112,7 +112,7 @@ class _Isi extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              Icon(IkonApp.jarak, size: 16, color: scheme.primary),
+              IkonDuo(IkonApp.jarak, size: 16, color: scheme.primary),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -148,7 +148,7 @@ class _Isi extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(child: keterangan),
-              Icon(IkonApp.selengkapnya, color: scheme.onSurfaceVariant),
+              IkonDuo(IkonApp.selengkapnya, color: scheme.onSurfaceVariant),
             ],
           ),
         const SizedBox(height: 12),

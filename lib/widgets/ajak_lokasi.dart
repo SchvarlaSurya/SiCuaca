@@ -31,7 +31,7 @@ class AjakLokasi extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(IkonApp.lokasiCari, color: scheme.onSecondaryContainer),
+              IkonDuo(IkonApp.lokasiCari, color: scheme.onSecondaryContainer),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -49,7 +49,7 @@ class AjakLokasi extends StatelessWidget {
                 onPressed: lokasi.sedangMencari
                     ? null
                     : context.read<WeatherProvider>().pakaiLokasiGps,
-                icon: const Icon(IkonApp.lokasiSaya, size: 18),
+                icon: const IkonDuo(IkonApp.lokasiSaya, size: 18),
                 label: Text(context.l10n.gunakanLokasiSaya),
               ),
               if (perluPengaturan)

@@ -163,17 +163,14 @@ void main() {
         final angin = tester.getTopLeft(find.text(l.angin).first);
         expect(angin.dy, greaterThan(kelembapan.dy));
 
-        for (final ikon in [
-          IkonApp.cuaca,
-          IkonApp.gempa,
-          IkonApp.peringatan,
-          IkonApp.pengaturan,
-          IkonApp.beranda,
-        ]) {
-          await tester.tap(find.byIcon(ikon).last);
+        for (final tab in ['cuaca', 'gempa', 'pengaturan', 'beranda']) {
+          await tester.tap(navTab(tab));
           await tester.pumpAndSettle();
         }
-        await tester.tap(find.byIcon(IkonApp.gempa).last);
+        await bukaPeringatan(tester);
+        await tester.tap(find.byType(BackButton));
+        await tester.pumpAndSettle();
+        await tester.tap(navTab('gempa'));
         await tester.pumpAndSettle();
         for (final tab in [l.gempaTabTerkini, l.gempaTabDirasakan]) {
           await tester.tap(find.text(tab));
@@ -283,7 +280,7 @@ void main() {
         buatApp(gps: const HasilGps(StatusGps.ditolak), notif: notif),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(IkonApp.pengaturan).last);
+      await tester.tap(navTab('pengaturan'));
       await tester.pumpAndSettle();
       expect(find.text(l.pengaturanTampilan), findsOneWidget);
       expect(find.text(l.tentangJudul), findsOneWidget);
@@ -328,7 +325,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.byIcon(IkonApp.gempa).last);
+        await tester.tap(navTab('gempa'));
         await tester.pumpAndSettle();
 
         await tester.tap(find.byIcon(IkonApp.riwayat));
@@ -412,7 +409,7 @@ void main() {
 
         await tester.tap(find.text(t.onboardingMulai));
         await tester.pumpAndSettle();
-        expect(find.byIcon(IkonApp.beranda), findsWidgets);
+        expect(navTab('beranda'), findsOneWidget);
         final prefs = await SharedPreferences.getInstance();
         expect(prefs.getBool('sudah_onboarding'), isTrue);
         expect(tester.takeException(), isNull);
@@ -428,5 +425,31 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text(l.cuacaSaatIni), findsOneWidget);
     });
+  });
+
+  testWidgets('navbar: 4 tab, suhu dan magnitudo tampil sebagai data', (
+    tester,
+  ) async {
+    final semantik = tester.ensureSemantics();
+    await tester.pumpWidget(buatApp(gps: _gpsJakarta));
+    await tester.pumpAndSettle();
+
+    for (final tab in ['beranda', 'cuaca', 'gempa', 'pengaturan']) {
+      expect(navTab(tab), findsOneWidget);
+    }
+    expect(find.byKey(const ValueKey('nav.peringatan')), findsNothing);
+
+    final suhu = find.descendant(
+      of: navTab('cuaca'),
+      matching: find.textContaining('°'),
+    );
+    expect(suhu, findsOneWidget);
+    final magnitudo = find.descendant(
+      of: navTab('gempa'),
+      matching: find.textContaining(RegExp(r'^M\d')),
+    );
+    expect(magnitudo, findsOneWidget);
+    expect(tester.getSemantics(navTab('gempa')).value, contains(l.magnitudo));
+    semantik.dispose();
   });
 }

@@ -93,7 +93,7 @@ class HeroCuaca extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(IkonApp.tempat, size: 17, color: teks),
+                            IkonDuo(IkonApp.tempat, size: 17, color: teks),
                             const SizedBox(width: 5),
                             Expanded(
                               child: Text(
@@ -119,7 +119,7 @@ class HeroCuaca extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: const Icon(IkonApp.bagikan),
+                      icon: const IkonDuo(IkonApp.bagikan),
                       color: teks,
                       tooltip: l.bagikanCuaca,
                       onPressed: () {

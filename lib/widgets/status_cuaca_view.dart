@@ -69,12 +69,12 @@ class _PilihWilayah extends StatelessWidget {
           children: [
             FilledButton.icon(
               onPressed: context.read<WeatherProvider>().pakaiLokasiGps,
-              icon: const Icon(IkonApp.lokasiSaya),
+              icon: const IkonDuo(IkonApp.lokasiSaya),
               label: Text(l.gunakanLokasiSaya),
             ),
             OutlinedButton.icon(
               onPressed: () => bukaPencarian(context),
-              icon: const Icon(IkonApp.cari),
+              icon: const IkonDuo(IkonApp.cari),
               label: Text(l.cariWilayah),
             ),
           ],
@@ -105,7 +105,7 @@ class DataTidakTersedia extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(IkonApp.kosong, color: theme.colorScheme.onSurfaceVariant),
+            IkonDuo(IkonApp.kosong, color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -118,7 +118,7 @@ class DataTidakTersedia extends StatelessWidget {
         const SizedBox(height: 12),
         OutlinedButton.icon(
           onPressed: () => bukaPencarian(context),
-          icon: const Icon(IkonApp.cari),
+          icon: const IkonDuo(IkonApp.cari),
           label: Text(l.gantiWilayah),
         ),
       ],

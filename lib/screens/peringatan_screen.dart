@@ -132,7 +132,7 @@ class PeringatanScreen extends StatelessWidget {
               child: Divider(),
             ),
             ListTile(
-              leading: const Icon(IkonApp.peringatanDini),
+              leading: const IkonDuo(IkonApp.peringatanDini),
               title: Text(l.peringatanDiniSegera),
               subtitle: Text(l.peringatanKeterangan),
               enabled: false,
@@ -158,7 +158,7 @@ class _PeringatanIntro extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(IkonApp.notifAktif),
+          const IkonDuo(IkonApp.notifAktif),
           const SizedBox(width: 12),
           Expanded(child: Text(context.l10n.peringatanIntro)),
         ],
@@ -199,7 +199,7 @@ class _Kotak extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(ikon, color: teks),
+              IkonDuo(ikon, color: teks),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(pesan, style: TextStyle(color: teks)),

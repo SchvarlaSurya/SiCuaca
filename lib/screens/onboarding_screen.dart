@@ -120,7 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 color: data.warnaLatarIkon,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
+                              child: IkonDuo(
                                 data.ikon,
                                 size: 72,
                                 color: data.warnaIkon,

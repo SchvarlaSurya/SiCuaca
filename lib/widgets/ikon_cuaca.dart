@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../core/ikon.dart';
+import '../core/warna_semantik.dart';
 
 /// Memetakan `weather_desc` BMKG ke ikon. Gambar dari URL BMKG sengaja
 /// tidak dipakai.
@@ -40,10 +41,15 @@ class IkonCuaca extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
+    return IkonDuo(
       ikonCuaca(deskripsi, malam: malam),
       size: size,
       color: warna ?? Theme.of(context).colorScheme.primary,
+      duotoneSecondaryColor: aksenKondisi(
+        KondisiLangit.dari(deskripsi),
+        malam: malam,
+      ),
+      duotoneSecondaryOpacity: 0.55,
       semanticLabel: deskripsi,
     );
   }

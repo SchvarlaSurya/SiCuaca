@@ -95,13 +95,13 @@ class _IsiRiwayatState extends State<_IsiRiwayat> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: TextField(
               decoration: InputDecoration(
-                prefixIcon: const Icon(IkonApp.cari),
+                prefixIcon: const IkonDuo(IkonApp.cari),
                 hintText: l.cariWilayahGempa,
                 suffixIcon: _query.isEmpty
                     ? null
                     : IconButton(
                         tooltip: l.hapusPencarian,
-                        icon: const Icon(IkonApp.hapus),
+                        icon: const IkonDuo(IkonApp.hapus),
                         onPressed: () => setState(() => _query = ''),
                       ),
                 border: const OutlineInputBorder(),
@@ -119,7 +119,7 @@ class _IsiRiwayatState extends State<_IsiRiwayat> {
                 Expanded(child: Text(l.riwayatJumlah(hasil.length))),
                 PopupMenuButton<String>(
                   tooltip: l.rentangGrafik,
-                  icon: const Icon(IkonApp.grafik),
+                  icon: const IkonDuo(IkonApp.grafik),
                   onSelected: (value) =>
                       _bukaGrafik(context, widget.daftar, value),
                   itemBuilder: (_) => [
@@ -132,7 +132,7 @@ class _IsiRiwayatState extends State<_IsiRiwayat> {
                 ),
                 PopupMenuButton<double?>(
                   tooltip: l.saringMagnitudo,
-                  icon: const Icon(IkonApp.saring),
+                  icon: const IkonDuo(IkonApp.saring),
                   onSelected: (value) => setState(() => _minimum = value),
                   itemBuilder: (_) => [
                     PopupMenuItem(value: null, child: Text(l.semuaMagnitudo)),
@@ -146,7 +146,7 @@ class _IsiRiwayatState extends State<_IsiRiwayat> {
                 IconButton(
                   tooltip: l.gempaDalam100Km,
                   isSelected: _hanyaDekat,
-                  icon: Icon(
+                  icon: IkonDuo(
                     IkonApp.jarak,
                     color: _hanyaDekat
                         ? Theme.of(context).colorScheme.primary

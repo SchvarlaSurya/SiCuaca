@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:app/core/ikon.dart';
 import 'package:app/core/exceptions.dart';
 import 'package:app/core/format.dart';
 import 'package:app/core/l10n.dart';
@@ -194,7 +193,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Beranda'), findsWidgets);
 
-      await tester.tap(find.byIcon(IkonApp.pengaturan).last);
+      await tester.tap(navTab('pengaturan'));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.tentangBahasa));
       await tester.pumpAndSettle();
@@ -208,7 +207,7 @@ void main() {
       expect(find.text('Beranda'), findsNothing);
 
       // Format waktu ikut bahasa: kartu Beranda memakai bentuk Inggris.
-      await tester.tap(find.byIcon(IkonApp.beranda));
+      await tester.tap(navTab('beranda'));
       await tester.pumpAndSettle();
       expect(find.textContaining('ago'), findsWidgets);
       expect(find.text(en.cuacaSaatIni), findsOneWidget);
@@ -223,7 +222,7 @@ void main() {
       await tester.pumpWidget(buatApp(gps: const HasilGps(StatusGps.ditolak)));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(IkonApp.pengaturan).last);
+      await tester.tap(navTab('pengaturan'));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.tentangTema));
       await tester.pumpAndSettle();
@@ -316,17 +315,14 @@ void main() {
         await tester.pumpAndSettle();
 
         // Kunjungi semua tab dan sub-tab; overflow akan menggagalkan test.
-        for (final ikon in [
-          IkonApp.cuaca,
-          IkonApp.gempa,
-          IkonApp.peringatan,
-          IkonApp.pengaturan,
-          IkonApp.beranda,
-        ]) {
-          await tester.tap(find.byIcon(ikon).last);
+        for (final tab in ['cuaca', 'gempa', 'pengaturan', 'beranda']) {
+          await tester.tap(navTab(tab));
           await tester.pumpAndSettle();
         }
-        await tester.tap(find.byIcon(IkonApp.gempa).last);
+        await bukaPeringatan(tester);
+        await tester.tap(find.byType(BackButton));
+        await tester.pumpAndSettle();
+        await tester.tap(navTab('gempa'));
         await tester.pumpAndSettle();
         final t = lookupAppLocalizations(bahasa.locale!);
         for (final tab in [t.gempaTabTerkini, t.gempaTabDirasakan]) {

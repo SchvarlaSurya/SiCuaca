@@ -44,7 +44,7 @@ class GempaDetailScreen extends StatelessWidget {
         title: Text(l.gempaDetailJudul),
         actions: [
           IconButton(
-            icon: const Icon(IkonApp.bagikan),
+            icon: const IkonDuo(IkonApp.bagikan),
             tooltip: l.bagikanGempa,
             onPressed: () {
               ShareService.bagikanGempa(
@@ -63,7 +63,7 @@ class GempaDetailScreen extends StatelessWidget {
           ),
           IconButton(
             tooltip: l.salinRingkasan,
-            icon: const Icon(IkonApp.salin),
+            icon: const IkonDuo(IkonApp.salin),
             onPressed: () async {
               final teks = l.ringkasanGempa(
                 gempa.magnitudo,
@@ -221,7 +221,7 @@ class _Shakemap extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(IkonApp.gambarTidakAda, color: scheme.onSurfaceVariant),
+          IkonDuo(IkonApp.gambarTidakAda, color: scheme.onSurfaceVariant),
           const SizedBox(height: 8),
           Text(
             context.l10n.shakemapTidakTersedia,
@@ -269,7 +269,7 @@ class _Baris extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(ikon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+          IkonDuo(ikon, size: 20, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

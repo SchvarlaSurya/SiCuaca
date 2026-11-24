@@ -72,7 +72,7 @@ class GempaItem extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(ikonKeterangan, size: 14, color: redup?.color),
+                        IkonDuo(ikonKeterangan, size: 14, color: redup?.color),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -89,7 +89,7 @@ class GempaItem extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(IkonApp.jarak, size: 14, color: scheme.primary),
+                        IkonDuo(IkonApp.jarak, size: 14, color: scheme.primary),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(

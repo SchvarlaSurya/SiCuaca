@@ -122,7 +122,7 @@ class _PerbandinganCuacaScreenState extends State<PerbandinganCuacaScreen> {
                                 ),
                                 trailing: IconButton(
                                   tooltip: context.l10n.cobaLagi,
-                                  icon: const Icon(IkonApp.muatUlang),
+                                  icon: const IkonDuo(IkonApp.muatUlang),
                                   onPressed: () => setState(
                                     () => _permintaan.remove(lokasi.adm4),
                                   ),
