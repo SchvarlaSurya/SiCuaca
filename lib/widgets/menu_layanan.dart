@@ -71,64 +71,59 @@ class _TombolMenu extends StatelessWidget {
       label: item.judul,
       hint: item.tautanKeluar ? l.layananBukaResmi : null,
       excludeSemantics: true,
-      child: Card(
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-        child: TekanLembut(
-          onTap: () => item.buka(context),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 14, 8, 12),
-            child: Column(
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: 46,
-                      height: 46,
-                      decoration: BoxDecoration(
-                        color: scheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: IkonDuo(
-                        item.ikon,
-                        color: scheme.onPrimaryContainer,
-                      ),
+      // Tanpa kartu di belakang: hanya ikon + label di atas latar.
+      child: TekanLembut(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () => item.buka(context),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 8, 4, 6),
+          child: Column(
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: scheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    if (item.tautanKeluar)
-                      Positioned(
-                        right: -6,
-                        top: -6,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 1,
-                          ),
-                          decoration: BoxDecoration(
-                            color: scheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            '↗',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                              fontWeight: FontWeight.w700,
-                            ),
+                    child: IkonDuo(item.ikon, color: scheme.onPrimaryContainer),
+                  ),
+                  if (item.tautanKeluar)
+                    Positioned(
+                      right: -6,
+                      top: -6,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: scheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '↗',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  item.judul,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.labelLarge,
-                ),
-              ],
-            ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                item.judul,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelLarge,
+              ),
+            ],
           ),
         ),
       ),
