@@ -287,7 +287,7 @@ void main() {
       await tester.tap(navTab('pengaturan'));
       await tester.pumpAndSettle();
       expect(find.text(l.pengaturanTampilan), findsOneWidget);
-      expect(find.text(l.tentangJudul), findsOneWidget);
+      expect(find.text(l.kacaCairJudul), findsOneWidget);
 
       await tester.ensureVisible(find.text(l.notifJudul).last);
       await tester.pumpAndSettle();

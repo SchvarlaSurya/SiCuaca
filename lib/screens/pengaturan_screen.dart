@@ -73,6 +73,14 @@ class PengaturanScreen extends StatelessWidget {
                   },
                   onPilih: pengaturan.pilihBahasa,
                 ),
+                SwitchListTile(
+                  key: const ValueKey('pengaturan.kacaCair'),
+                  secondary: const IkonDuo(IkonApp.tema),
+                  title: Text(l.kacaCairJudul),
+                  subtitle: Text(l.kacaCairKeterangan),
+                  value: pengaturan.kacaCair,
+                  onChanged: pengaturan.aturKacaCair,
+                ),
                 ListTile(
                   leading: const IkonDuo(IkonApp.urutan),
                   title: Text(l.urutanBerandaJudul),

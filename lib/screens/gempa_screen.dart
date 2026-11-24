@@ -37,28 +37,32 @@ class GempaScreen extends StatelessWidget {
             ],
           ),
           actions: [
-            TombolKaca(
-              tooltip: context.l10n.navPeringatan,
-              icon: const IkonDuo(IkonApp.peringatan),
-              onPressed: Navigasi.bukaPeringatan,
-            ),
-            TombolKaca(
-              tooltip: context.l10n.siagaJudul,
-              icon: const IkonDuo(IkonApp.siaga),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const SiagaGempaScreen(),
+            GrupTombolKaca(
+              children: [
+                TombolKaca(
+                  tooltip: context.l10n.navPeringatan,
+                  icon: const IkonDuo(IkonApp.peringatan),
+                  onPressed: Navigasi.bukaPeringatan,
                 ),
-              ),
-            ),
-            TombolKaca(
-              tooltip: context.l10n.riwayatJudul,
-              icon: const IkonDuo(IkonApp.riwayat),
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const RiwayatGempaScreen(),
+                TombolKaca(
+                  tooltip: context.l10n.siagaJudul,
+                  icon: const IkonDuo(IkonApp.siaga),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const SiagaGempaScreen(),
+                    ),
+                  ),
                 ),
-              ),
+                TombolKaca(
+                  tooltip: context.l10n.riwayatJudul,
+                  icon: const IkonDuo(IkonApp.riwayat),
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const RiwayatGempaScreen(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
           bottom: TabBar(

@@ -54,29 +54,32 @@ class CuacaScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          TombolKaca(
-            tooltip: context.l10n.bandingkanFavorit,
-            icon: const IkonDuo(IkonApp.bandingkan),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => const PerbandinganCuacaScreen(),
+          AksiWilayah(
+            sebelum: [
+              TombolKaca(
+                tooltip: context.l10n.bandingkanFavorit,
+                icon: const IkonDuo(IkonApp.bandingkan),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const PerbandinganCuacaScreen(),
+                  ),
+                ),
               ),
-            ),
+              if (berhasil) TombolFavorit(lokasi: wilayah),
+              if (berhasil)
+                TombolKaca(
+                  tooltip: context.l10n.bagikanCuaca,
+                  icon: const IkonDuo(IkonApp.bagikan),
+                  onPressed: () => _bukaKartuCuaca(
+                    context,
+                    wilayah,
+                    prakiraan.entriTerdekat(DateTime.now()),
+                    cuaca.diperbarui,
+                    cuaca.dariCache,
+                  ),
+                ),
+            ],
           ),
-          if (berhasil) TombolFavorit(lokasi: wilayah),
-          if (berhasil)
-            TombolKaca(
-              tooltip: context.l10n.bagikanCuaca,
-              icon: const IkonDuo(IkonApp.bagikan),
-              onPressed: () => _bukaKartuCuaca(
-                context,
-                wilayah,
-                prakiraan.entriTerdekat(DateTime.now()),
-                cuaca.diperbarui,
-                cuaca.dariCache,
-              ),
-            ),
-          const AksiWilayah(),
         ],
       ),
       body: LatarAtmosfer(

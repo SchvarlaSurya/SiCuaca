@@ -2171,6 +2171,18 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Sumber data: BMKG. SiCuaca bukan aplikasi resmi BMKG.'**
   String get onboardingSumber;
+
+  /// No description provided for @kacaCairJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Efek kaca cair'**
+  String get kacaCairJudul;
+
+  /// No description provided for @kacaCairKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembiasan kaca dan animasi tombol membelah. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.'**
+  String get kacaCairKeterangan;
 }
 
 class _AppLocalizationsDelegate

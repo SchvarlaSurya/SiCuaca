@@ -73,21 +73,72 @@ class _MainShellState extends State<MainShell> {
 }
 
 /// Navbar kaca cair (liquid glass) dari paket liquid_glass_widgets: pil kaca
-/// gelap melayang dengan lensa kapsul yang bisa digeser jari dari tab ke tab
-/// (efek jeli), seperti tab bar iOS. Tab tidak aktif hanya ikon; tab aktif
-/// ikon + label. Isi tab Cuaca dan Gempa tetap data langsung (suhu dan
-/// magnitudo).
+/// bening melayang (warna kaca mengikuti tema) dengan lensa kaca berbentuk
+/// kapsul di tab aktif. Lensa bisa digeser jari dari tab ke tab (efek jeli,
+/// milik paket); saat diam, lensa kaca kapsul sendiri tetap menempel di tab
+/// aktif. Tab tidak aktif hanya ikon; tab aktif ikon + label. Isi tab Cuaca
+/// dan Gempa tetap data langsung (suhu dan magnitudo).
 ///
-/// Di Android (Impeller) lensa membiaskan isi di belakangnya; di web hanya
-/// tingkat "standard" (tanpa pembiasan latar).
-class _NavigasiBawah extends StatelessWidget {
+/// Di Android (Impeller) kaca membiaskan isi di belakangnya; di web hanya
+/// tingkat "standard". Bila efek kaca cair dimatikan di Pengaturan, semua
+/// kaca jadi kaca sederhana tanpa shader (lihat GlassTheme di main.dart).
+class _NavigasiBawah extends StatefulWidget {
   const _NavigasiBawah({required this.indeks});
 
   final int indeks;
 
   @override
+  State<_NavigasiBawah> createState() => _NavigasiBawahState();
+}
+
+class _NavigasiBawahState extends State<_NavigasiBawah>
+    with SingleTickerProviderStateMixin {
+  static const _tinggiBar = 66.0;
+  static const _jarakSisi = 14.0;
+  static const _jarakTegak = 12.0;
+  static const _isiLensa = 4.0;
+
+  /// Jarak dalam deretan tab di dalam pil (tabPadding bawaan GlassTabBar).
+  static const _isiDeret = 4.0;
+
+  /// 1 = lensa diam tampil; 0 = disembunyikan selama jari menyentuh bar
+  /// (saat itu lensa jeli milik paket yang tampil dan bergerak).
+  late final AnimationController _lensaDiam;
+
+  @override
+  void initState() {
+    super.initState();
+    _lensaDiam = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+      value: 1,
+    );
+  }
+
+  @override
+  void dispose() {
+    _lensaDiam.dispose();
+    super.dispose();
+  }
+
+  void _sentuh() =>
+      _lensaDiam.animateBack(0, duration: const Duration(milliseconds: 110));
+
+  // Muncul lagi setelah lensa jeli paket selesai meluncur dan memudar.
+  void _lepas() => _lensaDiam.animateTo(
+    1,
+    duration: const Duration(milliseconds: 720),
+    curve: const Interval(.55, 1, curve: Curves.easeOut),
+  );
+
+  @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    final indeks = widget.indeks;
+    final gelap = Theme.of(context).brightness == Brightness.dark;
+    final tanpaGerak = MediaQuery.of(context).disableAnimations;
+    final warnaAktif = gelap ? _warnaIkonAktif : const Color(0xFF17151F);
+    final warnaPasif = gelap ? _warnaIkonPasif : const Color(0xFF45424F);
 
     // Satu widget untuk keadaan aktif dan tidak aktif (tanpa activeIcon).
     GlassTab tab({
@@ -108,8 +159,7 @@ class _NavigasiBawah extends StatelessWidget {
           key: ValueKey('nav.$kunci'),
           child: Builder(
             builder: (context) => isi(
-              IconTheme.of(context).color ??
-                  (aktif ? _warnaIkonAktif : _warnaIkonPasif),
+              IconTheme.of(context).color ?? (aktif ? warnaAktif : warnaPasif),
               aktif,
             ),
           ),
@@ -117,63 +167,116 @@ class _NavigasiBawah extends StatelessWidget {
       );
     }
 
-    return GlassTabBar.bottom(
-      selectedIndex: indeks,
-      onTabSelected: Navigasi.bukaTab,
-      barHeight: 66,
-      horizontalPadding: 14,
-      verticalPadding: 14,
-      iconSize: 26,
-      labelFontSize: 12,
-      iconLabelSpacing: 3,
-      selectedIconColor: _warnaIkonAktif,
-      unselectedIconColor: _warnaIkonPasif,
-      selectedLabelColor: _warnaIkonAktif,
-      unselectedLabelColor: _warnaIkonPasif,
-      // Pil: kaca gelap pekat dengan tepi menyala tipis (di kedua tema).
-      settings: LiquidGlassSettings.ios27Dark.copyWith(
-        glassColor: const Color(0xE60B0C10),
-        thickness: 18,
-        refractiveIndex: 1.12,
+    final tabs = [
+      tab(
+        urutan: TabUtama.beranda,
+        kunci: 'beranda',
+        label: l.navBeranda,
+        isi: (warna, aktif) => _IkonTab(IkonApp.beranda, warna, aktif),
       ),
-      // Lensa kapsul (radius bawaan = penuh), sedikit membesar saat digeser.
-      indicatorExpansion: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 6,
+      tab(
+        urutan: TabUtama.cuaca,
+        kunci: 'cuaca',
+        label: l.navCuaca,
+        nilai: _nilaiCuaca(context),
+        isi: (warna, aktif) => _IsiCuaca(warna: warna, aktif: aktif),
       ),
-      // Refraksi lensa diturunkan supaya lebih halus, tidak terlalu melengkung.
-      indicatorSettings: LiquidGlassSettings.ios27Indicator.copyWith(
-        thickness: 22,
-        refractiveIndex: 1.1,
+      tab(
+        urutan: TabUtama.gempa,
+        kunci: 'gempa',
+        label: l.navGempa,
+        nilai: _nilaiGempa(context),
+        isi: (warna, aktif) => _IsiGempa(warna: warna, aktif: aktif),
       ),
-      tabs: [
-        tab(
-          urutan: TabUtama.beranda,
-          kunci: 'beranda',
-          label: l.navBeranda,
-          isi: (warna, aktif) => _IkonTab(IkonApp.beranda, warna, aktif),
-        ),
-        tab(
-          urutan: TabUtama.cuaca,
-          kunci: 'cuaca',
-          label: l.navCuaca,
-          nilai: _nilaiCuaca(context),
-          isi: (warna, aktif) => _IsiCuaca(warna: warna, aktif: aktif),
-        ),
-        tab(
-          urutan: TabUtama.gempa,
-          kunci: 'gempa',
-          label: l.navGempa,
-          nilai: _nilaiGempa(context),
-          isi: (warna, aktif) => _IsiGempa(warna: warna, aktif: aktif),
-        ),
-        tab(
-          urutan: TabUtama.pengaturan,
-          kunci: 'pengaturan',
-          label: l.navPengaturan,
-          isi: (warna, aktif) => _IkonTab(IkonApp.pengaturan, warna, aktif),
-        ),
-      ],
+      tab(
+        urutan: TabUtama.pengaturan,
+        kunci: 'pengaturan',
+        label: l.navPengaturan,
+        isi: (warna, aktif) => _IkonTab(IkonApp.pengaturan, warna, aktif),
+      ),
+    ];
+
+    // Kaca bening, refraksi rendah. Gelap: tint gelap tipis + ikon terang;
+    // terang: tint putih + ikon gelap, supaya ikon tetap terbaca di atas
+    // konten apa pun yang lewat di belakangnya (kaca juga di-frost).
+    final kacaPil =
+        (gelap
+                ? LiquidGlassSettings.ios27Dark.copyWith(
+                    glassColor: const Color(0x590B0C10),
+                  )
+                : LiquidGlassSettings.ios27Light)
+            .copyWith(thickness: 18, refractiveIndex: 1.12);
+    final kacaLensa = LiquidGlassSettings.ios27Indicator.copyWith(
+      thickness: 22,
+      refractiveIndex: 1.1,
+      glassColor: gelap ? const Color(0x24FFFFFF) : const Color(0x4DFFFFFF),
+    );
+
+    return SafeArea(
+      top: false,
+      child: LayoutBuilder(
+        builder: (context, batas) {
+          final lebarTab =
+              (batas.maxWidth - 2 * (_jarakSisi + _isiDeret)) / tabs.length;
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Listener(
+                onPointerDown: (_) => _sentuh(),
+                onPointerUp: (_) => _lepas(),
+                onPointerCancel: (_) => _lepas(),
+                child: GlassTabBar.bottom(
+                  selectedIndex: indeks,
+                  onTabSelected: Navigasi.bukaTab,
+                  barHeight: _tinggiBar,
+                  horizontalPadding: _jarakSisi,
+                  verticalPadding: _jarakTegak,
+                  iconSize: 26,
+                  labelFontSize: 12,
+                  iconLabelSpacing: 3,
+                  selectedIconColor: warnaAktif,
+                  unselectedIconColor: warnaPasif,
+                  selectedLabelColor: warnaAktif,
+                  unselectedLabelColor: warnaPasif,
+                  settings: kacaPil,
+                  // Latar datar bawaan tab aktif diganti lensa kaca di bawah.
+                  indicatorColor: const Color(0x00000000),
+                  indicatorExpansion: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  indicatorSettings: kacaLensa,
+                  tabs: tabs,
+                ),
+              ),
+              // Lensa kaca kapsul yang menempel di tab aktif saat diam.
+              AnimatedPositioned(
+                duration: tanpaGerak
+                    ? Duration.zero
+                    : const Duration(milliseconds: 320),
+                curve: Curves.easeOutCubic,
+                left: _jarakSisi + _isiDeret + indeks * lebarTab + _isiLensa,
+                top: _jarakTegak + _isiLensa,
+                width: lebarTab - 2 * _isiLensa,
+                height: _tinggiBar - 2 * _isiLensa,
+                child: IgnorePointer(
+                  child: FadeTransition(
+                    opacity: _lensaDiam,
+                    child: GlassContainer(
+                      useOwnLayer: true,
+                      shape: const LiquidRoundedSuperellipse(
+                        borderRadius: (_tinggiBar - 2 * _isiLensa) / 2,
+                      ),
+                      settings: kacaLensa,
+                      child: const SizedBox.expand(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 

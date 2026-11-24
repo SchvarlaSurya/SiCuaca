@@ -1222,4 +1222,11 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get onboardingSumber =>
       'Sumber data: BMKG. SiCuaca bukan aplikasi resmi BMKG.';
+
+  @override
+  String get kacaCairJudul => 'Efek kaca cair';
+
+  @override
+  String get kacaCairKeterangan =>
+      'Pembiasan kaca dan animasi tombol membelah. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.';
 }

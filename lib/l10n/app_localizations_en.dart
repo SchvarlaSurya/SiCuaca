@@ -1253,4 +1253,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboardingSumber =>
       'Data source: BMKG. SiCuaca is not an official BMKG app.';
+
+  @override
+  String get kacaCairJudul => 'Liquid glass effect';
+
+  @override
+  String get kacaCairKeterangan =>
+      'Glass refraction and splitting button animation. Turn off if your phone feels slow; the navbar and buttons stay, with simple glass.';
 }

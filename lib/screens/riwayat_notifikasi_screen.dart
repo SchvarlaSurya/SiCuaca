@@ -151,12 +151,16 @@ class _RiwayatNotifikasiScreenState extends State<RiwayatNotifikasiScreen> {
       appBar: AppBar(
         title: Text(l.riwayatNotifJudul),
         actions: [
-          if (daftar != null && daftar.isNotEmpty)
-            TombolKaca(
-              tooltip: l.hapusRiwayat,
-              onPressed: _hapusSemua,
-              icon: const IkonDuo(IkonApp.hapusSemua),
-            ),
+          GrupTombolKaca(
+            children: [
+              if (daftar != null && daftar.isNotEmpty)
+                TombolKaca(
+                  tooltip: l.hapusRiwayat,
+                  onPressed: _hapusSemua,
+                  icon: const IkonDuo(IkonApp.hapusSemua),
+                ),
+            ],
+          ),
         ],
       ),
       body: LatarAtmosfer(child: isi),

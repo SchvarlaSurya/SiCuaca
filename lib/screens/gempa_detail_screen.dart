@@ -45,25 +45,29 @@ class GempaDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(l.gempaDetailJudul),
         actions: [
-          TombolKaca(
-            icon: const IkonDuo(IkonApp.bagikan),
-            tooltip: l.bagikanGempa,
-            onPressed: () => ShareService.bagikanTeks(
-              susunRingkasanGempa(l, gempa, jarakKm: jarak),
-            ),
-          ),
-          TombolKaca(
-            tooltip: l.salinRingkasan,
-            icon: const IkonDuo(IkonApp.salin),
-            onPressed: () async {
-              final teks = susunRingkasanGempa(l, gempa, jarakKm: jarak);
-              await Clipboard.setData(ClipboardData(text: teks));
-              if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(l.ringkasanDisalin)));
-              }
-            },
+          GrupTombolKaca(
+            children: [
+              TombolKaca(
+                icon: const IkonDuo(IkonApp.bagikan),
+                tooltip: l.bagikanGempa,
+                onPressed: () => ShareService.bagikanTeks(
+                  susunRingkasanGempa(l, gempa, jarakKm: jarak),
+                ),
+              ),
+              TombolKaca(
+                tooltip: l.salinRingkasan,
+                icon: const IkonDuo(IkonApp.salin),
+                onPressed: () async {
+                  final teks = susunRingkasanGempa(l, gempa, jarakKm: jarak);
+                  await Clipboard.setData(ClipboardData(text: teks));
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(l.ringkasanDisalin)));
+                  }
+                },
+              ),
+            ],
           ),
         ],
       ),

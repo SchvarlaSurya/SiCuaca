@@ -245,6 +245,15 @@ class _AplikasiState extends State<_Aplikasi> {
         }
         return bahasaDidukung.first;
       },
+      // Efek kaca cair bisa dimatikan di Pengaturan: kaca sederhana tanpa
+      // shader (GlassQuality.minimal). Pembungkusnya selalu ada supaya
+      // berganti mode tidak membangun ulang seluruh aplikasi.
+      builder: (context, anak) => GlassTheme(
+        data: pengaturan.kacaCair
+            ? const GlassThemeData()
+            : const GlassThemeData.minimal(),
+        child: anak!,
+      ),
       home: SplashGerbang(
         aktif: widget.tampilkanSplash,
         child: _sudahOnboarding

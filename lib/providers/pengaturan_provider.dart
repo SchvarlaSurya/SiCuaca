@@ -41,9 +41,14 @@ class PengaturanProvider extends ChangeNotifier {
   PilihanTema _tema;
 
   List<SeksiBeranda> _urutanBeranda = SeksiBeranda.values;
+  bool _kacaCair = true;
 
   PilihanBahasa get bahasa => _bahasa;
   PilihanTema get tema => _tema;
+
+  /// Efek kaca cair penuh (shader pembiasan, animasi tombol membelah).
+  /// Mati = kaca sederhana tanpa shader, untuk HP yang kurang kuat.
+  bool get kacaCair => _kacaCair;
 
   /// Urutan bagian Beranda; selalu berisi semua bagian tepat sekali.
   List<SeksiBeranda> get urutanBeranda => _urutanBeranda;
@@ -80,6 +85,7 @@ class PengaturanProvider extends ChangeNotifier {
       PilihanTema.sistem,
     );
     _urutanBeranda = normalkanUrutan(await _prefs.urutanBeranda());
+    _kacaCair = await _prefs.bacaTeks(PrefsKeys.kacaCair) != 'tidak';
     notifyListeners();
   }
 
@@ -100,6 +106,13 @@ class PengaturanProvider extends ChangeNotifier {
     _bahasa = bahasa;
     notifyListeners();
     await _prefs.simpanTeks(PrefsKeys.bahasa, bahasa.name);
+  }
+
+  Future<void> aturKacaCair(bool nyala) async {
+    if (_kacaCair == nyala) return;
+    _kacaCair = nyala;
+    notifyListeners();
+    await _prefs.simpanTeks(PrefsKeys.kacaCair, nyala ? 'ya' : 'tidak');
   }
 
   Future<void> pilihTema(PilihanTema tema) async {

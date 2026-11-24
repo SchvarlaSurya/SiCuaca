@@ -394,5 +394,7 @@
   "splashTagline": "Cuaca dan gempa dari data terbuka BMKG",
   "onboardingSiagaJudul": "Siap Siaga Gempa",
   "onboardingSiagaDeskripsi": "Pelajari langkah aman sebelum, saat, dan setelah gempa, lalu lengkapi tas siaga Anda. Isinya bersumber dari BMKG dan BNPB.",
-  "onboardingSumber": "Sumber data: BMKG. SiCuaca bukan aplikasi resmi BMKG."
+  "onboardingSumber": "Sumber data: BMKG. SiCuaca bukan aplikasi resmi BMKG.",
+  "kacaCairJudul": "Efek kaca cair",
+  "kacaCairKeterangan": "Pembiasan kaca dan animasi tombol membelah. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana."
 }
