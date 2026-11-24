@@ -21,7 +21,7 @@ final l = lookupAppLocalizations(const Locale('id'));
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
-    GrupTombolKaca.jumlahTerakhir = null;
+    GrupTombolKaca.sudahAdaSebelumnya = false;
   });
 
   testWidgets('tombol atas tab Gempa: tombol kaca 44 px, maks. 3 per baris', (
@@ -104,58 +104,16 @@ void main() {
     expect(find.byType(PerbandinganCuacaScreen), findsOneWidget);
   });
 
-  group('Grup tombol kaca membelah seperti jeli', () {
-    // Jarak antara tombol baru (Favorit, paling kiri) dan tombol terdekat
-    // yang sudah ada (Cari wilayah).
-    Finder diGrupCuaca(String nama) => find.descendant(
-      of: find.descendant(
-        of: find.byType(CuacaScreen),
-        matching: find.byType(GrupTombolKaca),
-      ),
-      matching: find.byTooltip(nama),
+  testWidgets('efek kaca cair dimatikan: kaca tanpa shader', (tester) async {
+    final pengaturan = PengaturanProvider(
+      PreferencesService(),
+      bahasa: PilihanBahasa.indonesia,
     );
-    double jarak(WidgetTester tester) =>
-        tester.getCenter(diGrupCuaca(l.cariWilayah)).dx -
-        tester.getCenter(diGrupCuaca(l.tambahFavorit)).dx;
-
-    testWidgets('Beranda (2 tombol) ke Cuaca (3 tombol): tombol baru keluar '
-        'dari tombol terdekat lalu meluncur ke tempatnya', (tester) async {
-      await tester.pumpWidget(buatApp(gps: _gps));
-      await tester.pumpAndSettle();
-      expect(GrupTombolKaca.jumlahTerakhir, 2);
-
-      await tester.tap(navTab('cuaca'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 60));
-      final tengah = jarak(tester);
-
-      await tester.pumpAndSettle();
-      final akhir = jarak(tester);
-      expect(akhir, closeTo(TombolKaca.lebarSlot, 0.5));
-      // Di tengah animasi tombol baru masih menempel di tetangganya.
-      expect(tengah, lessThan(akhir - 8));
-      expect(GrupTombolKaca.jumlahTerakhir, 3);
-      expect(tester.takeException(), isNull);
-    });
-
-    testWidgets('efek kaca cair dimatikan: tombol langsung di tempat dan '
-        'kaca tanpa shader', (tester) async {
-      final pengaturan = PengaturanProvider(
-        PreferencesService(),
-        bahasa: PilihanBahasa.indonesia,
-      );
-      await pengaturan.aturKacaCair(false);
-      await tester.pumpWidget(buatApp(gps: _gps, pengaturan: pengaturan));
-      await tester.pumpAndSettle();
-      await tester.tap(navTab('cuaca'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 60));
-      expect(jarak(tester), closeTo(TombolKaca.lebarSlot, 0.5));
-
-      final tema = tester.widget<GlassTheme>(find.byType(GlassTheme).first);
-      expect(tema.data.light, GlassThemeVariant.minimalLight);
-      await tester.pumpAndSettle();
-    });
+    await pengaturan.aturKacaCair(false);
+    await tester.pumpWidget(buatApp(gps: _gps, pengaturan: pengaturan));
+    await tester.pumpAndSettle();
+    final tema = tester.widget<GlassTheme>(find.byType(GlassTheme).first);
+    expect(tema.data.light, GlassThemeVariant.minimalLight);
   });
 
   group('Tombol ditekan seperti jeli', () {
@@ -284,11 +242,12 @@ void main() {
       expect(ikon(IkonApp.favorit), findsOneWidget);
     });
 
-    testWidgets('pindah ke halaman dengan jumlah tombol sama: kaca tetap, '
-        'ikon meletup masuk', (tester) async {
+    testWidgets('pindah halaman: kaca tetap, ikon meletup masuk', (
+      tester,
+    ) async {
       await tester.pumpWidget(buatApp(gps: _gps, offline: true));
       await tester.pumpAndSettle();
-      expect(GrupTombolKaca.jumlahTerakhir, 2);
+      expect(GrupTombolKaca.sudahAdaSebelumnya, isTrue);
 
       await tester.tap(navTab('gempa'));
       await tester.pump();
@@ -298,7 +257,6 @@ void main() {
       await tester.pumpAndSettle();
       final akhir = tester.getRect(ikon).width;
       expect(tengah, lessThan(akhir * .9));
-      expect(GrupTombolKaca.jumlahTerakhir, 2);
     });
   });
 }
