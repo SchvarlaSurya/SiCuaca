@@ -114,6 +114,27 @@ class PreferencesService {
     } catch (_) {}
   }
 
+  /// Daftar teks di bawah [kunci]; null bila belum ada atau tidak terbaca.
+  Future<List<String>?> bacaDaftar(String kunci) async {
+    try {
+      return (await _prefs).getStringList(kunci);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> simpanDaftar(String kunci, List<String> nilai) async {
+    try {
+      await (await _prefs).setStringList(kunci, nilai);
+    } catch (_) {}
+  }
+
+  Future<void> hapusKunci(String kunci) async {
+    try {
+      await (await _prefs).remove(kunci);
+    } catch (_) {}
+  }
+
   Future<bool> sudahOnboarding() async {
     try {
       return (await _prefs).getBool(PrefsKeys.sudahOnboarding) ?? false;

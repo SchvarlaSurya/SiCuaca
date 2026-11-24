@@ -13,6 +13,7 @@ import 'providers/lokasi_provider.dart';
 import 'providers/notifikasi_provider.dart';
 import 'providers/pengaturan_provider.dart';
 import 'providers/riwayat_gempa_provider.dart';
+import 'providers/siaga_provider.dart';
 import 'providers/weather_provider.dart';
 import 'screens/main_shell.dart';
 import 'screens/onboarding_screen.dart';
@@ -154,6 +155,10 @@ class SiCuacaApp extends StatelessWidget {
               ubahPosisi: lokasi,
             )..muat();
           },
+        ),
+        ChangeNotifierProvider<SiagaProvider>(
+          create: (context) =>
+              SiagaProvider(context.read<PreferencesService>())..muat(),
         ),
         ChangeNotifierProvider<NotifikasiProvider>(
           create: (context) => NotifikasiProvider(

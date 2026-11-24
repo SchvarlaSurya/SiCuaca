@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../core/format.dart';
 import '../core/ikon.dart';
+import '../core/ringkasan_gempa.dart';
 import '../core/l10n.dart';
 import '../core/theme.dart';
 import '../models/gempa.dart';
@@ -46,31 +47,15 @@ class GempaDetailScreen extends StatelessWidget {
           IconButton(
             icon: const IkonDuo(IkonApp.bagikan),
             tooltip: l.bagikanGempa,
-            onPressed: () {
-              ShareService.bagikanGempa(
-                l,
-                magnitudo: gempa.magnitudo,
-                wilayah: gempa.wilayah,
-                kedalaman: gempa.kedalaman,
-                waktu: Format.waktuLengkap(l, gempa.waktuUtc),
-                potensi: gempa.potensi,
-                dirasakan: gempa.dirasakan,
-                jarakDariAnda: jarak != null
-                    ? l.jarakKm(Format.jarak(l, jarak))
-                    : null,
-              );
-            },
+            onPressed: () => ShareService.bagikanTeks(
+              susunRingkasanGempa(l, gempa, jarakKm: jarak),
+            ),
           ),
           IconButton(
             tooltip: l.salinRingkasan,
             icon: const IkonDuo(IkonApp.salin),
             onPressed: () async {
-              final teks = l.ringkasanGempa(
-                gempa.magnitudo,
-                gempa.wilayah,
-                Format.waktuLengkap(l, gempa.waktuUtc),
-                gempa.kedalaman,
-              );
+              final teks = susunRingkasanGempa(l, gempa, jarakKm: jarak);
               await Clipboard.setData(ClipboardData(text: teks));
               if (context.mounted) {
                 ScaffoldMessenger.of(

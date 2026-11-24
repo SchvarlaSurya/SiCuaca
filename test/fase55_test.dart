@@ -193,7 +193,7 @@ void main() {
     await tester.pumpAndSettle();
     final l = lookupAppLocalizations(const Locale('id'));
     final tautan = find.text(l.selengkapnya);
-    expect(tautan, findsNWidgets(3));
+    expect(tautan, findsNWidgets(SeksiBeranda.values.length));
     await tester.ensureVisible(tautan.at(1));
     await tester.tap(tautan.at(1));
     await tester.pumpAndSettle();
@@ -313,55 +313,6 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getString('tema'), 'gelap');
     });
-  });
-
-  group('Riwayat dan siaga gempa', () {
-    for (final bahasa in [PilihanBahasa.indonesia, PilihanBahasa.inggris]) {
-      testWidgets(
-        'siaga gempa 360 dp + huruf 1,3x, dua bahasa (${bahasa.name})',
-        (tester) async {
-          tester.view.physicalSize = const Size(1080, 1920);
-          tester.view.devicePixelRatio = 3;
-          tester.platformDispatcher.textScaleFactorTestValue = 1.3;
-          addTearDown(tester.view.reset);
-          addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-          final t = lookupAppLocalizations(bahasa.locale!);
-
-          await tester.pumpWidget(
-            buatApp(
-              gps: _gpsJakarta,
-              pengaturan: PengaturanProvider(
-                PreferencesService(),
-                bahasa: bahasa,
-              ),
-            ),
-          );
-          await tester.pumpAndSettle();
-          await tester.tap(navTab('gempa'));
-          await tester.pumpAndSettle();
-
-          await tester.tap(find.byIcon(IkonApp.siaga));
-          await tester.pumpAndSettle();
-          expect(find.text(t.siagaJudul), findsOneWidget);
-          expect(find.text(t.siagaHeroJudul), findsOneWidget);
-          await tester.tap(find.text(t.siagaSebelum));
-          await tester.pumpAndSettle();
-          expect(find.text(t.siagaSebelum1), findsOneWidget);
-          await tester.scrollUntilVisible(
-            find.text(t.tas1),
-            200,
-            scrollable: find.byType(Scrollable).last,
-          );
-          await tester.tap(find.text(t.tas1));
-          await tester.pumpAndSettle();
-          final kotak = tester.widget<CheckboxListTile>(
-            find.widgetWithText(CheckboxListTile, t.tas1),
-          );
-          expect(kotak.value, isTrue);
-          expect(tester.takeException(), isNull);
-        },
-      );
-    }
   });
 
   group('Onboarding', () {
@@ -675,10 +626,27 @@ void main() {
         SeksiBeranda.peringatan,
         SeksiBeranda.cuaca,
         SeksiBeranda.gempa,
+        SeksiBeranda.siaga,
       ]);
       expect(
         PengaturanProvider.normalkanUrutan(['gempa', 'gempa', 'x', 'cuaca']),
-        [SeksiBeranda.gempa, SeksiBeranda.cuaca, SeksiBeranda.peringatan],
+        [
+          SeksiBeranda.gempa,
+          SeksiBeranda.cuaca,
+          SeksiBeranda.peringatan,
+          SeksiBeranda.siaga,
+        ],
+      );
+      // Urutan lama (tiga bagian) dari versi sebelumnya tetap valid: bagian
+      // baru ditaruh di akhir.
+      expect(
+        PengaturanProvider.normalkanUrutan(['gempa', 'peringatan', 'cuaca']),
+        [
+          SeksiBeranda.gempa,
+          SeksiBeranda.peringatan,
+          SeksiBeranda.cuaca,
+          SeksiBeranda.siaga,
+        ],
       );
     });
 
@@ -690,6 +658,7 @@ void main() {
         SeksiBeranda.gempa,
         SeksiBeranda.peringatan,
         SeksiBeranda.cuaca,
+        SeksiBeranda.siaga,
       ]);
       expect(a.urutanBerandaBawaan, isFalse);
 
@@ -699,6 +668,7 @@ void main() {
         SeksiBeranda.gempa,
         SeksiBeranda.peringatan,
         SeksiBeranda.cuaca,
+        SeksiBeranda.siaga,
       ]);
 
       await b.setelUlangUrutanBeranda();

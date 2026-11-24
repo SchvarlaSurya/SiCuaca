@@ -30,7 +30,12 @@ abstract final class ShareService {
     await SharePlus.instance.share(ShareParams(text: baris.join('\n')));
   }
 
-  /// Membagikan data gempa bumi.
+  /// Membagikan ringkasan gempa yang sudah disusun ([susunRingkasanGempa]).
+  static Future<void> bagikanTeks(String teks) async {
+    await SharePlus.instance.share(ShareParams(text: teks));
+  }
+
+  /// Membagikan data gempa bumi (bentuk lama dengan emoji).
   static Future<void> bagikanGempa(
     AppLocalizations l, {
     required String magnitudo,

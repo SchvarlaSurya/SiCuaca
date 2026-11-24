@@ -528,68 +528,15 @@ class AppLocalizationsId extends AppLocalizations {
   String get siagaSebelum => 'Sebelum gempa';
 
   @override
-  String get siagaSebelum1 => 'Kenali jalur evakuasi dan titik kumpul.';
-
-  @override
-  String get siagaSebelum2 => 'Amankan benda berat agar tidak jatuh.';
-
-  @override
-  String get siagaSebelum3 => 'Siapkan tas siaga dan simpan nomor darurat.';
-
-  @override
   String get siagaSaat => 'Saat gempa';
-
-  @override
-  String get siagaSaat1 => 'Merunduk, lindungi kepala, dan bertahan.';
-
-  @override
-  String get siagaSaat2 => 'Jauhi kaca, lemari, dan benda yang mudah jatuh.';
-
-  @override
-  String get siagaSaat3 => 'Jangan menggunakan lift.';
 
   @override
   String get siagaSetelah => 'Setelah gempa';
 
   @override
-  String get siagaSetelah1 =>
-      'Keluar dengan tertib setelah guncangan berhenti.';
-
-  @override
-  String get siagaSetelah2 => 'Periksa kondisi diri dan orang sekitar.';
-
-  @override
-  String get siagaSetelah3 =>
-      'Jika berada di pantai dan guncangan kuat, segera menuju tempat tinggi.';
-
-  @override
   String tasSiagaJudul(String selesai, String total) {
     return 'Checklist tas siaga ($selesai/$total)';
   }
-
-  @override
-  String get tas1 => 'Air minum';
-
-  @override
-  String get tas2 => 'Makanan tahan lama';
-
-  @override
-  String get tas3 => 'Senter dan baterai';
-
-  @override
-  String get tas4 => 'Kotak P3K dan obat pribadi';
-
-  @override
-  String get tas5 => 'Dokumen penting';
-
-  @override
-  String get tas6 => 'Peluit';
-
-  @override
-  String get tas7 => 'Masker';
-
-  @override
-  String get tas8 => 'Power bank';
 
   @override
   String get siagaCatatan =>
@@ -961,5 +908,304 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String filterAktifJumlah(String n) {
     return 'Filter aktif: $n';
+  }
+
+  @override
+  String get pSebelumG1 => 'Kunci utama';
+
+  @override
+  String get pSebelumG1B1 => 'Mengenali apa yang disebut gempabumi;';
+
+  @override
+  String get pSebelumG1B2 =>
+      'Pastikan bahwa struktur dan letak rumah Anda dapat terhindar dari bahaya yang disebabkan oleh gempabumi (longsor, liquefaction, dll.);';
+
+  @override
+  String get pSebelumG1B3 =>
+      'Mengevaluasi dan merenovasi ulang struktur bangunan Anda agar terhindar dari bahaya gempabumi.';
+
+  @override
+  String get pSebelumG2 => 'Kenali lingkungan tempat Anda bekerja';
+
+  @override
+  String get pSebelumG2B1 =>
+      'Perhatikan letak pintu, lift serta tangga darurat; apabila terjadi gempabumi, sudah mengetahui tempat paling aman untuk berlindung;';
+
+  @override
+  String get pSebelumG2B2 => 'Belajar melakukan P3K;';
+
+  @override
+  String get pSebelumG2B3 => 'Belajar menggunakan alat pemadam kebakaran;';
+
+  @override
+  String get pSebelumG2B4 =>
+      'Catat nomor telepon penting yang dapat dihubungi pada saat terjadi gempabumi.';
+
+  @override
+  String get pSebelumG3 =>
+      'Persiapan rutin pada tempat Anda bekerja dan tinggal';
+
+  @override
+  String get pSebelumG3B1 =>
+      'Perabotan (lemari, cabinet, dll.) diatur menempel pada dinding (dipaku, diikat, dll.) untuk menghindari jatuh, roboh, bergeser pada saat terjadi gempabumi;';
+
+  @override
+  String get pSebelumG3B2 =>
+      'Simpan bahan yang mudah terbakar pada tempat yang tidak mudah pecah agar terhindar dari kebakaran;';
+
+  @override
+  String get pSebelumG3B3 =>
+      'Selalu mematikan air, gas dan listrik apabila tidak sedang digunakan.';
+
+  @override
+  String get pSebelumG4 =>
+      'Penyebab celaka yang paling banyak pada saat gempabumi adalah akibat kejatuhan material';
+
+  @override
+  String get pSebelumG4B1 =>
+      'Atur benda yang berat sedapat mungkin berada pada bagian bawah;';
+
+  @override
+  String get pSebelumG4B2 =>
+      'Cek kestabilan benda yang tergantung yang dapat jatuh pada saat gempabumi terjadi (misalnya lampu, dll.).';
+
+  @override
+  String get pSebelumG5 => 'Alat yang harus ada di setiap tempat';
+
+  @override
+  String get pSebelumG5B1 => 'Kotak P3K;';
+
+  @override
+  String get pSebelumG5B2 => 'Senter/lampu baterai;';
+
+  @override
+  String get pSebelumG5B3 => 'Radio;';
+
+  @override
+  String get pSebelumG5B4 => 'Makanan suplemen dan air.';
+
+  @override
+  String get pSaatG1 => 'Jika Anda berada di dalam bangunan';
+
+  @override
+  String get pSaatG1B1 =>
+      'Lindungi kepala dan badan Anda dari reruntuhan bangunan (dengan bersembunyi di bawah meja, dll.);';
+
+  @override
+  String get pSaatG1B2 =>
+      'Mencari tempat yang paling aman dari reruntuhan goncangan;';
+
+  @override
+  String get pSaatG1B3 => 'Berlari keluar apabila masih dapat dilakukan.';
+
+  @override
+  String get pSaatG2 => 'Jika berada di luar bangunan atau area terbuka';
+
+  @override
+  String get pSaatG2B1 =>
+      'Menghindari bangunan yang ada di sekitar Anda (seperti gedung, tiang listrik, pohon, dll.);';
+
+  @override
+  String get pSaatG2B2 =>
+      'Perhatikan tempat Anda berpijak, hindari apabila terjadi rekahan tanah.';
+
+  @override
+  String get pSaatG3 => 'Jika Anda sedang mengendarai mobil';
+
+  @override
+  String get pSaatG3B1 =>
+      'Keluar, turun, dan menjauh dari mobil, hindari jika terjadi pergeseran atau kebakaran;';
+
+  @override
+  String get pSaatG3B2 =>
+      'Perhatikan tempat Anda berpijak, hindari apabila terjadi rekahan tanah.';
+
+  @override
+  String get pSaatG4 => 'Jika Anda tinggal atau berada di pantai';
+
+  @override
+  String get pSaatG4B1 => 'Jauhi pantai untuk menghindari terjadinya tsunami.';
+
+  @override
+  String get pSaatG5 => 'Jika Anda tinggal di daerah pegunungan';
+
+  @override
+  String get pSaatG5B1 =>
+      'Apabila terjadi gempa bumi hindari daerah yang mungkin terjadi longsoran.';
+
+  @override
+  String get pSetelahG1 => 'Jika Anda berada di dalam bangunan';
+
+  @override
+  String get pSetelahG1B1 => 'Keluar dari bangunan tersebut dengan tertib;';
+
+  @override
+  String get pSetelahG1B2 =>
+      'Jangan menggunakan tangga berjalan atau lift, gunakan tangga biasa;';
+
+  @override
+  String get pSetelahG1B3 => 'Periksa apakah ada yang terluka, lakukan P3K;';
+
+  @override
+  String get pSetelahG1B4 =>
+      'Telepon/minta pertolongan apabila terjadi luka parah pada Anda atau sekitar Anda.';
+
+  @override
+  String get pSetelahG2 => 'Periksa lingkungan sekitar Anda';
+
+  @override
+  String get pSetelahG2B1 => 'Periksa apabila terjadi kebakaran;';
+
+  @override
+  String get pSetelahG2B2 => 'Periksa apabila terjadi kebocoran gas;';
+
+  @override
+  String get pSetelahG2B3 => 'Periksa apabila terjadi arus pendek;';
+
+  @override
+  String get pSetelahG2B4 => 'Periksa aliran dan pipa air;';
+
+  @override
+  String get pSetelahG2B5 =>
+      'Periksa segala hal yang dapat membahayakan (mematikan listrik, tidak menyalakan api, dll.).';
+
+  @override
+  String get pSetelahG3 => 'Jangan memasuki bangunan yang sudah terjadi gempa';
+
+  @override
+  String get pSetelahG3B1 =>
+      'Bangunan yang sudah terjadi gempa menjadi rawan mengalami keruntuhan.';
+
+  @override
+  String get pSetelahG4 => 'Jangan berjalan di sekitar daerah gempa';
+
+  @override
+  String get pSetelahG4B1 =>
+      'Gempa susulan masih mungkin terjadi di sekitar daerah gempa.';
+
+  @override
+  String get pSetelahG5 => 'Mendengarkan informasi';
+
+  @override
+  String get pSetelahG5B1 =>
+      'Dengarkan informasi mengenai gempabumi dari radio (apabila terjadi gempa susulan);';
+
+  @override
+  String get pSetelahG5B2 =>
+      'Jangan mudah terpancing oleh isu atau berita yang tidak jelas sumbernya.';
+
+  @override
+  String get pSetelahG6 =>
+      'Mengisi angket yang diberikan oleh instansi terkait';
+
+  @override
+  String get pSetelahG6B1 =>
+      'Pengisian angket tersebut dilakukan untuk mengetahui seberapa besar kerusakan yang terjadi di lokasi kejadian gempa.';
+
+  @override
+  String get pSetelahG7 =>
+      'Jangan panik dan jangan lupa selalu berdoa kepada Tuhan Yang Maha Esa';
+
+  @override
+  String get pSetelahG7B1 =>
+      'Berdoa kepada Tuhan Yang Maha Esa demi keamanan dan keselamatan kita semua.';
+
+  @override
+  String get tasItem1 =>
+      'Surat-surat penting (surat tanah, surat kendaraan, ijazah, akta kelahiran, dan lain-lain)';
+
+  @override
+  String get tasItem2 =>
+      'Sandang untuk tiga hari: pakaian dalam, celana panjang, jaket, selimut, handuk, jas hujan, dan lain-lain';
+
+  @override
+  String get tasItem3 =>
+      'Makanan ringan tahan lama (mi instan, biskuit, abon, cokelat, dan lain-lain)';
+
+  @override
+  String get tasItem4 => 'Air minum (cukup untuk kurang lebih tiga hari)';
+
+  @override
+  String get tasItem5 =>
+      'Kotak P3K berisi obat-obatan pribadi dan obat-obatan umum lainnya';
+
+  @override
+  String get tasItem6 =>
+      'Radio/ponsel beserta baterai, pengisi daya, atau powerbank untuk memantau informasi bencana';
+
+  @override
+  String get tasItem7 =>
+      'Perlengkapan mandi (sabun mandi, sikat gigi, odol, sisir, cotton bud, dan lain-lain)';
+
+  @override
+  String get tasItem8 => 'Masker (penyaring udara kotor/tercemar)';
+
+  @override
+  String get tasItem9 => 'Peluit (alat bantu meminta pertolongan saat darurat)';
+
+  @override
+  String get tasItem10 =>
+      'Uang tunai secukupnya untuk perbekalan kurang lebih tiga hari';
+
+  @override
+  String get tasItem11 =>
+      'Alat penerangan: senter, lampu kepala (headlamp), korek api, lilin, dan lain-lain';
+
+  @override
+  String get istilah_magnitudo_Nama => 'Magnitudo';
+
+  @override
+  String get istilah_magnitudo_Isi => 'Kekuatan gempa dalam skala Richter.';
+
+  @override
+  String get istilah_richter_Nama => 'Skala Richter';
+
+  @override
+  String get istilah_richter_Isi =>
+      'Ukuran kekuatan gempabumi yang dihitung dari besarnya energi yang dilepaskan dari sumber gempa tersebut.';
+
+  @override
+  String get istilah_kedalaman_Nama => 'Kedalaman';
+
+  @override
+  String get istilah_kedalaman_Isi => 'Kedalaman gempa dalam kilometer.';
+
+  @override
+  String get istilah_mmi_Nama => 'Skala MMI (Modified Mercalli Intensity)';
+
+  @override
+  String get istilah_mmi_Isi =>
+      'Ukuran kekuatan gempa bumi berdasarkan kerusakan yang diakibatkan oleh gempa tersebut.';
+
+  @override
+  String get istilah_waktu_Nama => 'Waktu kejadian';
+
+  @override
+  String get istilah_waktu_Isi => 'Waktu terjadinya gempa dalam WIB.';
+
+  @override
+  String siagaSumber(String nama) {
+    return 'Sumber: $nama';
+  }
+
+  @override
+  String get siagaTerjemahan =>
+      'Teks panduan mengikuti sumber resmi di atas. Terjemahan bahasa Inggris dibuat oleh tim SiCuaca, bukan terjemahan resmi.';
+
+  @override
+  String get siagaIstilahJudul => 'Istilah gempa';
+
+  @override
+  String get tasSumberCatatan =>
+      'Daftar tas siaga bencana dari BNPB. Sesuaikan dengan kebutuhan keluarga Anda.';
+
+  @override
+  String tasProgres(String n, String total) {
+    return '$n dari $total siap';
+  }
+
+  @override
+  String tasProgresBeranda(String n, String total) {
+    return 'Tas siaga: $n dari $total siap';
   }
 }

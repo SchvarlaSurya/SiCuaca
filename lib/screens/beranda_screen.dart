@@ -8,6 +8,7 @@ import '../models/ambang_gempa.dart';
 import '../providers/gempa_provider.dart';
 import '../providers/notifikasi_provider.dart';
 import '../providers/pengaturan_provider.dart';
+import '../providers/siaga_provider.dart';
 import '../providers/weather_provider.dart';
 import '../widgets/aksi_wilayah.dart';
 import '../widgets/cuaca_saat_ini_card.dart';
@@ -107,6 +108,11 @@ List<Widget> _bagian(BuildContext context, SeksiBeranda seksi, int indeks) {
       Navigasi.bukaPeringatan,
       const _RingkasPeringatan() as Widget,
     ),
+    SeksiBeranda.siaga => (
+      l.siagaJudul,
+      Navigasi.bukaSiaga,
+      const _KartuSiaga() as Widget,
+    ),
   };
   return [
     if (indeks > 0) const SizedBox(height: 28),
@@ -131,6 +137,32 @@ String _sapaan(AppLocalizations l, WeatherProvider cuaca) {
 }
 
 /// Status notifikasi gempa saat ini (pengaturan yang sudah ada).
+/// Pintu masuk ke layar Siap Siaga, dengan progres tas siaga bila sudah
+/// ada yang dicentang.
+class _KartuSiaga extends StatelessWidget {
+  const _KartuSiaga();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final siaga = context.watch<SiagaProvider>();
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        leading: const IkonDuo(IkonApp.siaga),
+        title: Text(l.siagaHeroJudul),
+        subtitle: Text(
+          siaga.jumlahSelesai > 0
+              ? l.tasProgresBeranda('${siaga.jumlahSelesai}', '${siaga.total}')
+              : l.siagaHeroKeterangan,
+        ),
+        trailing: const IkonDuo(IkonApp.selengkapnya),
+        onTap: Navigasi.bukaSiaga,
+      ),
+    );
+  }
+}
+
 class _RingkasPeringatan extends StatelessWidget {
   const _RingkasPeringatan();
 

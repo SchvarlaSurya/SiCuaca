@@ -1022,47 +1022,11 @@ abstract class AppLocalizations {
   /// **'Sebelum gempa'**
   String get siagaSebelum;
 
-  /// No description provided for @siagaSebelum1.
-  ///
-  /// In id, this message translates to:
-  /// **'Kenali jalur evakuasi dan titik kumpul.'**
-  String get siagaSebelum1;
-
-  /// No description provided for @siagaSebelum2.
-  ///
-  /// In id, this message translates to:
-  /// **'Amankan benda berat agar tidak jatuh.'**
-  String get siagaSebelum2;
-
-  /// No description provided for @siagaSebelum3.
-  ///
-  /// In id, this message translates to:
-  /// **'Siapkan tas siaga dan simpan nomor darurat.'**
-  String get siagaSebelum3;
-
   /// No description provided for @siagaSaat.
   ///
   /// In id, this message translates to:
   /// **'Saat gempa'**
   String get siagaSaat;
-
-  /// No description provided for @siagaSaat1.
-  ///
-  /// In id, this message translates to:
-  /// **'Merunduk, lindungi kepala, dan bertahan.'**
-  String get siagaSaat1;
-
-  /// No description provided for @siagaSaat2.
-  ///
-  /// In id, this message translates to:
-  /// **'Jauhi kaca, lemari, dan benda yang mudah jatuh.'**
-  String get siagaSaat2;
-
-  /// No description provided for @siagaSaat3.
-  ///
-  /// In id, this message translates to:
-  /// **'Jangan menggunakan lift.'**
-  String get siagaSaat3;
 
   /// No description provided for @siagaSetelah.
   ///
@@ -1070,77 +1034,11 @@ abstract class AppLocalizations {
   /// **'Setelah gempa'**
   String get siagaSetelah;
 
-  /// No description provided for @siagaSetelah1.
-  ///
-  /// In id, this message translates to:
-  /// **'Keluar dengan tertib setelah guncangan berhenti.'**
-  String get siagaSetelah1;
-
-  /// No description provided for @siagaSetelah2.
-  ///
-  /// In id, this message translates to:
-  /// **'Periksa kondisi diri dan orang sekitar.'**
-  String get siagaSetelah2;
-
-  /// No description provided for @siagaSetelah3.
-  ///
-  /// In id, this message translates to:
-  /// **'Jika berada di pantai dan guncangan kuat, segera menuju tempat tinggi.'**
-  String get siagaSetelah3;
-
   /// No description provided for @tasSiagaJudul.
   ///
   /// In id, this message translates to:
   /// **'Checklist tas siaga ({selesai}/{total})'**
   String tasSiagaJudul(String selesai, String total);
-
-  /// No description provided for @tas1.
-  ///
-  /// In id, this message translates to:
-  /// **'Air minum'**
-  String get tas1;
-
-  /// No description provided for @tas2.
-  ///
-  /// In id, this message translates to:
-  /// **'Makanan tahan lama'**
-  String get tas2;
-
-  /// No description provided for @tas3.
-  ///
-  /// In id, this message translates to:
-  /// **'Senter dan baterai'**
-  String get tas3;
-
-  /// No description provided for @tas4.
-  ///
-  /// In id, this message translates to:
-  /// **'Kotak P3K dan obat pribadi'**
-  String get tas4;
-
-  /// No description provided for @tas5.
-  ///
-  /// In id, this message translates to:
-  /// **'Dokumen penting'**
-  String get tas5;
-
-  /// No description provided for @tas6.
-  ///
-  /// In id, this message translates to:
-  /// **'Peluit'**
-  String get tas6;
-
-  /// No description provided for @tas7.
-  ///
-  /// In id, this message translates to:
-  /// **'Masker'**
-  String get tas7;
-
-  /// No description provided for @tas8.
-  ///
-  /// In id, this message translates to:
-  /// **'Power bank'**
-  String get tas8;
 
   /// No description provided for @siagaCatatan.
   ///
@@ -1745,6 +1643,510 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Filter aktif: {n}'**
   String filterAktifJumlah(String n);
+
+  /// No description provided for @pSebelumG1.
+  ///
+  /// In id, this message translates to:
+  /// **'Kunci utama'**
+  String get pSebelumG1;
+
+  /// No description provided for @pSebelumG1B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengenali apa yang disebut gempabumi;'**
+  String get pSebelumG1B1;
+
+  /// No description provided for @pSebelumG1B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Pastikan bahwa struktur dan letak rumah Anda dapat terhindar dari bahaya yang disebabkan oleh gempabumi (longsor, liquefaction, dll.);'**
+  String get pSebelumG1B2;
+
+  /// No description provided for @pSebelumG1B3.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengevaluasi dan merenovasi ulang struktur bangunan Anda agar terhindar dari bahaya gempabumi.'**
+  String get pSebelumG1B3;
+
+  /// No description provided for @pSebelumG2.
+  ///
+  /// In id, this message translates to:
+  /// **'Kenali lingkungan tempat Anda bekerja'**
+  String get pSebelumG2;
+
+  /// No description provided for @pSebelumG2B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Perhatikan letak pintu, lift serta tangga darurat; apabila terjadi gempabumi, sudah mengetahui tempat paling aman untuk berlindung;'**
+  String get pSebelumG2B1;
+
+  /// No description provided for @pSebelumG2B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Belajar melakukan P3K;'**
+  String get pSebelumG2B2;
+
+  /// No description provided for @pSebelumG2B3.
+  ///
+  /// In id, this message translates to:
+  /// **'Belajar menggunakan alat pemadam kebakaran;'**
+  String get pSebelumG2B3;
+
+  /// No description provided for @pSebelumG2B4.
+  ///
+  /// In id, this message translates to:
+  /// **'Catat nomor telepon penting yang dapat dihubungi pada saat terjadi gempabumi.'**
+  String get pSebelumG2B4;
+
+  /// No description provided for @pSebelumG3.
+  ///
+  /// In id, this message translates to:
+  /// **'Persiapan rutin pada tempat Anda bekerja dan tinggal'**
+  String get pSebelumG3;
+
+  /// No description provided for @pSebelumG3B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Perabotan (lemari, cabinet, dll.) diatur menempel pada dinding (dipaku, diikat, dll.) untuk menghindari jatuh, roboh, bergeser pada saat terjadi gempabumi;'**
+  String get pSebelumG3B1;
+
+  /// No description provided for @pSebelumG3B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Simpan bahan yang mudah terbakar pada tempat yang tidak mudah pecah agar terhindar dari kebakaran;'**
+  String get pSebelumG3B2;
+
+  /// No description provided for @pSebelumG3B3.
+  ///
+  /// In id, this message translates to:
+  /// **'Selalu mematikan air, gas dan listrik apabila tidak sedang digunakan.'**
+  String get pSebelumG3B3;
+
+  /// No description provided for @pSebelumG4.
+  ///
+  /// In id, this message translates to:
+  /// **'Penyebab celaka yang paling banyak pada saat gempabumi adalah akibat kejatuhan material'**
+  String get pSebelumG4;
+
+  /// No description provided for @pSebelumG4B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Atur benda yang berat sedapat mungkin berada pada bagian bawah;'**
+  String get pSebelumG4B1;
+
+  /// No description provided for @pSebelumG4B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Cek kestabilan benda yang tergantung yang dapat jatuh pada saat gempabumi terjadi (misalnya lampu, dll.).'**
+  String get pSebelumG4B2;
+
+  /// No description provided for @pSebelumG5.
+  ///
+  /// In id, this message translates to:
+  /// **'Alat yang harus ada di setiap tempat'**
+  String get pSebelumG5;
+
+  /// No description provided for @pSebelumG5B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Kotak P3K;'**
+  String get pSebelumG5B1;
+
+  /// No description provided for @pSebelumG5B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Senter/lampu baterai;'**
+  String get pSebelumG5B2;
+
+  /// No description provided for @pSebelumG5B3.
+  ///
+  /// In id, this message translates to:
+  /// **'Radio;'**
+  String get pSebelumG5B3;
+
+  /// No description provided for @pSebelumG5B4.
+  ///
+  /// In id, this message translates to:
+  /// **'Makanan suplemen dan air.'**
+  String get pSebelumG5B4;
+
+  /// No description provided for @pSaatG1.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika Anda berada di dalam bangunan'**
+  String get pSaatG1;
+
+  /// No description provided for @pSaatG1B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Lindungi kepala dan badan Anda dari reruntuhan bangunan (dengan bersembunyi di bawah meja, dll.);'**
+  String get pSaatG1B1;
+
+  /// No description provided for @pSaatG1B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Mencari tempat yang paling aman dari reruntuhan goncangan;'**
+  String get pSaatG1B2;
+
+  /// No description provided for @pSaatG1B3.
+  ///
+  /// In id, this message translates to:
+  /// **'Berlari keluar apabila masih dapat dilakukan.'**
+  String get pSaatG1B3;
+
+  /// No description provided for @pSaatG2.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika berada di luar bangunan atau area terbuka'**
+  String get pSaatG2;
+
+  /// No description provided for @pSaatG2B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Menghindari bangunan yang ada di sekitar Anda (seperti gedung, tiang listrik, pohon, dll.);'**
+  String get pSaatG2B1;
+
+  /// No description provided for @pSaatG2B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Perhatikan tempat Anda berpijak, hindari apabila terjadi rekahan tanah.'**
+  String get pSaatG2B2;
+
+  /// No description provided for @pSaatG3.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika Anda sedang mengendarai mobil'**
+  String get pSaatG3;
+
+  /// No description provided for @pSaatG3B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Keluar, turun, dan menjauh dari mobil, hindari jika terjadi pergeseran atau kebakaran;'**
+  String get pSaatG3B1;
+
+  /// No description provided for @pSaatG3B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Perhatikan tempat Anda berpijak, hindari apabila terjadi rekahan tanah.'**
+  String get pSaatG3B2;
+
+  /// No description provided for @pSaatG4.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika Anda tinggal atau berada di pantai'**
+  String get pSaatG4;
+
+  /// No description provided for @pSaatG4B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Jauhi pantai untuk menghindari terjadinya tsunami.'**
+  String get pSaatG4B1;
+
+  /// No description provided for @pSaatG5.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika Anda tinggal di daerah pegunungan'**
+  String get pSaatG5;
+
+  /// No description provided for @pSaatG5B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Apabila terjadi gempa bumi hindari daerah yang mungkin terjadi longsoran.'**
+  String get pSaatG5B1;
+
+  /// No description provided for @pSetelahG1.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika Anda berada di dalam bangunan'**
+  String get pSetelahG1;
+
+  /// No description provided for @pSetelahG1B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Keluar dari bangunan tersebut dengan tertib;'**
+  String get pSetelahG1B1;
+
+  /// No description provided for @pSetelahG1B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Jangan menggunakan tangga berjalan atau lift, gunakan tangga biasa;'**
+  String get pSetelahG1B2;
+
+  /// No description provided for @pSetelahG1B3.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa apakah ada yang terluka, lakukan P3K;'**
+  String get pSetelahG1B3;
+
+  /// No description provided for @pSetelahG1B4.
+  ///
+  /// In id, this message translates to:
+  /// **'Telepon/minta pertolongan apabila terjadi luka parah pada Anda atau sekitar Anda.'**
+  String get pSetelahG1B4;
+
+  /// No description provided for @pSetelahG2.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa lingkungan sekitar Anda'**
+  String get pSetelahG2;
+
+  /// No description provided for @pSetelahG2B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa apabila terjadi kebakaran;'**
+  String get pSetelahG2B1;
+
+  /// No description provided for @pSetelahG2B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa apabila terjadi kebocoran gas;'**
+  String get pSetelahG2B2;
+
+  /// No description provided for @pSetelahG2B3.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa apabila terjadi arus pendek;'**
+  String get pSetelahG2B3;
+
+  /// No description provided for @pSetelahG2B4.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa aliran dan pipa air;'**
+  String get pSetelahG2B4;
+
+  /// No description provided for @pSetelahG2B5.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa segala hal yang dapat membahayakan (mematikan listrik, tidak menyalakan api, dll.).'**
+  String get pSetelahG2B5;
+
+  /// No description provided for @pSetelahG3.
+  ///
+  /// In id, this message translates to:
+  /// **'Jangan memasuki bangunan yang sudah terjadi gempa'**
+  String get pSetelahG3;
+
+  /// No description provided for @pSetelahG3B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Bangunan yang sudah terjadi gempa menjadi rawan mengalami keruntuhan.'**
+  String get pSetelahG3B1;
+
+  /// No description provided for @pSetelahG4.
+  ///
+  /// In id, this message translates to:
+  /// **'Jangan berjalan di sekitar daerah gempa'**
+  String get pSetelahG4;
+
+  /// No description provided for @pSetelahG4B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa susulan masih mungkin terjadi di sekitar daerah gempa.'**
+  String get pSetelahG4B1;
+
+  /// No description provided for @pSetelahG5.
+  ///
+  /// In id, this message translates to:
+  /// **'Mendengarkan informasi'**
+  String get pSetelahG5;
+
+  /// No description provided for @pSetelahG5B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Dengarkan informasi mengenai gempabumi dari radio (apabila terjadi gempa susulan);'**
+  String get pSetelahG5B1;
+
+  /// No description provided for @pSetelahG5B2.
+  ///
+  /// In id, this message translates to:
+  /// **'Jangan mudah terpancing oleh isu atau berita yang tidak jelas sumbernya.'**
+  String get pSetelahG5B2;
+
+  /// No description provided for @pSetelahG6.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengisi angket yang diberikan oleh instansi terkait'**
+  String get pSetelahG6;
+
+  /// No description provided for @pSetelahG6B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengisian angket tersebut dilakukan untuk mengetahui seberapa besar kerusakan yang terjadi di lokasi kejadian gempa.'**
+  String get pSetelahG6B1;
+
+  /// No description provided for @pSetelahG7.
+  ///
+  /// In id, this message translates to:
+  /// **'Jangan panik dan jangan lupa selalu berdoa kepada Tuhan Yang Maha Esa'**
+  String get pSetelahG7;
+
+  /// No description provided for @pSetelahG7B1.
+  ///
+  /// In id, this message translates to:
+  /// **'Berdoa kepada Tuhan Yang Maha Esa demi keamanan dan keselamatan kita semua.'**
+  String get pSetelahG7B1;
+
+  /// No description provided for @tasItem1.
+  ///
+  /// In id, this message translates to:
+  /// **'Surat-surat penting (surat tanah, surat kendaraan, ijazah, akta kelahiran, dan lain-lain)'**
+  String get tasItem1;
+
+  /// No description provided for @tasItem2.
+  ///
+  /// In id, this message translates to:
+  /// **'Sandang untuk tiga hari: pakaian dalam, celana panjang, jaket, selimut, handuk, jas hujan, dan lain-lain'**
+  String get tasItem2;
+
+  /// No description provided for @tasItem3.
+  ///
+  /// In id, this message translates to:
+  /// **'Makanan ringan tahan lama (mi instan, biskuit, abon, cokelat, dan lain-lain)'**
+  String get tasItem3;
+
+  /// No description provided for @tasItem4.
+  ///
+  /// In id, this message translates to:
+  /// **'Air minum (cukup untuk kurang lebih tiga hari)'**
+  String get tasItem4;
+
+  /// No description provided for @tasItem5.
+  ///
+  /// In id, this message translates to:
+  /// **'Kotak P3K berisi obat-obatan pribadi dan obat-obatan umum lainnya'**
+  String get tasItem5;
+
+  /// No description provided for @tasItem6.
+  ///
+  /// In id, this message translates to:
+  /// **'Radio/ponsel beserta baterai, pengisi daya, atau powerbank untuk memantau informasi bencana'**
+  String get tasItem6;
+
+  /// No description provided for @tasItem7.
+  ///
+  /// In id, this message translates to:
+  /// **'Perlengkapan mandi (sabun mandi, sikat gigi, odol, sisir, cotton bud, dan lain-lain)'**
+  String get tasItem7;
+
+  /// No description provided for @tasItem8.
+  ///
+  /// In id, this message translates to:
+  /// **'Masker (penyaring udara kotor/tercemar)'**
+  String get tasItem8;
+
+  /// No description provided for @tasItem9.
+  ///
+  /// In id, this message translates to:
+  /// **'Peluit (alat bantu meminta pertolongan saat darurat)'**
+  String get tasItem9;
+
+  /// No description provided for @tasItem10.
+  ///
+  /// In id, this message translates to:
+  /// **'Uang tunai secukupnya untuk perbekalan kurang lebih tiga hari'**
+  String get tasItem10;
+
+  /// No description provided for @tasItem11.
+  ///
+  /// In id, this message translates to:
+  /// **'Alat penerangan: senter, lampu kepala (headlamp), korek api, lilin, dan lain-lain'**
+  String get tasItem11;
+
+  /// No description provided for @istilah_magnitudo_Nama.
+  ///
+  /// In id, this message translates to:
+  /// **'Magnitudo'**
+  String get istilah_magnitudo_Nama;
+
+  /// No description provided for @istilah_magnitudo_Isi.
+  ///
+  /// In id, this message translates to:
+  /// **'Kekuatan gempa dalam skala Richter.'**
+  String get istilah_magnitudo_Isi;
+
+  /// No description provided for @istilah_richter_Nama.
+  ///
+  /// In id, this message translates to:
+  /// **'Skala Richter'**
+  String get istilah_richter_Nama;
+
+  /// No description provided for @istilah_richter_Isi.
+  ///
+  /// In id, this message translates to:
+  /// **'Ukuran kekuatan gempabumi yang dihitung dari besarnya energi yang dilepaskan dari sumber gempa tersebut.'**
+  String get istilah_richter_Isi;
+
+  /// No description provided for @istilah_kedalaman_Nama.
+  ///
+  /// In id, this message translates to:
+  /// **'Kedalaman'**
+  String get istilah_kedalaman_Nama;
+
+  /// No description provided for @istilah_kedalaman_Isi.
+  ///
+  /// In id, this message translates to:
+  /// **'Kedalaman gempa dalam kilometer.'**
+  String get istilah_kedalaman_Isi;
+
+  /// No description provided for @istilah_mmi_Nama.
+  ///
+  /// In id, this message translates to:
+  /// **'Skala MMI (Modified Mercalli Intensity)'**
+  String get istilah_mmi_Nama;
+
+  /// No description provided for @istilah_mmi_Isi.
+  ///
+  /// In id, this message translates to:
+  /// **'Ukuran kekuatan gempa bumi berdasarkan kerusakan yang diakibatkan oleh gempa tersebut.'**
+  String get istilah_mmi_Isi;
+
+  /// No description provided for @istilah_waktu_Nama.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu kejadian'**
+  String get istilah_waktu_Nama;
+
+  /// No description provided for @istilah_waktu_Isi.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu terjadinya gempa dalam WIB.'**
+  String get istilah_waktu_Isi;
+
+  /// No description provided for @siagaSumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Sumber: {nama}'**
+  String siagaSumber(String nama);
+
+  /// No description provided for @siagaTerjemahan.
+  ///
+  /// In id, this message translates to:
+  /// **'Teks panduan mengikuti sumber resmi di atas. Terjemahan bahasa Inggris dibuat oleh tim SiCuaca, bukan terjemahan resmi.'**
+  String get siagaTerjemahan;
+
+  /// No description provided for @siagaIstilahJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Istilah gempa'**
+  String get siagaIstilahJudul;
+
+  /// No description provided for @tasSumberCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Daftar tas siaga bencana dari BNPB. Sesuaikan dengan kebutuhan keluarga Anda.'**
+  String get tasSumberCatatan;
+
+  /// No description provided for @tasProgres.
+  ///
+  /// In id, this message translates to:
+  /// **'{n} dari {total} siap'**
+  String tasProgres(String n, String total);
+
+  /// No description provided for @tasProgresBeranda.
+  ///
+  /// In id, this message translates to:
+  /// **'Tas siaga: {n} dari {total} siap'**
+  String tasProgresBeranda(String n, String total);
 }
 
 class _AppLocalizationsDelegate

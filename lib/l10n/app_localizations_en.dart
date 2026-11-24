@@ -552,69 +552,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get siagaSebelum => 'Before an earthquake';
 
   @override
-  String get siagaSebelum1 => 'Know the evacuation routes and assembly points.';
-
-  @override
-  String get siagaSebelum2 => 'Secure heavy objects so they cannot fall.';
-
-  @override
-  String get siagaSebelum3 =>
-      'Prepare an emergency bag and save emergency numbers.';
-
-  @override
   String get siagaSaat => 'During an earthquake';
-
-  @override
-  String get siagaSaat1 => 'Drop, cover your head, and hold on.';
-
-  @override
-  String get siagaSaat2 =>
-      'Stay away from glass, cabinets, and objects that can fall.';
-
-  @override
-  String get siagaSaat3 => 'Do not use the lift.';
 
   @override
   String get siagaSetelah => 'After an earthquake';
 
   @override
-  String get siagaSetelah1 => 'Leave calmly once the shaking stops.';
-
-  @override
-  String get siagaSetelah2 => 'Check yourself and the people around you.';
-
-  @override
-  String get siagaSetelah3 =>
-      'If you are near the coast and the shaking was strong, move to high ground at once.';
-
-  @override
   String tasSiagaJudul(String selesai, String total) {
     return 'Emergency bag checklist ($selesai/$total)';
   }
-
-  @override
-  String get tas1 => 'Drinking water';
-
-  @override
-  String get tas2 => 'Long-lasting food';
-
-  @override
-  String get tas3 => 'Torch and batteries';
-
-  @override
-  String get tas4 => 'First aid kit and personal medicine';
-
-  @override
-  String get tas5 => 'Important documents';
-
-  @override
-  String get tas6 => 'Whistle';
-
-  @override
-  String get tas7 => 'Face mask';
-
-  @override
-  String get tas8 => 'Power bank';
 
   @override
   String get siagaCatatan =>
@@ -996,5 +942,301 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String filterAktifJumlah(String n) {
     return 'Active filters: $n';
+  }
+
+  @override
+  String get pSebelumG1 => 'Key points';
+
+  @override
+  String get pSebelumG1B1 => 'Learn what an earthquake is;';
+
+  @override
+  String get pSebelumG1B2 =>
+      'Make sure the structure and location of your home are safe from earthquake hazards (landslides, liquefaction, etc.);';
+
+  @override
+  String get pSebelumG1B3 =>
+      'Evaluate and renovate your building structure to protect it from earthquake hazards.';
+
+  @override
+  String get pSebelumG2 => 'Know your workplace';
+
+  @override
+  String get pSebelumG2B1 =>
+      'Note the location of doors, lifts, and emergency stairs, and know the safest place to take shelter if an earthquake occurs;';
+
+  @override
+  String get pSebelumG2B2 => 'Learn first aid;';
+
+  @override
+  String get pSebelumG2B3 => 'Learn to use a fire extinguisher;';
+
+  @override
+  String get pSebelumG2B4 =>
+      'Write down important phone numbers to call when an earthquake occurs.';
+
+  @override
+  String get pSebelumG3 => 'Routine preparation at work and at home';
+
+  @override
+  String get pSebelumG3B1 =>
+      'Fix furniture (cupboards, cabinets, etc.) to the wall (nailed, tied, etc.) so it does not fall, topple, or shift during an earthquake;';
+
+  @override
+  String get pSebelumG3B2 =>
+      'Store flammable materials in containers that do not break easily to avoid fires;';
+
+  @override
+  String get pSebelumG3B3 =>
+      'Always turn off water, gas, and electricity when not in use.';
+
+  @override
+  String get pSebelumG4 =>
+      'Most injuries in an earthquake are caused by falling objects';
+
+  @override
+  String get pSebelumG4B1 => 'Keep heavy objects as low as possible;';
+
+  @override
+  String get pSebelumG4B2 =>
+      'Check that hanging objects that could fall during an earthquake (for example lamps) are secure.';
+
+  @override
+  String get pSebelumG5 => 'Items every place should have';
+
+  @override
+  String get pSebelumG5B1 => 'First aid kit;';
+
+  @override
+  String get pSebelumG5B2 => 'Torch/battery lamp;';
+
+  @override
+  String get pSebelumG5B3 => 'Radio;';
+
+  @override
+  String get pSebelumG5B4 => 'Food supplements and water.';
+
+  @override
+  String get pSaatG1 => 'If you are inside a building';
+
+  @override
+  String get pSaatG1B1 =>
+      'Protect your head and body from falling debris (for example by taking cover under a table);';
+
+  @override
+  String get pSaatG1B2 =>
+      'Find the place that is safest from debris and shaking;';
+
+  @override
+  String get pSaatG1B3 => 'Run outside if you still can.';
+
+  @override
+  String get pSaatG2 => 'If you are outside or in an open area';
+
+  @override
+  String get pSaatG2B1 =>
+      'Stay away from nearby structures (such as buildings, power poles, trees);';
+
+  @override
+  String get pSaatG2B2 =>
+      'Watch where you step and avoid places where the ground cracks.';
+
+  @override
+  String get pSaatG3 => 'If you are driving a car';
+
+  @override
+  String get pSaatG3B1 =>
+      'Get out and move away from the car, in case it shifts or catches fire;';
+
+  @override
+  String get pSaatG3B2 =>
+      'Watch where you step and avoid places where the ground cracks.';
+
+  @override
+  String get pSaatG4 => 'If you live or are at the coast';
+
+  @override
+  String get pSaatG4B1 => 'Move away from the coast to avoid a tsunami.';
+
+  @override
+  String get pSaatG5 => 'If you live in a mountainous area';
+
+  @override
+  String get pSaatG5B1 =>
+      'If an earthquake occurs, avoid areas where landslides may happen.';
+
+  @override
+  String get pSetelahG1 => 'If you are inside a building';
+
+  @override
+  String get pSetelahG1B1 => 'Leave the building calmly;';
+
+  @override
+  String get pSetelahG1B2 =>
+      'Do not use escalators or lifts; use the regular stairs;';
+
+  @override
+  String get pSetelahG1B3 =>
+      'Check whether anyone is injured and give first aid;';
+
+  @override
+  String get pSetelahG1B4 =>
+      'Call for help if you or people around you are seriously injured.';
+
+  @override
+  String get pSetelahG2 => 'Check your surroundings';
+
+  @override
+  String get pSetelahG2B1 => 'Check for fires;';
+
+  @override
+  String get pSetelahG2B2 => 'Check for gas leaks;';
+
+  @override
+  String get pSetelahG2B3 => 'Check for short circuits;';
+
+  @override
+  String get pSetelahG2B4 => 'Check water flow and pipes;';
+
+  @override
+  String get pSetelahG2B5 =>
+      'Check for anything else that could be dangerous (switch off electricity, do not light flames, etc.).';
+
+  @override
+  String get pSetelahG3 => 'Do not enter a building that has been hit';
+
+  @override
+  String get pSetelahG3B1 =>
+      'A building that has been hit by an earthquake is prone to collapse.';
+
+  @override
+  String get pSetelahG4 => 'Do not walk around the affected area';
+
+  @override
+  String get pSetelahG4B1 =>
+      'Aftershocks may still occur around the affected area.';
+
+  @override
+  String get pSetelahG5 => 'Listen for information';
+
+  @override
+  String get pSetelahG5B1 =>
+      'Listen to earthquake information on the radio (in case of aftershocks);';
+
+  @override
+  String get pSetelahG5B2 =>
+      'Do not be easily swayed by rumours or news from unclear sources.';
+
+  @override
+  String get pSetelahG6 => 'Fill in the survey from the relevant agency';
+
+  @override
+  String get pSetelahG6B1 =>
+      'The survey is used to find out how much damage occurred at the earthquake location.';
+
+  @override
+  String get pSetelahG7 => 'Do not panic, and remember to pray';
+
+  @override
+  String get pSetelahG7B1 =>
+      'Pray to God Almighty for the safety and security of us all.';
+
+  @override
+  String get tasItem1 =>
+      'Important documents (land certificate, vehicle papers, diplomas, birth certificate, etc.)';
+
+  @override
+  String get tasItem2 =>
+      'Clothing for three days: underwear, long trousers, jacket, blanket, towel, raincoat, etc.';
+
+  @override
+  String get tasItem3 =>
+      'Long-lasting snacks (instant noodles, biscuits, shredded meat, chocolate, etc.)';
+
+  @override
+  String get tasItem4 => 'Drinking water (enough for about three days)';
+
+  @override
+  String get tasItem5 =>
+      'First aid kit with personal medicine and other common medicines';
+
+  @override
+  String get tasItem6 =>
+      'Radio/phone with batteries, charger, or power bank to follow disaster information';
+
+  @override
+  String get tasItem7 =>
+      'Toiletries (soap, toothbrush, toothpaste, comb, cotton buds, etc.)';
+
+  @override
+  String get tasItem8 => 'Face mask (filters dirty/polluted air)';
+
+  @override
+  String get tasItem9 => 'Whistle (to call for help in an emergency)';
+
+  @override
+  String get tasItem10 => 'Enough cash for supplies for about three days';
+
+  @override
+  String get tasItem11 => 'Lighting: torch, headlamp, matches, candles, etc.';
+
+  @override
+  String get istilah_magnitudo_Nama => 'Magnitude';
+
+  @override
+  String get istilah_magnitudo_Isi =>
+      'The strength of an earthquake on the Richter scale.';
+
+  @override
+  String get istilah_richter_Nama => 'Richter scale';
+
+  @override
+  String get istilah_richter_Isi =>
+      'A measure of earthquake strength calculated from the energy released at the earthquake source.';
+
+  @override
+  String get istilah_kedalaman_Nama => 'Depth';
+
+  @override
+  String get istilah_kedalaman_Isi =>
+      'The depth of the earthquake in kilometres.';
+
+  @override
+  String get istilah_mmi_Nama => 'MMI scale (Modified Mercalli Intensity)';
+
+  @override
+  String get istilah_mmi_Isi =>
+      'A measure of earthquake strength based on the damage the earthquake causes.';
+
+  @override
+  String get istilah_waktu_Nama => 'Origin time';
+
+  @override
+  String get istilah_waktu_Isi => 'The time the earthquake occurred, in WIB.';
+
+  @override
+  String siagaSumber(String nama) {
+    return 'Source: $nama';
+  }
+
+  @override
+  String get siagaTerjemahan =>
+      'The guidance text follows the official sources above. The English version is a translation by the SiCuaca team, not an official translation.';
+
+  @override
+  String get siagaIstilahJudul => 'Earthquake terms';
+
+  @override
+  String get tasSumberCatatan =>
+      'Emergency bag list from BNPB. Adjust it to your family\'s needs.';
+
+  @override
+  String tasProgres(String n, String total) {
+    return '$n of $total ready';
+  }
+
+  @override
+  String tasProgresBeranda(String n, String total) {
+    return 'Emergency bag: $n of $total ready';
   }
 }

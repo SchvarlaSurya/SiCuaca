@@ -1,108 +1,146 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 import '../core/ikon.dart';
 import '../core/l10n.dart';
+import '../core/panduan_siaga.dart';
+import '../providers/siaga_provider.dart';
 import '../widgets/app_chrome.dart';
+import '../widgets/status_data.dart';
 
-/// Panduan kesiapsiagaan gempa dan checklist tas siaga (tersimpan di
-/// perangkat).
-class SiagaGempaScreen extends StatefulWidget {
+/// Siap siaga gempa: panduan Sebelum/Saat/Setelah, checklist tas siaga,
+/// dan istilah gempa. Seluruh isi berasal dari sumber resmi (BMKG, BNPB);
+/// setiap bagian menampilkan nama dan alamat sumbernya. Bersifat edukasi dan
+/// bukan pengganti arahan resmi.
+class SiagaGempaScreen extends StatelessWidget {
   const SiagaGempaScreen({super.key});
-
-  @override
-  State<SiagaGempaScreen> createState() => _SiagaGempaScreenState();
-}
-
-class _SiagaGempaScreenState extends State<SiagaGempaScreen> {
-  static const _key = 'checklist_tas_siaga';
-
-  /// Indeks butir disimpan, jadi urutan teks tas siaga tidak boleh diubah.
-  static List<String> _items(AppLocalizations l) => [
-    l.tas1,
-    l.tas2,
-    l.tas3,
-    l.tas4,
-    l.tas5,
-    l.tas6,
-    l.tas7,
-    l.tas8,
-  ];
-
-  Set<int> _selesai = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _muat();
-  }
-
-  Future<void> _muat() async {
-    final p = await SharedPreferences.getInstance();
-    if (mounted) {
-      setState(
-        () => _selesai = (p.getStringList(_key) ?? []).map(int.parse).toSet(),
-      );
-    }
-  }
-
-  Future<void> _toggle(int i) async {
-    final next = {..._selesai};
-    next.contains(i) ? next.remove(i) : next.add(i);
-    setState(() => _selesai = next);
-    final p = await SharedPreferences.getInstance();
-    await p.setStringList(_key, next.map((e) => '$e').toList());
-  }
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final items = _items(l);
+    final theme = Theme.of(context);
+    final siaga = context.watch<SiagaProvider>();
+    final panduan = panduanSiaga(l);
+    final tas = tasSiaga(l);
+    final istilah = istilahGempa(l);
+    final progres = l.tasProgres('${siaga.jumlahSelesai}', '${siaga.total}');
+
     return Scaffold(
       appBar: AppBar(title: Text(l.siagaJudul)),
       body: LatarAtmosfer(
         gelap: false,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            8,
+            16,
+            24 + MediaQuery.paddingOf(context).bottom,
+          ),
           children: [
             const MasukLembut(child: _SiagaHero()),
             const SizedBox(height: 12),
-            MasukLembut(
-              delay: const Duration(milliseconds: 70),
-              child: _Panduan(
-                title: l.siagaSebelum,
-                items: [l.siagaSebelum1, l.siagaSebelum2, l.siagaSebelum3],
+            for (final (i, bagian) in panduan.indexed)
+              MasukLembut(
+                delay: Duration(milliseconds: 70 + 50 * i),
+                child: _Bagian(
+                  key: ValueKey('siaga.${bagian.id}'),
+                  judul: bagian.judul,
+                  sumber: bagian.sumber,
+                  anak: [
+                    for (final k in bagian.kelompok) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 4),
+                        child: Semantics(
+                          header: true,
+                          child: Text(
+                            k.judul,
+                            style: theme.textTheme.titleSmall,
+                          ),
+                        ),
+                      ),
+                      for (final b in k.butir) _Butir(b),
+                    ],
+                  ],
+                ),
               ),
+            const SizedBox(height: 12),
+            JudulBagian(
+              l.tasSiagaJudul('${siaga.jumlahSelesai}', '${siaga.total}'),
             ),
-            MasukLembut(
-              delay: const Duration(milliseconds: 120),
-              child: _Panduan(
-                title: l.siagaSaat,
-                items: [l.siagaSaat1, l.siagaSaat2, l.siagaSaat3],
-              ),
-            ),
-            MasukLembut(
-              delay: const Duration(milliseconds: 170),
-              child: _Panduan(
-                title: l.siagaSetelah,
-                items: [l.siagaSetelah1, l.siagaSetelah2, l.siagaSetelah3],
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(progres, style: theme.textTheme.titleSmall),
+                    const SizedBox(height: 8),
+                    Semantics(
+                      label: progres,
+                      child: ExcludeSemantics(
+                        child: LinearProgressIndicator(
+                          value: siaga.progres,
+                          minHeight: 10,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    for (final item in tas)
+                      CheckboxListTile(
+                        key: ValueKey('tas.${item.id}'),
+                        value: siaga.sudah(item.id),
+                        onChanged: (_) => siaga.toggle(item.id),
+                        title: Text(item.teks),
+                        contentPadding: EdgeInsets.zero,
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    const Divider(),
+                    Text(
+                      l.tasSumberCatatan,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const _BarisSumber(sumber: sumberBnpbTas),
+                    const SizedBox(height: 8),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 12),
-            Text(
-              l.tasSiagaJudul('${_selesai.length}', '${items.length}'),
-              style: Theme.of(context).textTheme.titleLarge,
+            _Bagian(
+              key: const ValueKey('siaga.istilah'),
+              judul: l.siagaIstilahJudul,
+              sumber: sumberBmkgIstilah,
+              anak: [
+                for (final t in istilah) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12, bottom: 2),
+                    child: Text(t.nama, style: theme.textTheme.titleSmall),
+                  ),
+                  Text(t.isi, style: theme.textTheme.bodyMedium),
+                ],
+              ],
             ),
-            const SizedBox(height: 4),
-            for (var i = 0; i < items.length; i++)
-              CheckboxListTile(
-                value: _selesai.contains(i),
-                onChanged: (_) => _toggle(i),
-                title: Text(items[i]),
-                contentPadding: EdgeInsets.zero,
+            const SizedBox(height: 16),
+            Text(
+              l.siagaTerjemahan,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
+            ),
             const SizedBox(height: 8),
-            Text(l.siagaCatatan, style: Theme.of(context).textTheme.bodySmall),
+            Text(l.siagaCatatan, style: theme.textTheme.bodySmall),
+            const SizedBox(height: 4),
+            Text(
+              l.bukanResmi,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -148,20 +186,87 @@ class _SiagaHero extends StatelessWidget {
   }
 }
 
-class _Panduan extends StatelessWidget {
-  const _Panduan({required this.title, required this.items});
+/// Satu bagian yang bisa dibuka-tutup, dengan baris sumber di bawahnya.
+class _Bagian extends StatelessWidget {
+  const _Bagian({
+    super.key,
+    required this.judul,
+    required this.sumber,
+    required this.anak,
+  });
 
-  final String title;
-  final List<String> items;
+  final String judul;
+  final SumberPanduan sumber;
+  final List<Widget> anak;
 
   @override
   Widget build(BuildContext context) => Card(
+    clipBehavior: Clip.antiAlias,
     child: ExpansionTile(
-      title: Text(title),
+      title: Text(judul),
+      shape: const Border(),
+      collapsedShape: const Border(),
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       children: [
-        for (final item in items)
-          ListTile(leading: const IkonDuo(IkonApp.panduan), title: Text(item)),
+        ...anak,
+        const SizedBox(height: 12),
+        _BarisSumber(sumber: sumber),
       ],
     ),
   );
+}
+
+class _Butir extends StatelessWidget {
+  const _Butir(this.teks);
+
+  final String teks;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: IkonDuo(
+            IkonApp.panduan,
+            size: 18,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(child: Text(teks)),
+      ],
+    ),
+  );
+}
+
+/// "Sumber: nama" + alamat. Alamat bisa diseleksi dan disalin (tanpa
+/// membuka peramban, karena aplikasi tidak memakai paket tautan luar).
+class _BarisSumber extends StatelessWidget {
+  const _BarisSumber({required this.sumber});
+
+  final SumberPanduan sumber;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.siagaSumber(sumber.nama),
+          style: theme.textTheme.labelMedium,
+        ),
+        SelectableText(
+          sumber.url,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.primary,
+          ),
+        ),
+      ],
+    );
+  }
 }

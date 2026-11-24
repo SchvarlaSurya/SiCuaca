@@ -125,6 +125,18 @@ class _GempaIntro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    // Kartu "Siap Siaga": diketuk membuka layar Siaga.
+    return Semantics(
+      button: true,
+      child: TekanLembut(
+        borderRadius: BorderRadius.circular(24),
+        onTap: Navigasi.bukaSiaga,
+        child: _isiIntro(context, scheme),
+      ),
+    );
+  }
+
+  Widget _isiIntro(BuildContext context, ColorScheme scheme) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
