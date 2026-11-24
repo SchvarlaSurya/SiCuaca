@@ -2181,7 +2181,7 @@ abstract class AppLocalizations {
   /// No description provided for @kacaCairKeterangan.
   ///
   /// In id, this message translates to:
-  /// **'Pembiasan kaca dan animasi tombol membelah. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.'**
+  /// **'Pembiasan kaca dan animasi tombol jeli. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.'**
   String get kacaCairKeterangan;
 
   /// No description provided for @lainnya.
@@ -2189,6 +2189,306 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Lainnya'**
   String get lainnya;
+
+  /// No description provided for @layananJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Layanan BMKG lainnya'**
+  String get layananJudul;
+
+  /// No description provided for @layananRingkas.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca maritim, radar, penerbangan, titik panas, iklim, siaran pers'**
+  String get layananRingkas;
+
+  /// No description provided for @layananTautanCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Layanan bertanda \"Halaman resmi\" dibuka di situs BMKG; isinya tidak disalin ke SiCuaca.'**
+  String get layananTautanCatatan;
+
+  /// No description provided for @layananBukaResmi.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka halaman resmi'**
+  String get layananBukaResmi;
+
+  /// No description provided for @layananGagalBuka.
+  ///
+  /// In id, this message translates to:
+  /// **'Halaman resmi tidak bisa dibuka.'**
+  String get layananGagalBuka;
+
+  /// No description provided for @layananLabelTautan.
+  ///
+  /// In id, this message translates to:
+  /// **'Halaman resmi'**
+  String get layananLabelTautan;
+
+  /// No description provided for @layananMaritimJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca maritim'**
+  String get layananMaritimJudul;
+
+  /// No description provided for @layananMaritimKet.
+  ///
+  /// In id, this message translates to:
+  /// **'Tinggi gelombang, angin, dan arus di perairan terdekat.'**
+  String get layananMaritimKet;
+
+  /// No description provided for @layananRadarJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Radar cuaca'**
+  String get layananRadarJudul;
+
+  /// No description provided for @layananRadarKet.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum tersedia di SiCuaca karena data radar BMKG belum terbuka untuk aplikasi; lihat di halaman resmi.'**
+  String get layananRadarKet;
+
+  /// No description provided for @layananPenerbanganJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca penerbangan'**
+  String get layananPenerbanganJudul;
+
+  /// No description provided for @layananPenerbanganKet.
+  ///
+  /// In id, this message translates to:
+  /// **'Laporan METAR dan prakiraan TAF bandara.'**
+  String get layananPenerbanganKet;
+
+  /// No description provided for @layananTitikPanasJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Titik panas'**
+  String get layananTitikPanasJudul;
+
+  /// No description provided for @layananTitikPanasKet.
+  ///
+  /// In id, this message translates to:
+  /// **'Citra sebaran titik panas dari satelit.'**
+  String get layananTitikPanasKet;
+
+  /// No description provided for @layananIklimJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi iklim'**
+  String get layananIklimJudul;
+
+  /// No description provided for @layananIklimKet.
+  ///
+  /// In id, this message translates to:
+  /// **'Analisis dan prediksi hujan, musim, serta El Niño/La Niña.'**
+  String get layananIklimKet;
+
+  /// No description provided for @layananSiaranPersJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Siaran pers'**
+  String get layananSiaranPersJudul;
+
+  /// No description provided for @layananSiaranPersKet.
+  ///
+  /// In id, this message translates to:
+  /// **'Siaran pers resmi BMKG.'**
+  String get layananSiaranPersKet;
+
+  /// No description provided for @maritimPerairanTerdekat.
+  ///
+  /// In id, this message translates to:
+  /// **'Perairan terdekat dari lokasi Anda, ±{jarak} km'**
+  String maritimPerairanTerdekat(String jarak);
+
+  /// No description provided for @maritimPerairanPilihan.
+  ///
+  /// In id, this message translates to:
+  /// **'Perairan pilihan Anda'**
+  String get maritimPerairanPilihan;
+
+  /// No description provided for @maritimPilihPerairan.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih perairan'**
+  String get maritimPilihPerairan;
+
+  /// No description provided for @maritimPakaiTerdekat.
+  ///
+  /// In id, this message translates to:
+  /// **'Gunakan perairan terdekat'**
+  String get maritimPakaiTerdekat;
+
+  /// No description provided for @maritimCariPerairan.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari perairan atau provinsi'**
+  String get maritimCariPerairan;
+
+  /// No description provided for @maritimPerluPilih.
+  ///
+  /// In id, this message translates to:
+  /// **'Izinkan lokasi untuk menemukan perairan terdekat, atau pilih perairan sendiri.'**
+  String get maritimPerluPilih;
+
+  /// No description provided for @maritimMemuat.
+  ///
+  /// In id, this message translates to:
+  /// **'Memuat cuaca maritim…'**
+  String get maritimMemuat;
+
+  /// No description provided for @maritimGagal.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca maritim belum bisa dimuat.'**
+  String get maritimGagal;
+
+  /// No description provided for @maritimMemuatDaftar.
+  ///
+  /// In id, this message translates to:
+  /// **'Memuat daftar perairan…'**
+  String get maritimMemuatDaftar;
+
+  /// No description provided for @maritimDaftarGagal.
+  ///
+  /// In id, this message translates to:
+  /// **'Daftar perairan belum bisa dimuat.'**
+  String get maritimDaftarGagal;
+
+  /// No description provided for @maritimTidakAdaHasil.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada perairan yang cocok.'**
+  String get maritimTidakAdaHasil;
+
+  /// No description provided for @maritimSaatIni.
+  ///
+  /// In id, this message translates to:
+  /// **'Saat ini'**
+  String get maritimSaatIni;
+
+  /// No description provided for @maritimGelombang.
+  ///
+  /// In id, this message translates to:
+  /// **'Gelombang'**
+  String get maritimGelombang;
+
+  /// No description provided for @maritimMeter.
+  ///
+  /// In id, this message translates to:
+  /// **'{nilai} m'**
+  String maritimMeter(String nilai);
+
+  /// No description provided for @maritimAngin.
+  ///
+  /// In id, this message translates to:
+  /// **'Angin'**
+  String get maritimAngin;
+
+  /// No description provided for @maritimAnginNilai.
+  ///
+  /// In id, this message translates to:
+  /// **'Dari {arah}, {kecepatan} knot (hembusan {hembusan})'**
+  String maritimAnginNilai(String arah, String kecepatan, String hembusan);
+
+  /// No description provided for @maritimArus.
+  ///
+  /// In id, this message translates to:
+  /// **'Arus'**
+  String get maritimArus;
+
+  /// No description provided for @maritimArusNilai.
+  ///
+  /// In id, this message translates to:
+  /// **'Ke {arah}, {kecepatan} knot'**
+  String maritimArusNilai(String arah, String kecepatan);
+
+  /// No description provided for @maritimCuaca.
+  ///
+  /// In id, this message translates to:
+  /// **'Cuaca'**
+  String get maritimCuaca;
+
+  /// No description provided for @maritimBerlaku.
+  ///
+  /// In id, this message translates to:
+  /// **'Berlaku pukul {jam}'**
+  String maritimBerlaku(String jam);
+
+  /// No description provided for @maritimDiterbitkan.
+  ///
+  /// In id, this message translates to:
+  /// **'Diterbitkan BMKG {waktu}'**
+  String maritimDiterbitkan(String waktu);
+
+  /// No description provided for @maritimPrakiraanJam.
+  ///
+  /// In id, this message translates to:
+  /// **'24 jam ke depan'**
+  String get maritimPrakiraanJam;
+
+  /// No description provided for @maritimPrakiraanHari.
+  ///
+  /// In id, this message translates to:
+  /// **'Hari berikutnya (per 3 jam)'**
+  String get maritimPrakiraanHari;
+
+  /// No description provided for @maritimKategoriSemantik.
+  ///
+  /// In id, this message translates to:
+  /// **'Gelombang {kategori}, {tinggi} meter'**
+  String maritimKategoriSemantik(String kategori, String tinggi);
+
+  /// No description provided for @maritimCatatanKategori.
+  ///
+  /// In id, this message translates to:
+  /// **'Kategori gelombang adalah label dari BMKG.'**
+  String get maritimCatatanKategori;
+
+  /// No description provided for @gelombangTenang.
+  ///
+  /// In id, this message translates to:
+  /// **'Tenang'**
+  String get gelombangTenang;
+
+  /// No description provided for @gelombangRendah.
+  ///
+  /// In id, this message translates to:
+  /// **'Rendah'**
+  String get gelombangRendah;
+
+  /// No description provided for @gelombangSedang.
+  ///
+  /// In id, this message translates to:
+  /// **'Sedang'**
+  String get gelombangSedang;
+
+  /// No description provided for @gelombangTinggi.
+  ///
+  /// In id, this message translates to:
+  /// **'Tinggi'**
+  String get gelombangTinggi;
+
+  /// No description provided for @gelombangSangatTinggi.
+  ///
+  /// In id, this message translates to:
+  /// **'Sangat tinggi'**
+  String get gelombangSangatTinggi;
+
+  /// No description provided for @gelombangEkstrem.
+  ///
+  /// In id, this message translates to:
+  /// **'Ekstrem'**
+  String get gelombangEkstrem;
+
+  /// No description provided for @gelombangSangatEkstrem.
+  ///
+  /// In id, this message translates to:
+  /// **'Sangat ekstrem'**
+  String get gelombangSangatEkstrem;
 }
 
 class _AppLocalizationsDelegate

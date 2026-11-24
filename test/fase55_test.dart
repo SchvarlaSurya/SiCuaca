@@ -636,6 +636,7 @@ void main() {
         SeksiBeranda.cuaca,
         SeksiBeranda.gempa,
         SeksiBeranda.siaga,
+        SeksiBeranda.layanan,
       ]);
       expect(
         PengaturanProvider.normalkanUrutan(['gempa', 'gempa', 'x', 'cuaca']),
@@ -644,6 +645,7 @@ void main() {
           SeksiBeranda.cuaca,
           SeksiBeranda.peringatan,
           SeksiBeranda.siaga,
+          SeksiBeranda.layanan,
         ],
       );
       // Urutan lama (tiga bagian) dari versi sebelumnya tetap valid: bagian
@@ -655,6 +657,7 @@ void main() {
           SeksiBeranda.peringatan,
           SeksiBeranda.cuaca,
           SeksiBeranda.siaga,
+          SeksiBeranda.layanan,
         ],
       );
     });
@@ -668,6 +671,7 @@ void main() {
         SeksiBeranda.peringatan,
         SeksiBeranda.cuaca,
         SeksiBeranda.siaga,
+        SeksiBeranda.layanan,
       ]);
       expect(a.urutanBerandaBawaan, isFalse);
 
@@ -678,6 +682,7 @@ void main() {
         SeksiBeranda.peringatan,
         SeksiBeranda.cuaca,
         SeksiBeranda.siaga,
+        SeksiBeranda.layanan,
       ]);
 
       await b.setelUlangUrutanBeranda();

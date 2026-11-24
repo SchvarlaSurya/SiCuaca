@@ -113,6 +113,11 @@ List<Widget> _bagian(BuildContext context, SeksiBeranda seksi, int indeks) {
       Navigasi.bukaSiaga,
       const _KartuSiaga() as Widget,
     ),
+    SeksiBeranda.layanan => (
+      l.layananJudul,
+      Navigasi.bukaLayanan,
+      const _KartuLayanan() as Widget,
+    ),
   };
   return [
     if (indeks > 0) const SizedBox(height: 28),
@@ -158,6 +163,26 @@ class _KartuSiaga extends StatelessWidget {
         ),
         trailing: const IkonDuo(IkonApp.selengkapnya),
         onTap: Navigasi.bukaSiaga,
+      ),
+    );
+  }
+}
+
+/// Pintu masuk ke Layanan BMKG lainnya (cuaca maritim dan tautan resmi).
+class _KartuLayanan extends StatelessWidget {
+  const _KartuLayanan();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        leading: const IkonDuo(IkonApp.layanan),
+        title: Text(l.layananJudul),
+        subtitle: Text(l.layananRingkas),
+        trailing: const IkonDuo(IkonApp.selengkapnya),
+        onTap: Navigasi.bukaLayanan,
       ),
     );
   }

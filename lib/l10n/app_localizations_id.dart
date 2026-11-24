@@ -1228,8 +1228,180 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get kacaCairKeterangan =>
-      'Pembiasan kaca dan animasi tombol membelah. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.';
+      'Pembiasan kaca dan animasi tombol jeli. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.';
 
   @override
   String get lainnya => 'Lainnya';
+
+  @override
+  String get layananJudul => 'Layanan BMKG lainnya';
+
+  @override
+  String get layananRingkas =>
+      'Cuaca maritim, radar, penerbangan, titik panas, iklim, siaran pers';
+
+  @override
+  String get layananTautanCatatan =>
+      'Layanan bertanda \"Halaman resmi\" dibuka di situs BMKG; isinya tidak disalin ke SiCuaca.';
+
+  @override
+  String get layananBukaResmi => 'Buka halaman resmi';
+
+  @override
+  String get layananGagalBuka => 'Halaman resmi tidak bisa dibuka.';
+
+  @override
+  String get layananLabelTautan => 'Halaman resmi';
+
+  @override
+  String get layananMaritimJudul => 'Cuaca maritim';
+
+  @override
+  String get layananMaritimKet =>
+      'Tinggi gelombang, angin, dan arus di perairan terdekat.';
+
+  @override
+  String get layananRadarJudul => 'Radar cuaca';
+
+  @override
+  String get layananRadarKet =>
+      'Belum tersedia di SiCuaca karena data radar BMKG belum terbuka untuk aplikasi; lihat di halaman resmi.';
+
+  @override
+  String get layananPenerbanganJudul => 'Cuaca penerbangan';
+
+  @override
+  String get layananPenerbanganKet =>
+      'Laporan METAR dan prakiraan TAF bandara.';
+
+  @override
+  String get layananTitikPanasJudul => 'Titik panas';
+
+  @override
+  String get layananTitikPanasKet => 'Citra sebaran titik panas dari satelit.';
+
+  @override
+  String get layananIklimJudul => 'Informasi iklim';
+
+  @override
+  String get layananIklimKet =>
+      'Analisis dan prediksi hujan, musim, serta El Niño/La Niña.';
+
+  @override
+  String get layananSiaranPersJudul => 'Siaran pers';
+
+  @override
+  String get layananSiaranPersKet => 'Siaran pers resmi BMKG.';
+
+  @override
+  String maritimPerairanTerdekat(String jarak) {
+    return 'Perairan terdekat dari lokasi Anda, ±$jarak km';
+  }
+
+  @override
+  String get maritimPerairanPilihan => 'Perairan pilihan Anda';
+
+  @override
+  String get maritimPilihPerairan => 'Pilih perairan';
+
+  @override
+  String get maritimPakaiTerdekat => 'Gunakan perairan terdekat';
+
+  @override
+  String get maritimCariPerairan => 'Cari perairan atau provinsi';
+
+  @override
+  String get maritimPerluPilih =>
+      'Izinkan lokasi untuk menemukan perairan terdekat, atau pilih perairan sendiri.';
+
+  @override
+  String get maritimMemuat => 'Memuat cuaca maritim…';
+
+  @override
+  String get maritimGagal => 'Cuaca maritim belum bisa dimuat.';
+
+  @override
+  String get maritimMemuatDaftar => 'Memuat daftar perairan…';
+
+  @override
+  String get maritimDaftarGagal => 'Daftar perairan belum bisa dimuat.';
+
+  @override
+  String get maritimTidakAdaHasil => 'Tidak ada perairan yang cocok.';
+
+  @override
+  String get maritimSaatIni => 'Saat ini';
+
+  @override
+  String get maritimGelombang => 'Gelombang';
+
+  @override
+  String maritimMeter(String nilai) {
+    return '$nilai m';
+  }
+
+  @override
+  String get maritimAngin => 'Angin';
+
+  @override
+  String maritimAnginNilai(String arah, String kecepatan, String hembusan) {
+    return 'Dari $arah, $kecepatan knot (hembusan $hembusan)';
+  }
+
+  @override
+  String get maritimArus => 'Arus';
+
+  @override
+  String maritimArusNilai(String arah, String kecepatan) {
+    return 'Ke $arah, $kecepatan knot';
+  }
+
+  @override
+  String get maritimCuaca => 'Cuaca';
+
+  @override
+  String maritimBerlaku(String jam) {
+    return 'Berlaku pukul $jam';
+  }
+
+  @override
+  String maritimDiterbitkan(String waktu) {
+    return 'Diterbitkan BMKG $waktu';
+  }
+
+  @override
+  String get maritimPrakiraanJam => '24 jam ke depan';
+
+  @override
+  String get maritimPrakiraanHari => 'Hari berikutnya (per 3 jam)';
+
+  @override
+  String maritimKategoriSemantik(String kategori, String tinggi) {
+    return 'Gelombang $kategori, $tinggi meter';
+  }
+
+  @override
+  String get maritimCatatanKategori =>
+      'Kategori gelombang adalah label dari BMKG.';
+
+  @override
+  String get gelombangTenang => 'Tenang';
+
+  @override
+  String get gelombangRendah => 'Rendah';
+
+  @override
+  String get gelombangSedang => 'Sedang';
+
+  @override
+  String get gelombangTinggi => 'Tinggi';
+
+  @override
+  String get gelombangSangatTinggi => 'Sangat tinggi';
+
+  @override
+  String get gelombangEkstrem => 'Ekstrem';
+
+  @override
+  String get gelombangSangatEkstrem => 'Sangat ekstrem';
 }

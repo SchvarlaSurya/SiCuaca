@@ -58,6 +58,29 @@ extension L10nTambahan on AppLocalizations {
     StatusLokasi.idle || StatusLokasi.mencari || StatusLokasi.berhasil => null,
   };
 
+  /// Teks cuaca maritim BMKG (bahasa Indonesia) sesuai bahasa aplikasi.
+  String cuacaTeks(String teksBmkg) {
+    if (!inggris) return teksBmkg;
+    return _cuacaInggris[teksBmkg.trim().toLowerCase()] ?? teksBmkg;
+  }
+
+  /// Nama arah BMKG dalam bahasa Indonesia ("Barat Laut") sesuai bahasa
+  /// aplikasi. Nama tak dikenal dikembalikan apa adanya.
+  String arahNama(String nama) {
+    final kode = switch (nama.trim().toLowerCase()) {
+      'utara' => 'N',
+      'timur laut' => 'NE',
+      'timur' => 'E',
+      'tenggara' => 'SE',
+      'selatan' => 'S',
+      'barat daya' => 'SW',
+      'barat' => 'W',
+      'barat laut' => 'NW',
+      _ => null,
+    };
+    return kode == null ? nama : arahAngin(kode);
+  }
+
   /// Nama arah mata angin dari kode BMKG (N, NE, ...). Kode tak dikenal
   /// dikembalikan apa adanya.
   String arahAngin(String kode) => switch (kode.toUpperCase()) {

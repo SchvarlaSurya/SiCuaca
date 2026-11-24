@@ -23,8 +23,39 @@ class ApiConstants {
   static const String prakiraanCuacaUrl =
       'https://api.bmkg.go.id/publik/prakiraan-cuaca';
 
+  /// API publik data maritim BMKG (dokumentasi: maritim.bmkg.go.id/apidoc).
+  /// Semua GET, tanpa autentikasi, data diperbarui sekitar 00 UTC.
+  static const String maritimBaseUrl =
+      'https://maritim.bmkg.go.id/marine2026-data';
+
+  /// Daftar wilayah perairan per provinsi (±51 KB).
+  static const String maritimAreaUrl =
+      '$maritimBaseUrl/meta/area_province.json';
+
+  /// Poligon wilayah perairan, GeoJSON (±1,6 MB; diunduh jarang).
+  static const String maritimWilayahUrl =
+      '$maritimBaseUrl/meta/wilmetos.min.geojson';
+
+  /// Prakiraan satu wilayah perairan (±10 KB).
+  static String maritimPerairanUrl(String kode) =>
+      '$maritimBaseUrl/perairan/$kode.json';
+
   static const Duration connectTimeout = Duration(seconds: 10);
   static const Duration receiveTimeout = Duration(seconds: 15);
+}
+
+/// Halaman resmi BMKG untuk layanan tanpa API terbuka (dibuka di browser
+/// dalam aplikasi; isinya tidak disalin).
+class TautanResmi {
+  const TautanResmi._();
+
+  static const String radar = 'https://www.bmkg.go.id/cuaca/radar';
+  static const String penerbangan = 'https://aviation.bmkg.go.id';
+  static const String titikPanas =
+      'https://www.bmkg.go.id/cuaca/satelit/polar-hotspot';
+  static const String iklim = 'https://www.bmkg.go.id/iklim';
+  static const String siaranPers = 'https://www.bmkg.go.id/siaran-pers';
+  static const String maritim = 'https://maritim.bmkg.go.id';
 }
 
 class WilayahConstants {
@@ -61,6 +92,7 @@ class PrefsKeys {
   static const String tema = 'tema';
   static const String sudahOnboarding = 'sudah_onboarding';
   static const String kacaCair = 'kaca_cair';
+  static const String maritimPerairan = 'maritim_perairan';
 
   /// Awalan kunci cache (lihat CacheService).
   static const String cache = 'cache.';

@@ -60,6 +60,11 @@ class FakeApi extends ApiService {
       ApiConstants.gempaTerkiniUrl => fixture('gempaterkini.json'),
       ApiConstants.gempaDirasakanUrl => fixture('gempadirasakan.json'),
       ApiConstants.prakiraanCuacaUrl => fixture('prakiraan_31.71.01.1001.json'),
+      // Data maritim asli BMKG (GeoJSON dipotong; data pribadi dihapus).
+      ApiConstants.maritimAreaUrl => fixture('maritim_area_province.json'),
+      ApiConstants.maritimWilayahUrl => fixture('maritim_wilayah.geojson'),
+      _ when url.startsWith('${ApiConstants.maritimBaseUrl}/perairan/') =>
+        fixture('maritim_perairan.json'),
       _ => throw ApiException.notFound(),
     };
   }

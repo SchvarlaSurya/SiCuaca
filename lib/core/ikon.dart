@@ -24,6 +24,24 @@ abstract final class IkonApp {
     fontFamily: _duo,
   ); // gearSix
 
+  // Layanan BMKG lainnya.
+  static const IconData layanan = IconData(
+    0xe28b,
+    fontFamily: _duo,
+  ); // globeHemisphereEast
+  static const IconData kapal = IconData(0xe787, fontFamily: _duo); // boat
+  static const IconData radar = IconData(0xe0f3, fontFamily: _duo); // broadcast
+  static const IconData pesawat = IconData(
+    0xe5d7,
+    fontFamily: _duo,
+  ); // airplaneTilt
+  static const IconData titikPanas = IconData(0xe243, fontFamily: _duo); // fire
+  static const IconData iklim = IconData(
+    0xe5c7,
+    fontFamily: _duo,
+  ); // thermometer
+  static const IconData koran = IconData(0xe345, fontFamily: _duo); // newspaper
+
   // Aksi.
   static const IconData lainnya = IconData(
     0xe1ff,

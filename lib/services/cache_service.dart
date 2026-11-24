@@ -75,6 +75,21 @@ class CacheService {
     } catch (_) {}
   }
 
+  /// Hapus cache berawalan [awalan] selain yang akhirannya ada di
+  /// [dipertahankan] (mis. hanya prakiraan maritim perairan aktif).
+  Future<void> pangkasAwalan(String awalan, Set<String> dipertahankan) async {
+    try {
+      final prefs = await _prefs;
+      final penuh = '${PrefsKeys.cache}$awalan';
+      for (final kunci in prefs.getKeys()) {
+        if (!kunci.startsWith(penuh)) continue;
+        if (!dipertahankan.contains(kunci.substring(penuh.length))) {
+          await prefs.remove(kunci);
+        }
+      }
+    } catch (_) {}
+  }
+
   /// Riwayat gempa versi lama (shared_preferences). Dipertahankan hanya untuk
   /// dipindahkan satu kali ke database; lihat RiwayatGempaRepository.
   Future<void> hapusRiwayatGempa() async {

@@ -18,6 +18,7 @@ class UrutanBerandaScreen extends StatelessWidget {
     SeksiBeranda.gempa => l.gempaTerbaruJudul,
     SeksiBeranda.peringatan => l.navPeringatan,
     SeksiBeranda.siaga => l.siagaJudul,
+    SeksiBeranda.layanan => l.layananJudul,
   };
 
   static IconData _ikon(SeksiBeranda s) => switch (s) {
@@ -25,6 +26,7 @@ class UrutanBerandaScreen extends StatelessWidget {
     SeksiBeranda.gempa => IkonApp.gempa,
     SeksiBeranda.peringatan => IkonApp.peringatan,
     SeksiBeranda.siaga => IkonApp.siaga,
+    SeksiBeranda.layanan => IkonApp.layanan,
   };
 
   @override

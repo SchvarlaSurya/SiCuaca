@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../core/ikon.dart';
 import '../core/l10n.dart';
+import '../core/navigasi.dart';
 import '../models/ambang_gempa.dart';
 import '../providers/notifikasi_provider.dart';
 import '../providers/pengaturan_provider.dart';
@@ -118,6 +119,14 @@ class PengaturanScreen extends StatelessWidget {
             _Bagian(
               judul: l.tentangJudul,
               children: [
+                ListTile(
+                  key: const ValueKey('pengaturan.layanan'),
+                  leading: const IkonDuo(IkonApp.layanan),
+                  title: Text(l.layananJudul),
+                  subtitle: Text(l.layananRingkas),
+                  trailing: const IkonDuo(IkonApp.selengkapnya),
+                  onTap: Navigasi.bukaLayanan,
+                ),
                 ListTile(
                   leading: const IkonDuo(IkonApp.info),
                   title: Text(l.appName),

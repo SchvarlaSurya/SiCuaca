@@ -11,6 +11,7 @@ import 'core/theme.dart';
 import 'providers/favorit_provider.dart';
 import 'providers/gempa_provider.dart';
 import 'providers/lokasi_provider.dart';
+import 'providers/maritim_provider.dart';
 import 'providers/notifikasi_provider.dart';
 import 'providers/pengaturan_provider.dart';
 import 'providers/riwayat_gempa_provider.dart';
@@ -22,6 +23,7 @@ import 'services/api_service.dart';
 import 'services/bmkg_repository.dart';
 import 'services/cache_service.dart';
 import 'services/gps_service.dart';
+import 'services/maritim_repository.dart';
 import 'services/notifikasi_service.dart';
 import 'services/preferences_service.dart';
 import 'services/riwayat_gempa_repository.dart';
@@ -167,6 +169,23 @@ class SiCuacaApp extends StatelessWidget {
               posisi: () => lokasi.posisi,
               ubahPosisi: lokasi,
             )..muat();
+          },
+        ),
+        Provider<MaritimRepository>(
+          create: (context) => MaritimRepository(
+            context.read<ApiService>(),
+            cacheService ?? CacheService(),
+          ),
+        ),
+        ChangeNotifierProvider<MaritimProvider>(
+          create: (context) {
+            final lokasi = context.read<LokasiProvider>();
+            return MaritimProvider(
+              context.read<MaritimRepository>(),
+              context.read<PreferencesService>(),
+              posisi: () => lokasi.posisi,
+              ubahPosisi: lokasi,
+            );
           },
         ),
         ChangeNotifierProvider<SiagaProvider>(

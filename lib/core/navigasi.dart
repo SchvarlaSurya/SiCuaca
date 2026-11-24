@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/gempa.dart';
 import '../screens/gempa_detail_screen.dart';
+import '../screens/layanan_screen.dart';
 import '../screens/peringatan_screen.dart';
 import '../screens/siaga_gempa_screen.dart';
 
@@ -38,6 +39,13 @@ class Navigasi {
   }
 
   /// Membuka layar Siap Siaga gempa (panduan, tas siaga, istilah).
+  /// Membuka halaman Layanan BMKG lainnya.
+  static void bukaLayanan() {
+    navigatorKey.currentState?.push(
+      MaterialPageRoute<void>(builder: (_) => const LayananScreen()),
+    );
+  }
+
   static void bukaSiaga() {
     navigatorKey.currentState?.push(
       MaterialPageRoute<void>(builder: (_) => const SiagaGempaScreen()),
