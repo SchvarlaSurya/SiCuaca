@@ -189,6 +189,7 @@ void main() {
     testWidgets('ganti ke English mengubah teks tanpa restart dan tersimpan', (
       tester,
     ) async {
+      final semantik = tester.ensureSemantics();
       await tester.pumpWidget(buatApp(gps: _gpsJakarta));
       await tester.pumpAndSettle();
       expect(find.text('Beranda'), findsWidgets);
@@ -202,7 +203,10 @@ void main() {
 
       // Tab, judul, dan halaman Tentang berganti bahasa.
       expect(find.text(en.navPengaturan), findsWidgets);
-      expect(find.text(en.navBeranda), findsOneWidget);
+      // Navbar hanya menampilkan label tab aktif; nama tab lain dibacakan
+      // lewat semantik.
+      expect(tester.getSemantics(navTab('beranda')).label, en.navBeranda);
+      semantik.dispose();
       expect(find.text(en.tentangBahasa), findsOneWidget);
       expect(find.text('Beranda'), findsNothing);
 

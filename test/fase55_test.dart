@@ -396,7 +396,11 @@ void main() {
       matching: find.textContaining(RegExp(r'^M\d')),
     );
     expect(magnitudo, findsOneWidget);
-    expect(tester.getSemantics(navTab('gempa')).value, contains(l.magnitudo));
+    // Nilai data dibacakan bersama nama tab oleh node semantik navbar.
+    final gempa = tester.getSemantics(navTab('gempa'));
+    expect(gempa.label, startsWith(l.navGempa));
+    expect(gempa.label, contains(l.magnitudo));
+    expect(gempa.flagsCollection.isButton, isTrue);
     semantik.dispose();
   });
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import 'package:provider/provider.dart';
 
@@ -11,7 +12,6 @@ import '../models/prakiraan.dart';
 import '../providers/gempa_provider.dart';
 import '../providers/weather_provider.dart';
 import '../services/notifikasi_service.dart';
-import '../widgets/app_chrome.dart';
 import '../widgets/ikon_cuaca.dart';
 import '../widgets/transisi_tab.dart';
 import 'beranda_screen.dart';
@@ -72,6 +72,14 @@ class _MainShellState extends State<MainShell> {
   }
 }
 
+/// Navbar kaca cair (liquid glass) dari paket liquid_glass_widgets: pil kaca
+/// gelap melayang dengan lensa kapsul yang bisa digeser jari dari tab ke tab
+/// (efek jeli), seperti tab bar iOS. Tab tidak aktif hanya ikon; tab aktif
+/// ikon + label. Isi tab Cuaca dan Gempa tetap data langsung (suhu dan
+/// magnitudo).
+///
+/// Di Android (Impeller) lensa membiaskan isi di belakangnya; di web hanya
+/// tingkat "standard" (tanpa pembiasan latar).
 class _NavigasiBawah extends StatelessWidget {
   const _NavigasiBawah({required this.indeks});
 
@@ -80,62 +88,90 @@ class _NavigasiBawah extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final dock = isDark ? const Color(0xFF101116) : const Color(0xFFFFFFFF);
-    final outline = isDark ? const Color(0xFF3A3D49) : const Color(0xFFE0DCEA);
 
-    return SafeArea(
-      top: false,
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        decoration: BoxDecoration(
-          color: dock,
-          borderRadius: BorderRadius.circular(32),
-          border: Border.all(color: outline, width: 1.25),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: .22),
-              blurRadius: 24,
-              offset: const Offset(0, 10),
+    // Satu widget untuk keadaan aktif dan tidak aktif (tanpa activeIcon).
+    GlassTab tab({
+      required int urutan,
+      required String kunci,
+      required String label,
+      required Widget Function(Color warna, bool aktif) isi,
+      String? nilai,
+    }) {
+      final aktif = indeks == urutan;
+      return GlassTab(
+        label: aktif ? label : null,
+        // Node semantik tab dibuat GlassTabBar (tombol, terpilih, aksi
+        // ketuk); isi ikon dikecualikan, jadi nilai data langsung (suhu,
+        // magnitudo) ikut dibacakan lewat label ini.
+        semanticLabel: nilai == null ? label : '$label, $nilai',
+        icon: KeyedSubtree(
+          key: ValueKey('nav.$kunci'),
+          child: Builder(
+            builder: (context) => isi(
+              IconTheme.of(context).color ??
+                  (aktif ? _warnaIkonAktif : _warnaIkonPasif),
+              aktif,
             ),
-          ],
+          ),
         ),
-        child: Row(
-          children: [
-            _Tab(
-              kunci: 'beranda',
-              indeks: TabUtama.beranda,
-              aktif: indeks == TabUtama.beranda,
-              label: l.navBeranda,
-              isi: (warna, aktif) => _IkonTab(IkonApp.beranda, warna, aktif),
-            ),
-            _Tab(
-              kunci: 'cuaca',
-              indeks: TabUtama.cuaca,
-              aktif: indeks == TabUtama.cuaca,
-              label: l.navCuaca,
-              nilai: _nilaiCuaca(context),
-              isi: (warna, aktif) => _IsiCuaca(warna: warna, aktif: aktif),
-            ),
-            _Tab(
-              kunci: 'gempa',
-              indeks: TabUtama.gempa,
-              aktif: indeks == TabUtama.gempa,
-              label: l.navGempa,
-              nilai: _nilaiGempa(context),
-              isi: (warna, aktif) => _IsiGempa(warna: warna, aktif: aktif),
-            ),
-            _Tab(
-              kunci: 'pengaturan',
-              indeks: TabUtama.pengaturan,
-              aktif: indeks == TabUtama.pengaturan,
-              label: l.navPengaturan,
-              isi: (warna, aktif) => _IkonTab(IkonApp.pengaturan, warna, aktif),
-            ),
-          ],
-        ),
+      );
+    }
+
+    return GlassTabBar.bottom(
+      selectedIndex: indeks,
+      onTabSelected: Navigasi.bukaTab,
+      barHeight: 66,
+      horizontalPadding: 14,
+      verticalPadding: 14,
+      iconSize: 26,
+      labelFontSize: 12,
+      iconLabelSpacing: 3,
+      selectedIconColor: _warnaIkonAktif,
+      unselectedIconColor: _warnaIkonPasif,
+      selectedLabelColor: _warnaIkonAktif,
+      unselectedLabelColor: _warnaIkonPasif,
+      // Pil: kaca gelap pekat dengan tepi menyala tipis (di kedua tema).
+      settings: LiquidGlassSettings.ios27Dark.copyWith(
+        glassColor: const Color(0xE60B0C10),
+        thickness: 26,
       ),
+      // Lensa kapsul (radius bawaan = penuh), sedikit membesar saat digeser.
+      indicatorExpansion: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 6,
+      ),
+      indicatorSettings: LiquidGlassSettings.ios27Indicator.copyWith(
+        thickness: 30,
+        refractiveIndex: 1.22,
+      ),
+      tabs: [
+        tab(
+          urutan: TabUtama.beranda,
+          kunci: 'beranda',
+          label: l.navBeranda,
+          isi: (warna, aktif) => _IkonTab(IkonApp.beranda, warna, aktif),
+        ),
+        tab(
+          urutan: TabUtama.cuaca,
+          kunci: 'cuaca',
+          label: l.navCuaca,
+          nilai: _nilaiCuaca(context),
+          isi: (warna, aktif) => _IsiCuaca(warna: warna, aktif: aktif),
+        ),
+        tab(
+          urutan: TabUtama.gempa,
+          kunci: 'gempa',
+          label: l.navGempa,
+          nilai: _nilaiGempa(context),
+          isi: (warna, aktif) => _IsiGempa(warna: warna, aktif: aktif),
+        ),
+        tab(
+          urutan: TabUtama.pengaturan,
+          kunci: 'pengaturan',
+          label: l.navPengaturan,
+          isi: (warna, aktif) => _IkonTab(IkonApp.pengaturan, warna, aktif),
+        ),
+      ],
     );
   }
 
@@ -163,89 +199,8 @@ EntriPrakiraan? _entriSekarang(BuildContext context) {
   return cuaca.prakiraan?.entriTerdekat(DateTime.now());
 }
 
-/// Satu tab: garis penanda di atas, isi (ikon atau data), lalu label.
-class _Tab extends StatelessWidget {
-  const _Tab({
-    required this.kunci,
-    required this.indeks,
-    required this.aktif,
-    required this.label,
-    required this.isi,
-    this.nilai,
-  });
-
-  final String kunci;
-  final int indeks;
-  final bool aktif;
-  final String label;
-
-  /// Nilai data untuk pembaca layar (suhu, magnitudo).
-  final String? nilai;
-  final Widget Function(Color warna, bool aktif) isi;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
-    final warnaAktif = isDark ? const Color(0xFFC9C1FF) : scheme.primary;
-    final warnaPasif = isDark
-        ? const Color(0xFFC9CBD5)
-        : const Color(0xFF625F70);
-    final warna = aktif ? warnaAktif : warnaPasif;
-    final tanpaGerak = MediaQuery.of(context).disableAnimations;
-
-    return Expanded(
-      child: Semantics(
-        key: ValueKey('nav.$kunci'),
-        selected: aktif,
-        button: true,
-        label: label,
-        value: nilai,
-        child: ExcludeSemantics(
-          child: TekanLembut(
-            borderRadius: BorderRadius.circular(22),
-            onTap: () => Navigasi.bukaTab(indeks),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 60),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AnimatedContainer(
-                    duration: tanpaGerak
-                        ? Duration.zero
-                        : const Duration(milliseconds: 220),
-                    curve: Curves.easeOutCubic,
-                    width: aktif ? 22 : 0,
-                    height: 3,
-                    decoration: BoxDecoration(
-                      color: warnaAktif,
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  SizedBox(height: 26, child: Center(child: isi(warna, aktif))),
-                  const SizedBox(height: 3),
-                  Text(
-                    label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: warna,
-                      fontWeight: aktif ? FontWeight.w700 : FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+const _warnaIkonPasif = Color(0xFFE4E2EC);
+const _warnaIkonAktif = Color(0xFFFFFFFF);
 
 class _IkonTab extends StatelessWidget {
   const _IkonTab(this.ikon, this.warna, this.aktif);

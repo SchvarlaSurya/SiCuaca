@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:provider/provider.dart';
 
 import 'core/l10n.dart';
@@ -60,14 +61,20 @@ Future<void> main() async {
   await pengaturan.muat();
   final sudahOnboarding = await preferences.sudahOnboarding();
 
+  // Kaca cair untuk navbar: muat shader lebih dulu agar tidak ada kedip.
+  await LiquidGlassWidgets.initialize();
+
   runApp(
-    SiCuacaApp(
-      notifikasiService: notifikasi,
-      riwayatGempa: riwayatGempa,
-      preferencesService: preferences,
-      pengaturan: pengaturan,
-      sudahOnboarding: sudahOnboarding,
-      tampilkanSplash: true,
+    LiquidGlassWidgets.wrap(
+      brightnessResolver: Theme.maybeBrightnessOf,
+      child: SiCuacaApp(
+        notifikasiService: notifikasi,
+        riwayatGempa: riwayatGempa,
+        preferencesService: preferences,
+        pengaturan: pengaturan,
+        sudahOnboarding: sudahOnboarding,
+        tampilkanSplash: true,
+      ),
     ),
   );
 }

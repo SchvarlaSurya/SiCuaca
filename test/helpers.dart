@@ -132,7 +132,9 @@ Widget buatApp({
 
 /// Tab di navigasi bawah: 'beranda', 'cuaca', 'gempa', 'pengaturan'.
 /// Dicari lewat key karena tab Cuaca dan Gempa menampilkan data, bukan ikon.
-Finder navTab(String nama) => find.byKey(ValueKey('nav.$nama'));
+// Navbar kaca menggambar isi tab dua kali (lapisan dasar dan lapisan tab
+// terpilih), jadi ambil yang pertama.
+Finder navTab(String nama) => find.byKey(ValueKey('nav.$nama')).first;
 
 /// Membuka pengaturan notifikasi lewat tombol lonceng di tab Gempa.
 Future<void> bukaPeringatan(WidgetTester tester) async {
