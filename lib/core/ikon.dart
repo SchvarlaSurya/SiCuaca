@@ -66,6 +66,28 @@ abstract final class IkonApp {
     0xe40b,
     fontFamily: _duo,
   ); // shareNetwork
+  static const IconData naik = IconData(0xe08f, fontFamily: _duo); // arrowUp
+  static const IconData turun = IconData(0xe03f, fontFamily: _duo); // arrowDown
+  static const IconData geser = IconData(
+    0xeae3,
+    fontFamily: _duo,
+  ); // dotsSixVertical
+  static const IconData setelUlang = IconData(
+    0xe039,
+    fontFamily: _duo,
+  ); // arrowCounterClockwise
+  static const IconData hapusSemua = IconData(
+    0xe4a7,
+    fontFamily: _duo,
+  ); // trash
+  static const IconData urutan = IconData(
+    0xe2f7,
+    fontFamily: _duo,
+  ); // listNumbers
+  static const IconData riwayatNotif = IconData(
+    0xe5eb,
+    fontFamily: _duo,
+  ); // bellSimpleRinging
 
   // Status.
   static const IconData offline = IconData(
@@ -165,7 +187,10 @@ abstract final class IkonApp {
   static const Map<int, IconData> lapisanKedua = {
     0xe001: IconData(0xe000, fontFamily: _duo),
     0xe037: IconData(0xe036, fontFamily: _duo),
+    0xe039: IconData(0xe038, fontFamily: _duo),
+    0xe03f: IconData(0xe03e, fontFamily: _duo),
     0xe05d: IconData(0xe05c, fontFamily: _duo),
+    0xe08f: IconData(0xe08e, fontFamily: _duo),
     0xe0a1: IconData(0xe0a0, fontFamily: _duo),
     0xe0cf: IconData(0xe0ce, fontFamily: _duo),
     0xe0d5: IconData(0xe0d4, fontFamily: _duo),
@@ -189,6 +214,7 @@ abstract final class IkonApp {
     0xe273: IconData(0xe272, fontFamily: _duo),
     0xe2c3: IconData(0xe2c2, fontFamily: _duo),
     0xe2cf: IconData(0xe2ce, fontFamily: _duo),
+    0xe2f7: IconData(0xe2f6, fontFamily: _duo),
     0xe30d: IconData(0xe30c, fontFamily: _duo),
     0xe317: IconData(0xe316, fontFamily: _duo),
     0xe31b: IconData(0xe31a, fontFamily: _duo),
@@ -198,6 +224,7 @@ abstract final class IkonApp {
     0xe46b: IconData(0xe46a, fontFamily: _duo),
     0xe473: IconData(0xe472, fontFamily: _duo),
     0xe4a3: IconData(0xe4a2, fontFamily: _duo),
+    0xe4a7: IconData(0xe4a6, fontFamily: _duo),
     0xe4ab: IconData(0xe4aa, fontFamily: _duo),
     0xe4d7: IconData(0xe4d6, fontFamily: _duo),
     0xe4e1: IconData(0xe4e0, fontFamily: _duo),
@@ -208,11 +235,13 @@ abstract final class IkonApp {
     0xe56f: IconData(0xe56e, fontFamily: _duo),
     0xe5d3: IconData(0xe5d2, fontFamily: _duo),
     0xe5e9: IconData(0xe5e8, fontFamily: _duo),
+    0xe5eb: IconData(0xe5ea, fontFamily: _duo),
     0xe607: IconData(0xe606, fontFamily: _duo),
     0xe67d: IconData(0xe67c, fontFamily: _duo),
     0xe6df: IconData(0xe6de, fontFamily: _duo),
     0xe7a9: IconData(0xe7a8, fontFamily: _duo),
     0xeadf: IconData(0xeade, fontFamily: _duo),
+    0xeae3: IconData(0xeae2, fontFamily: _duo),
     0xedd5: IconData(0xedd4, fontFamily: _duo),
   };
 }

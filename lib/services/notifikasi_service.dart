@@ -10,6 +10,7 @@ import '../core/constants.dart';
 import '../core/l10n.dart';
 import '../models/ambang_gempa.dart';
 import '../models/gempa.dart';
+import 'riwayat_notifikasi_service.dart';
 
 /// Handler pesan FCM saat aplikasi di latar belakang atau tertutup.
 ///
@@ -20,6 +21,7 @@ import '../models/gempa.dart';
 Future<void> tanganiPesanLatarBelakang(RemoteMessage message) async {
   await Firebase.initializeApp();
   debugPrint('FCM latar belakang: ${message.messageId}');
+  await RiwayatNotifikasiService().catat(message.data);
 }
 
 /// Mengubah data notifikasi menjadi [Gempa] lalu membukanya lewat fungsi
@@ -45,6 +47,9 @@ class PembukaNotifikasi {
       debugPrint('Notifikasi ($sumber) diabaikan: payload bukan gempa/rusak');
       return;
     }
+    // Ketukan juga dicatat: notifikasi latar belakang yang tiba saat
+    // handler tidak sempat menulis tetap masuk riwayat. Duplikat diabaikan.
+    RiwayatNotifikasiService().catat(data);
     final buka = _buka;
     if (buka == null) {
       _tertunda = gempa;
@@ -153,6 +158,7 @@ class NotifikasiService {
   }
 
   Future<void> _tampilkanDiDepan(RemoteMessage message) async {
+    await RiwayatNotifikasiService().catat(message.data);
     final notif = message.notification;
     if (notif == null) return;
     try {

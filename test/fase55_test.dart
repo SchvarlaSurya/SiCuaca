@@ -11,6 +11,8 @@ import 'package:app/core/warna_semantik.dart';
 import 'package:app/models/ambang_gempa.dart';
 import 'package:app/models/prakiraan.dart';
 import 'package:app/providers/pengaturan_provider.dart';
+import 'package:app/screens/riwayat_notifikasi_screen.dart';
+import 'package:app/services/riwayat_notifikasi_service.dart';
 import 'package:app/services/gps_service.dart';
 import 'package:app/services/preferences_service.dart';
 import 'package:app/services/wilayah_service.dart';
@@ -287,6 +289,8 @@ void main() {
       expect(find.text(l.pengaturanTampilan), findsOneWidget);
       expect(find.text(l.tentangJudul), findsOneWidget);
 
+      await tester.ensureVisible(find.text(l.notifJudul).last);
+      await tester.pumpAndSettle();
       await tester.tap(find.text(l.notifJudul).last);
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.notifM5).last);
@@ -294,6 +298,12 @@ void main() {
       expect(notif.langgananDipanggil, [AmbangGempa.m5]);
       expect(find.text(l.notifM5), findsOneWidget);
 
+      await tester.dragUntilVisible(
+        find.text(l.tentangTema),
+        find.byType(ListView).last,
+        const Offset(0, 200),
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.text(l.tentangTema));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.temaGelap).last);
@@ -547,6 +557,224 @@ void main() {
         ),
       );
       expect(find.textContaining(l.grafikSuhuJudul), findsNothing);
+    });
+  });
+
+  group('P3: riwayat notifikasi', () {
+    Map<String, dynamic> payload(int menit, {String mag = '5.1'}) {
+      final waktu = DateTime.utc(
+        2026,
+        11,
+        20,
+        3,
+        menit % 60,
+        0,
+      ).add(Duration(hours: menit ~/ 60));
+      return {
+        'jenis': 'gempa',
+        'gempa_key': 'k$menit',
+        'tanggal': '20 Nov 2026',
+        'jam': '10:00:00 WIB',
+        'waktu': waktu.toIso8601String(),
+        'koordinat': '-5.56,102.24',
+        'magnitudo': mag,
+        'kedalaman': '10 km',
+        'wilayah': 'Pusat gempa uji $menit',
+        'potensi': 'Tidak berpotensi tsunami',
+        'dirasakan': '',
+        'shakemap': '',
+      };
+    }
+
+    test(
+      'catat lalu baca: terbaru di atas, duplikat dan bukan gempa dilewati',
+      () async {
+        final r = RiwayatNotifikasiService();
+        expect(await r.baca(), isEmpty);
+        expect(await r.catat(payload(1)), isTrue);
+        expect(await r.catat(payload(2)), isTrue);
+        expect(await r.catat(payload(2)), isFalse); // gempa yang sama
+        expect(await r.catat({'jenis': 'uji'}), isFalse);
+        expect(await r.catat(null), isFalse);
+
+        final daftar = await r.baca();
+        expect(daftar.length, 2);
+        expect(daftar.first.gempa.wilayah, 'Pusat gempa uji 2');
+        expect(daftar.last.gempa.magnitudoAngka, 5.1);
+      },
+    );
+
+    test('maksimal 50 entri, yang terlama dibuang', () async {
+      final r = RiwayatNotifikasiService();
+      for (var i = 1; i <= 55; i++) {
+        await r.catat(payload(i));
+      }
+      final daftar = await r.baca();
+      expect(daftar.length, RiwayatNotifikasiService.batas);
+      expect(daftar.first.gempa.wilayah, 'Pusat gempa uji 55');
+      expect(daftar.last.gempa.wilayah, 'Pusat gempa uji 6');
+    });
+
+    test('hapusSemua mengosongkan riwayat', () async {
+      final r = RiwayatNotifikasiService();
+      await r.catat(payload(1));
+      await r.hapusSemua();
+      expect(await r.baca(), isEmpty);
+    });
+
+    test('data tersimpan rusak tidak membuat crash', () async {
+      SharedPreferences.setMockInitialValues({'riwayat_notifikasi': '{rusak'});
+      expect(await RiwayatNotifikasiService().baca(), isEmpty);
+      SharedPreferences.setMockInitialValues({
+        'riwayat_notifikasi': '[1, {"gempa": 5}, null]',
+      });
+      expect(await RiwayatNotifikasiService().baca(), isEmpty);
+    });
+
+    for (final bahasa in [PilihanBahasa.indonesia, PilihanBahasa.inggris]) {
+      testWidgets('layar riwayat 360 dp + huruf 1,3x (${bahasa.name})', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 3;
+        tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final t = lookupAppLocalizations(bahasa.locale!);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: bahasaDidukung,
+            locale: bahasa.locale,
+            home: const RiwayatNotifikasiScreen(),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text(t.riwayatNotifKosong), findsOneWidget);
+        expect(find.byIcon(IkonApp.hapusSemua), findsNothing);
+
+        await tester.runAsync(() async {
+          final r = RiwayatNotifikasiService();
+          await r.catat(payload(1));
+          await r.catat(payload(2, mag: '6.3'));
+        });
+        await tester.pumpWidget(
+          MaterialApp(
+            key: UniqueKey(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: bahasaDidukung,
+            locale: bahasa.locale,
+            home: const RiwayatNotifikasiScreen(),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Pusat gempa uji 2'), findsOneWidget);
+        expect(find.text('Pusat gempa uji 1'), findsOneWidget);
+        expect(find.textContaining(t.diterimaWaktu('')), findsWidgets);
+
+        // Hapus lewat dialog konfirmasi: batal tidak menghapus, hapus menghapus.
+        await tester.tap(find.byIcon(IkonApp.hapusSemua));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(t.aksiBatal));
+        await tester.pumpAndSettle();
+        expect(find.text('Pusat gempa uji 2'), findsOneWidget);
+        await tester.tap(find.byIcon(IkonApp.hapusSemua));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(t.aksiHapus));
+        await tester.pumpAndSettle();
+        expect(find.text(t.riwayatNotifKosong), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  });
+
+  group('P3: urutan bagian Beranda', () {
+    test('normalkanUrutan: lengkap, tanpa duplikat, nama asing dibuang', () {
+      expect(PengaturanProvider.normalkanUrutan(null), SeksiBeranda.values);
+      expect(PengaturanProvider.normalkanUrutan(['peringatan', 'cuaca']), [
+        SeksiBeranda.peringatan,
+        SeksiBeranda.cuaca,
+        SeksiBeranda.gempa,
+      ]);
+      expect(
+        PengaturanProvider.normalkanUrutan(['gempa', 'gempa', 'x', 'cuaca']),
+        [SeksiBeranda.gempa, SeksiBeranda.cuaca, SeksiBeranda.peringatan],
+      );
+    });
+
+    test('atur, tersimpan, dimuat ulang, dan disetel ulang', () async {
+      final prefs = PreferencesService();
+      final a = PengaturanProvider(prefs);
+      expect(a.urutanBerandaBawaan, isTrue);
+      await a.aturUrutanBeranda([
+        SeksiBeranda.gempa,
+        SeksiBeranda.peringatan,
+        SeksiBeranda.cuaca,
+      ]);
+      expect(a.urutanBerandaBawaan, isFalse);
+
+      final b = PengaturanProvider(prefs);
+      await b.muat();
+      expect(b.urutanBeranda, [
+        SeksiBeranda.gempa,
+        SeksiBeranda.peringatan,
+        SeksiBeranda.cuaca,
+      ]);
+
+      await b.setelUlangUrutanBeranda();
+      final c = PengaturanProvider(prefs);
+      await c.muat();
+      expect(c.urutanBeranda, SeksiBeranda.values);
+    });
+
+    testWidgets('Beranda mengikuti urutan, atur lewat tombol panah', (
+      tester,
+    ) async {
+      await tester.pumpWidget(buatApp(gps: _gpsJakarta));
+      await tester.pumpAndSettle();
+
+      double y(String teks) => tester.getTopLeft(find.text(teks).first).dy;
+      expect(y(l.cuacaSaatIni), lessThan(y(l.gempaTerbaruJudul)));
+
+      await tester.tap(navTab('pengaturan'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.urutanBerandaJudul));
+      await tester.pumpAndSettle();
+      expect(find.text(l.urutanBerandaKeterangan), findsOneWidget);
+
+      // Turunkan "Cuaca": urutan jadi Gempa, Cuaca, Peringatan.
+      await tester.tap(find.byTooltip(l.turunkanBagian(l.cuacaSaatIni)));
+      await tester.pumpAndSettle();
+      // Tombol naik pada bagian pertama dinonaktifkan.
+      final naikPertama = tester.widget<IconButton>(
+        find
+            .ancestor(
+              of: find.byTooltip(l.naikkanBagian(l.gempaTerbaruJudul)),
+              matching: find.byType(IconButton),
+            )
+            .first,
+      );
+      expect(naikPertama.onPressed, isNull);
+
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+      await tester.tap(navTab('beranda'));
+      await tester.pumpAndSettle();
+      expect(y(l.gempaTerbaruJudul), lessThan(y(l.cuacaSaatIni)));
+
+      // Setel ulang mengembalikan urutan bawaan.
+      await tester.tap(navTab('pengaturan'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.urutanBerandaJudul));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.setelUlangUrutan));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+      await tester.tap(navTab('beranda'));
+      await tester.pumpAndSettle();
+      expect(y(l.cuacaSaatIni), lessThan(y(l.gempaTerbaruJudul)));
     });
   });
 }

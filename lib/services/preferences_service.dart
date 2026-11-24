@@ -92,6 +92,28 @@ class PreferencesService {
     } catch (_) {}
   }
 
+  /// Nama bagian Beranda sesuai urutan pilihan pengguna; null bila belum
+  /// pernah diatur.
+  Future<List<String>?> urutanBeranda() async {
+    try {
+      return (await _prefs).getStringList(PrefsKeys.urutanBeranda);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> simpanUrutanBeranda(List<String> nama) async {
+    try {
+      await (await _prefs).setStringList(PrefsKeys.urutanBeranda, nama);
+    } catch (_) {}
+  }
+
+  Future<void> hapusUrutanBeranda() async {
+    try {
+      await (await _prefs).remove(PrefsKeys.urutanBeranda);
+    } catch (_) {}
+  }
+
   Future<bool> sudahOnboarding() async {
     try {
       return (await _prefs).getBool(PrefsKeys.sudahOnboarding) ?? false;

@@ -863,4 +863,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String sapaMalam(String lokasi) {
     return 'Good night, $lokasi';
   }
+
+  @override
+  String get riwayatNotifJudul => 'Notification history';
+
+  @override
+  String get riwayatNotifKeterangan => 'Earthquakes that notified this device.';
+
+  @override
+  String get riwayatNotifKosong =>
+      'No earthquake notifications received yet. Pick a magnitude threshold in Alerts to receive them.';
+
+  @override
+  String diterimaWaktu(String waktu) {
+    return 'Received $waktu';
+  }
+
+  @override
+  String get hapusRiwayat => 'Clear history';
+
+  @override
+  String get hapusRiwayatKonfirmasi =>
+      'Delete all notification history on this device? This cannot be undone.';
+
+  @override
+  String get aksiBatal => 'Cancel';
+
+  @override
+  String get aksiHapus => 'Delete';
+
+  @override
+  String get urutanBerandaJudul => 'Home order';
+
+  @override
+  String get urutanBerandaKeterangan =>
+      'Drag or use the arrow buttons to change the order of the Home sections.';
+
+  @override
+  String get urutanBerandaRingkas => 'Arrange Weather, Earthquakes, and Alerts';
+
+  @override
+  String get setelUlangUrutan => 'Reset order';
+
+  @override
+  String naikkanBagian(String nama) {
+    return 'Move $nama up';
+  }
+
+  @override
+  String turunkanBagian(String nama) {
+    return 'Move $nama down';
+  }
 }

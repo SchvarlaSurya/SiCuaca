@@ -826,4 +826,56 @@ class AppLocalizationsId extends AppLocalizations {
   String sapaMalam(String lokasi) {
     return 'Selamat malam, $lokasi';
   }
+
+  @override
+  String get riwayatNotifJudul => 'Riwayat notifikasi';
+
+  @override
+  String get riwayatNotifKeterangan =>
+      'Gempa yang pernah dikirimi notifikasi ke perangkat ini.';
+
+  @override
+  String get riwayatNotifKosong =>
+      'Belum ada notifikasi gempa yang diterima. Pilih ambang magnitudo di Peringatan agar notifikasi masuk.';
+
+  @override
+  String diterimaWaktu(String waktu) {
+    return 'Diterima $waktu';
+  }
+
+  @override
+  String get hapusRiwayat => 'Hapus riwayat';
+
+  @override
+  String get hapusRiwayatKonfirmasi =>
+      'Hapus seluruh riwayat notifikasi di perangkat ini? Tindakan ini tidak bisa dibatalkan.';
+
+  @override
+  String get aksiBatal => 'Batal';
+
+  @override
+  String get aksiHapus => 'Hapus';
+
+  @override
+  String get urutanBerandaJudul => 'Urutan Beranda';
+
+  @override
+  String get urutanBerandaKeterangan =>
+      'Seret atau pakai tombol panah untuk mengubah urutan bagian di Beranda.';
+
+  @override
+  String get urutanBerandaRingkas => 'Atur urutan Cuaca, Gempa, dan Peringatan';
+
+  @override
+  String get setelUlangUrutan => 'Setel ulang urutan';
+
+  @override
+  String naikkanBagian(String nama) {
+    return 'Naikkan $nama';
+  }
+
+  @override
+  String turunkanBagian(String nama) {
+    return 'Turunkan $nama';
+  }
 }

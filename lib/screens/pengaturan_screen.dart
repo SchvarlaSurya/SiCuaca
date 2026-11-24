@@ -10,6 +10,7 @@ import '../providers/pengaturan_provider.dart';
 import '../widgets/status_data.dart';
 import '../widgets/app_chrome.dart';
 import 'onboarding_screen.dart';
+import 'urutan_beranda_screen.dart';
 
 /// Pengaturan: tampilan (tema, bahasa), ambang notifikasi gempa, dan
 /// informasi tentang aplikasi. Semua pilihan tersimpan di perangkat lewat
@@ -71,6 +72,17 @@ class PengaturanScreen extends StatelessWidget {
                     PilihanBahasa.inggris: l.bahasaInggris,
                   },
                   onPilih: pengaturan.pilihBahasa,
+                ),
+                ListTile(
+                  leading: const IkonDuo(IkonApp.urutan),
+                  title: Text(l.urutanBerandaJudul),
+                  subtitle: Text(l.urutanBerandaRingkas),
+                  trailing: const IkonDuo(IkonApp.selengkapnya),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const UrutanBerandaScreen(),
+                    ),
+                  ),
                 ),
               ],
             ),

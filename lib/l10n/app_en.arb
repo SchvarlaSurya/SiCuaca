@@ -247,5 +247,19 @@
   "sapaPagi": "Good morning, {lokasi}",
   "sapaSiang": "Good afternoon, {lokasi}",
   "sapaSore": "Good evening, {lokasi}",
-  "sapaMalam": "Good night, {lokasi}"
+  "sapaMalam": "Good night, {lokasi}",
+  "riwayatNotifJudul": "Notification history",
+  "riwayatNotifKeterangan": "Earthquakes that notified this device.",
+  "riwayatNotifKosong": "No earthquake notifications received yet. Pick a magnitude threshold in Alerts to receive them.",
+  "diterimaWaktu": "Received {waktu}",
+  "hapusRiwayat": "Clear history",
+  "hapusRiwayatKonfirmasi": "Delete all notification history on this device? This cannot be undone.",
+  "aksiBatal": "Cancel",
+  "aksiHapus": "Delete",
+  "urutanBerandaJudul": "Home order",
+  "urutanBerandaKeterangan": "Drag or use the arrow buttons to change the order of the Home sections.",
+  "urutanBerandaRingkas": "Arrange Weather, Earthquakes, and Alerts",
+  "setelUlangUrutan": "Reset order",
+  "naikkanBagian": "Move {nama} up",
+  "turunkanBagian": "Move {nama} down"
 }

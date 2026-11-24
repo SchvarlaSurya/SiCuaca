@@ -1523,6 +1523,90 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Selamat malam, {lokasi}'**
   String sapaMalam(String lokasi);
+
+  /// No description provided for @riwayatNotifJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat notifikasi'**
+  String get riwayatNotifJudul;
+
+  /// No description provided for @riwayatNotifKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Gempa yang pernah dikirimi notifikasi ke perangkat ini.'**
+  String get riwayatNotifKeterangan;
+
+  /// No description provided for @riwayatNotifKosong.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada notifikasi gempa yang diterima. Pilih ambang magnitudo di Peringatan agar notifikasi masuk.'**
+  String get riwayatNotifKosong;
+
+  /// No description provided for @diterimaWaktu.
+  ///
+  /// In id, this message translates to:
+  /// **'Diterima {waktu}'**
+  String diterimaWaktu(String waktu);
+
+  /// No description provided for @hapusRiwayat.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus riwayat'**
+  String get hapusRiwayat;
+
+  /// No description provided for @hapusRiwayatKonfirmasi.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus seluruh riwayat notifikasi di perangkat ini? Tindakan ini tidak bisa dibatalkan.'**
+  String get hapusRiwayatKonfirmasi;
+
+  /// No description provided for @aksiBatal.
+  ///
+  /// In id, this message translates to:
+  /// **'Batal'**
+  String get aksiBatal;
+
+  /// No description provided for @aksiHapus.
+  ///
+  /// In id, this message translates to:
+  /// **'Hapus'**
+  String get aksiHapus;
+
+  /// No description provided for @urutanBerandaJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Urutan Beranda'**
+  String get urutanBerandaJudul;
+
+  /// No description provided for @urutanBerandaKeterangan.
+  ///
+  /// In id, this message translates to:
+  /// **'Seret atau pakai tombol panah untuk mengubah urutan bagian di Beranda.'**
+  String get urutanBerandaKeterangan;
+
+  /// No description provided for @urutanBerandaRingkas.
+  ///
+  /// In id, this message translates to:
+  /// **'Atur urutan Cuaca, Gempa, dan Peringatan'**
+  String get urutanBerandaRingkas;
+
+  /// No description provided for @setelUlangUrutan.
+  ///
+  /// In id, this message translates to:
+  /// **'Setel ulang urutan'**
+  String get setelUlangUrutan;
+
+  /// No description provided for @naikkanBagian.
+  ///
+  /// In id, this message translates to:
+  /// **'Naikkan {nama}'**
+  String naikkanBagian(String nama);
+
+  /// No description provided for @turunkanBagian.
+  ///
+  /// In id, this message translates to:
+  /// **'Turunkan {nama}'**
+  String turunkanBagian(String nama);
 }
 
 class _AppLocalizationsDelegate

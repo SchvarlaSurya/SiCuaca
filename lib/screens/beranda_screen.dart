@@ -7,6 +7,7 @@ import '../core/navigasi.dart';
 import '../models/ambang_gempa.dart';
 import '../providers/gempa_provider.dart';
 import '../providers/notifikasi_provider.dart';
+import '../providers/pengaturan_provider.dart';
 import '../providers/weather_provider.dart';
 import '../widgets/aksi_wilayah.dart';
 import '../widgets/cuaca_saat_ini_card.dart';
@@ -25,6 +26,9 @@ class BerandaScreen extends StatelessWidget {
     final l = context.l10n;
     final cuaca = context.watch<WeatherProvider>();
     final gempa = context.watch<GempaProvider>();
+    final urutan = context.select<PengaturanProvider, List<SeksiBeranda>>(
+      (p) => p.urutanBeranda,
+    );
 
     // Banner offline bila salah satu bagian menampilkan data tersimpan.
     final waktuCache = [
@@ -72,42 +76,8 @@ class BerandaScreen extends StatelessWidget {
                 ],
                 const SizedBox(height: 8),
                 const LokasiBanner(),
-                MasukLembut(
-                  child: JudulBagian(
-                    l.cuacaSaatIni,
-                    onSelengkapnya: () => Navigasi.bukaTab(TabUtama.cuaca),
-                  ),
-                ),
-                const MasukLembut(
-                  delay: Duration(milliseconds: 70),
-                  child: CuacaSaatIniCard(),
-                ),
-                const SizedBox(height: 16),
-                const SizedBox(height: 4),
-                const SizedBox(height: 8),
-                MasukLembut(
-                  child: JudulBagian(
-                    l.gempaTerbaruJudul,
-                    onSelengkapnya: () => Navigasi.bukaTab(TabUtama.gempa),
-                  ),
-                ),
-                const MasukLembut(
-                  delay: Duration(milliseconds: 120),
-                  child: GempaTerbaruCard(),
-                ),
-                const SizedBox(height: 16),
-                const SizedBox(height: 4),
-                const SizedBox(height: 8),
-                MasukLembut(
-                  child: JudulBagian(
-                    l.navPeringatan,
-                    onSelengkapnya: Navigasi.bukaPeringatan,
-                  ),
-                ),
-                const MasukLembut(
-                  delay: Duration(milliseconds: 160),
-                  child: _RingkasPeringatan(),
-                ),
+                for (final (i, seksi) in urutan.indexed)
+                  ..._bagian(context, seksi, i),
               ],
             ),
           ),
@@ -115,6 +85,37 @@ class BerandaScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Satu bagian Beranda (judul + isi) dengan jarak dari bagian sebelumnya.
+/// Urutannya mengikuti pilihan pengguna di Pengaturan.
+List<Widget> _bagian(BuildContext context, SeksiBeranda seksi, int indeks) {
+  final l = context.l10n;
+  final (judul, aksi, isi) = switch (seksi) {
+    SeksiBeranda.cuaca => (
+      l.cuacaSaatIni,
+      () => Navigasi.bukaTab(TabUtama.cuaca),
+      const CuacaSaatIniCard() as Widget,
+    ),
+    SeksiBeranda.gempa => (
+      l.gempaTerbaruJudul,
+      () => Navigasi.bukaTab(TabUtama.gempa),
+      const GempaTerbaruCard() as Widget,
+    ),
+    SeksiBeranda.peringatan => (
+      l.navPeringatan,
+      Navigasi.bukaPeringatan,
+      const _RingkasPeringatan() as Widget,
+    ),
+  };
+  return [
+    if (indeks > 0) const SizedBox(height: 28),
+    MasukLembut(child: JudulBagian(judul, onSelengkapnya: aksi)),
+    MasukLembut(
+      delay: Duration(milliseconds: 70 + 50 * indeks),
+      child: isi,
+    ),
+  ];
 }
 
 /// "Selamat sore, Pasar Manggis" menurut jam setempat wilayah; tanpa wilayah

@@ -8,6 +8,7 @@ import '../models/ambang_gempa.dart';
 import '../providers/notifikasi_provider.dart';
 import '../widgets/status_data.dart';
 import '../widgets/app_chrome.dart';
+import 'riwayat_notifikasi_screen.dart';
 
 /// Tab Peringatan: pengaturan ambang notifikasi gempa.
 class PeringatanScreen extends StatelessWidget {
@@ -125,6 +126,23 @@ class PeringatanScreen extends StatelessWidget {
               child: Text(
                 [l.notifSumber, if (l.inggris) l.notifBahasaCatatan].join(' '),
                 style: redup,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                child: ListTile(
+                  leading: const IkonDuo(IkonApp.riwayatNotif),
+                  title: Text(l.riwayatNotifJudul),
+                  subtitle: Text(l.riwayatNotifKeterangan),
+                  trailing: const IkonDuo(IkonApp.selengkapnya),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const RiwayatNotifikasiScreen(),
+                    ),
+                  ),
+                ),
               ),
             ),
             const Padding(

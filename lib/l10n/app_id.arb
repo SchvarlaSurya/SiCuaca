@@ -275,5 +275,22 @@
   "sapaSore": "Selamat sore, {lokasi}",
   "@sapaSore": {"placeholders": {"lokasi": {"type": "String"}}},
   "sapaMalam": "Selamat malam, {lokasi}",
-  "@sapaMalam": {"placeholders": {"lokasi": {"type": "String"}}}
+  "@sapaMalam": {"placeholders": {"lokasi": {"type": "String"}}},
+  "riwayatNotifJudul": "Riwayat notifikasi",
+  "riwayatNotifKeterangan": "Gempa yang pernah dikirimi notifikasi ke perangkat ini.",
+  "riwayatNotifKosong": "Belum ada notifikasi gempa yang diterima. Pilih ambang magnitudo di Peringatan agar notifikasi masuk.",
+  "diterimaWaktu": "Diterima {waktu}",
+  "@diterimaWaktu": {"placeholders": {"waktu": {"type": "String"}}},
+  "hapusRiwayat": "Hapus riwayat",
+  "hapusRiwayatKonfirmasi": "Hapus seluruh riwayat notifikasi di perangkat ini? Tindakan ini tidak bisa dibatalkan.",
+  "aksiBatal": "Batal",
+  "aksiHapus": "Hapus",
+  "urutanBerandaJudul": "Urutan Beranda",
+  "urutanBerandaKeterangan": "Seret atau pakai tombol panah untuk mengubah urutan bagian di Beranda.",
+  "urutanBerandaRingkas": "Atur urutan Cuaca, Gempa, dan Peringatan",
+  "setelUlangUrutan": "Setel ulang urutan",
+  "naikkanBagian": "Naikkan {nama}",
+  "@naikkanBagian": {"placeholders": {"nama": {"type": "String"}}},
+  "turunkanBagian": "Turunkan {nama}",
+  "@turunkanBagian": {"placeholders": {"nama": {"type": "String"}}}
 }

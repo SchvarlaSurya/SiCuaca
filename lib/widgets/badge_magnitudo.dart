@@ -28,7 +28,7 @@ class BadgeMagnitudo extends StatelessWidget {
       label: l.magnitudoSemantik(angka, tingkat.label(l)),
       child: ExcludeSemantics(
         child: Container(
-          constraints: const BoxConstraints(minWidth: 64),
+          constraints: const BoxConstraints(minWidth: 92),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             color: tingkat.latar,
