@@ -255,4 +255,50 @@ void main() {
       expect(opasitas(tester), 1);
     });
   });
+
+  group('Ikon tombol berganti dengan animasi', () {
+    testWidgets('favorit: bintang kosong bertukar ke bintang penuh, tidak '
+        'langsung', (tester) async {
+      await tester.pumpWidget(buatApp(gps: _gps));
+      await tester.pumpAndSettle();
+      await tester.tap(navTab('cuaca'));
+      await tester.pumpAndSettle();
+
+      final grup = find.descendant(
+        of: find.byType(CuacaScreen),
+        matching: find.byType(GrupTombolKaca),
+      );
+      Finder ikon(IconData data) =>
+          find.descendant(of: grup, matching: find.byIcon(data));
+      expect(ikon(IkonApp.bukanFavorit), findsOneWidget);
+
+      await tester.tap(ikon(IkonApp.bukanFavorit));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 80));
+      // Di tengah pergantian kedua ikon masih ada (yang lama memudar).
+      expect(ikon(IkonApp.bukanFavorit), findsOneWidget);
+      expect(ikon(IkonApp.favorit), findsOneWidget);
+
+      await tester.pumpAndSettle();
+      expect(ikon(IkonApp.bukanFavorit), findsNothing);
+      expect(ikon(IkonApp.favorit), findsOneWidget);
+    });
+
+    testWidgets('pindah ke halaman dengan jumlah tombol sama: kaca tetap, '
+        'ikon meletup masuk', (tester) async {
+      await tester.pumpWidget(buatApp(gps: _gps, offline: true));
+      await tester.pumpAndSettle();
+      expect(GrupTombolKaca.jumlahTerakhir, 2);
+
+      await tester.tap(navTab('gempa'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 60));
+      final ikon = find.byIcon(IkonApp.riwayat);
+      final tengah = tester.getRect(ikon).width;
+      await tester.pumpAndSettle();
+      final akhir = tester.getRect(ikon).width;
+      expect(tengah, lessThan(akhir * .9));
+      expect(GrupTombolKaca.jumlahTerakhir, 2);
+    });
+  });
 }

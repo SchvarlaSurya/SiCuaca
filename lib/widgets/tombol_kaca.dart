@@ -22,10 +22,17 @@ LiquidGlassSettings _kacaTombol(BuildContext context) {
 /// lapisan bersama milik grup (supaya bisa melebur satu sama lain), bukan
 /// lapisan sendiri.
 class _DalamGrup extends InheritedWidget {
-  const _DalamGrup({required super.child});
+  const _DalamGrup({required super.child, this.ikonMasuk});
+
+  /// 0..1 saat ikon-ikon grup baru saja berganti (pindah halaman dengan
+  /// jumlah tombol sama); null bila tidak ada.
+  final Animation<double>? ikonMasuk;
 
   static bool ada(BuildContext context) =>
       context.getInheritedWidgetOfExactType<_DalamGrup>() != null;
+
+  static Animation<double>? ikonMasukDari(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_DalamGrup>()?.ikonMasuk;
 
   @override
   bool updateShouldNotify(_DalamGrup lama) => false;
@@ -72,7 +79,10 @@ class TombolKaca extends StatelessWidget {
         child: _JeliTekan(
           nyala: onPressed != null,
           child: GlassIconButton(
-            icon: icon,
+            icon: _IkonBerganti(
+              masuk: _DalamGrup.ikonMasukDari(context),
+              child: icon,
+            ),
             onPressed: onPressed,
             size: ukuran,
             iconSize: 24,
@@ -86,6 +96,74 @@ class TombolKaca extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Ikon di dalam tombol kaca yang berganti dengan animasi, bukan diam-diam:
+/// ikon lama mengecil sambil berputar sedikit dan memudar, ikon baru meletup
+/// masuk (sedikit kebablasan lalu pas). Dipakai saat ikon satu tombol
+/// berubah (mis. bintang favorit, putaran lokasi) dan saat seluruh ikon grup
+/// berganti karena pindah halaman ([masuk] dari [GrupTombolKaca]).
+/// Tanpa gerak bila "kurangi gerakan" aktif atau kaca cair dimatikan.
+class _IkonBerganti extends StatelessWidget {
+  const _IkonBerganti({required this.child, this.masuk});
+
+  final Widget child;
+  final Animation<double>? masuk;
+
+  /// Identitas ikon untuk memicu pergantian.
+  static Object _identitas(Widget w) => switch (w) {
+    IkonDuo(:final icon) => icon,
+    Icon(:final icon) => icon ?? w.runtimeType,
+    _ => w.runtimeType,
+  };
+
+  bool _boleh(BuildContext context) {
+    if (MediaQuery.of(context).disableAnimations) return false;
+    try {
+      return Provider.of<PengaturanProvider>(context, listen: false).kacaCair;
+    } on ProviderNotFoundException {
+      return true;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final boleh = _boleh(context);
+    Widget hasil = AnimatedSwitcher(
+      duration: boleh ? const Duration(milliseconds: 340) : Duration.zero,
+      reverseDuration: boleh
+          ? const Duration(milliseconds: 180)
+          : Duration.zero,
+      switchInCurve: Curves.easeOutBack,
+      switchOutCurve: Curves.easeIn,
+      transitionBuilder: (anak, animasi) => FadeTransition(
+        opacity: animasi,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: .35, end: 1).animate(animasi),
+          child: RotationTransition(
+            turns: Tween<double>(begin: -.08, end: 0).animate(animasi),
+            child: anak,
+          ),
+        ),
+      ),
+      child: KeyedSubtree(key: ValueKey(_identitas(child)), child: child),
+    );
+    final m = masuk;
+    if (m != null && boleh) {
+      hasil = AnimatedBuilder(
+        animation: m,
+        builder: (context, anak) {
+          final t = Curves.easeOutBack.transform(m.value);
+          return Opacity(
+            opacity: m.value.clamp(0.0, 1.0),
+            child: Transform.scale(scale: .4 + .6 * t, child: anak),
+          );
+        },
+        child: hasil,
+      );
+    }
+    return hasil;
   }
 }
 
@@ -272,8 +350,12 @@ class GrupTombolKaca extends StatefulWidget {
 }
 
 class _GrupTombolKacaState extends State<GrupTombolKaca>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _kontrol;
+
+  /// Ikon-ikon grup "meletup" masuk saat grup tampil di halaman baru dengan
+  /// jumlah tombol yang sama (kaca tetap di tempat, ikonnya yang berganti).
+  late final AnimationController _ikon;
 
   /// Jumlah tombol di awal animasi yang sedang berjalan.
   int _dari = 0;
@@ -288,6 +370,11 @@ class _GrupTombolKacaState extends State<GrupTombolKaca>
       value: 1,
     );
     _dari = widget.children.length;
+    _ikon = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 420),
+      value: 1,
+    );
   }
 
   bool get _bolehGerak {
@@ -323,6 +410,8 @@ class _GrupTombolKacaState extends State<GrupTombolKaca>
     if (dari == null || dari == n || !_bolehGerak) {
       _dari = n;
       _kontrol.value = 1;
+      // Jumlah sama tapi halaman lain: ikonnya berganti dengan letupan.
+      if (dari == n && _bolehGerak && n > 0) _ikon.forward(from: 0);
       return;
     }
     _dari = dari;
@@ -331,6 +420,7 @@ class _GrupTombolKacaState extends State<GrupTombolKaca>
 
   @override
   void dispose() {
+    _ikon.dispose();
     _kontrol.dispose();
     super.dispose();
   }
@@ -349,6 +439,7 @@ class _GrupTombolKacaState extends State<GrupTombolKaca>
         horizontal: 4 * TombolKaca.lebarSlot,
       ),
       child: _DalamGrup(
+        ikonMasuk: _ikon,
         child: AnimatedBuilder(
           animation: _kontrol,
           builder: (context, _) {
