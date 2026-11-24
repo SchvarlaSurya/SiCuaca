@@ -9,10 +9,12 @@ import 'package:app/core/l10n.dart';
 import 'package:app/core/theme.dart';
 import 'package:app/core/warna_semantik.dart';
 import 'package:app/models/ambang_gempa.dart';
+import 'package:app/models/prakiraan.dart';
 import 'package:app/providers/pengaturan_provider.dart';
 import 'package:app/services/gps_service.dart';
 import 'package:app/services/preferences_service.dart';
 import 'package:app/services/wilayah_service.dart';
+import 'package:app/widgets/grafik_suhu.dart';
 import 'package:app/widgets/status_data.dart';
 
 import 'helpers.dart';
@@ -451,5 +453,100 @@ void main() {
     expect(magnitudo, findsOneWidget);
     expect(tester.getSemantics(navTab('gempa')).value, contains(l.magnitudo));
     semantik.dispose();
+  });
+
+  group('Grafik suhu dan sapaan', () {
+    Prakiraan prakiraan() =>
+        Prakiraan.fromJson(fixture('prakiraan_31.71.01.1001.json'));
+
+    test('entri24Jam: dari jam sekarang sampai 24 jam, urut, 9 titik', () {
+      final p = prakiraan();
+      final awal = p.semuaEntri.first;
+      final titik = entri24Jam(p, awal);
+      expect(titik.length, 9);
+      expect(identical(titik.first, awal), isTrue);
+      for (var i = 1; i < titik.length; i++) {
+        expect(titik[i].waktuUtc!.isAfter(titik[i - 1].waktuUtc!), isTrue);
+      }
+      expect(
+        titik.last.waktuUtc!.difference(awal.waktuUtc!),
+        const Duration(hours: 24),
+      );
+    });
+
+    test('entri24Jam: di ujung prakiraan titiknya sedikit', () {
+      final p = prakiraan();
+      expect(entri24Jam(p, p.semuaEntri.last).length, 1);
+    });
+
+    test('sapaan menurut jam setempat, dua bahasa', () {
+      expect(l.sapaan(3, 'Gambir'), 'Selamat malam, Gambir');
+      expect(l.sapaan(4, 'Gambir'), 'Selamat pagi, Gambir');
+      expect(l.sapaan(10, 'Gambir'), 'Selamat pagi, Gambir');
+      expect(l.sapaan(11, 'Gambir'), 'Selamat siang, Gambir');
+      expect(l.sapaan(14, 'Gambir'), 'Selamat siang, Gambir');
+      expect(l.sapaan(15, 'Gambir'), 'Selamat sore, Gambir');
+      expect(l.sapaan(17, 'Gambir'), 'Selamat sore, Gambir');
+      expect(l.sapaan(18, 'Gambir'), 'Selamat malam, Gambir');
+      expect(en.sapaan(9, 'Gambir'), 'Good morning, Gambir');
+      expect(en.sapaan(20, 'Gambir'), 'Good night, Gambir');
+    });
+
+    for (final skala in [1.0, 1.3]) {
+      testWidgets('grafik suhu tanpa overflow di 360 dp, huruf $skala', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1080, 1920);
+        tester.view.devicePixelRatio = 3;
+        tester.platformDispatcher.textScaleFactorTestValue = skala;
+        addTearDown(tester.view.reset);
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final p = prakiraan();
+        final titik = entri24Jam(p, p.semuaEntri.first);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: bahasaDidukung,
+            locale: const Locale('id'),
+            home: Scaffold(
+              body: Padding(
+                padding: const EdgeInsets.all(16),
+                child: GrafikSuhu(
+                  entri: titik,
+                  warna: Colors.black,
+                  warnaRedup: Colors.black54,
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.textContaining(l.grafikSuhuJudul), findsOneWidget);
+        expect(find.byType(CustomPaint), findsWidgets);
+        expect(tester.takeException(), isNull);
+      });
+    }
+
+    testWidgets('kurang dari 3 titik: grafik tidak ditampilkan', (
+      tester,
+    ) async {
+      final p = prakiraan();
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: bahasaDidukung,
+          locale: const Locale('id'),
+          home: Scaffold(
+            body: GrafikSuhu(
+              entri: [p.semuaEntri.first, p.semuaEntri.last],
+              warna: Colors.black,
+              warnaRedup: Colors.black54,
+            ),
+          ),
+        ),
+      );
+      expect(find.textContaining(l.grafikSuhuJudul), findsNothing);
+    });
   });
 }

@@ -40,7 +40,9 @@ class BerandaScreen extends StatelessWidget {
           children: [
             Text(l.appName),
             Text(
-              l.subjudulBeranda,
+              _sapaan(l, cuaca),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -113,6 +115,18 @@ class BerandaScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// "Selamat sore, Pasar Manggis" menurut jam setempat wilayah; tanpa wilayah
+/// terpilih memakai subjudul umum.
+String _sapaan(AppLocalizations l, WeatherProvider cuaca) {
+  final wilayah = cuaca.wilayah;
+  if (wilayah == null || wilayah.desa.isEmpty) return l.subjudulBeranda;
+  final selisih = cuaca.prakiraan?.selisihZona;
+  final sekarang = selisih == null
+      ? DateTime.now()
+      : DateTime.now().toUtc().add(selisih);
+  return l.sapaan(sekarang.hour, wilayah.desa);
 }
 
 /// Status notifikasi gempa saat ini (pengaturan yang sudah ada).

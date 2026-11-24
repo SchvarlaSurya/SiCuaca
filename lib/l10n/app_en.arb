@@ -241,5 +241,11 @@
   "jumlahKejadian": "{n, plural, =1{1 event} other{{n} events}}",
   "totalGrafik": "{n, plural, =1{Total on chart: 1 event} other{Total on chart: {n} events}}",
   "siagaHeroJudul": "Preparedness starts before an earthquake.",
-  "siagaHeroKeterangan": "Learn the safe steps and complete your emergency bag bit by bit."
+  "siagaHeroKeterangan": "Learn the safe steps and complete your emergency bag bit by bit.",
+  "grafikSuhuJudul": "Next 24 hours",
+  "grafikSuhuSemantik": "Temperature for the next 24 hours: now {sekarang} degrees, high {tertinggi}, low {terendah}",
+  "sapaPagi": "Good morning, {lokasi}",
+  "sapaSiang": "Good afternoon, {lokasi}",
+  "sapaSore": "Good evening, {lokasi}",
+  "sapaMalam": "Good night, {lokasi}"
 }

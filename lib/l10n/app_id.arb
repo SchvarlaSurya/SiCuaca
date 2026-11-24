@@ -264,5 +264,16 @@
   "totalGrafik": "Total pada grafik: {n} kejadian",
   "@totalGrafik": {"placeholders": {"n": {"type": "int"}}},
   "siagaHeroJudul": "Kesiapsiagaan dimulai sebelum terjadi gempa.",
-  "siagaHeroKeterangan": "Pelajari langkah aman dan lengkapi tas siaga secara bertahap."
+  "siagaHeroKeterangan": "Pelajari langkah aman dan lengkapi tas siaga secara bertahap.",
+  "grafikSuhuJudul": "24 jam ke depan",
+  "grafikSuhuSemantik": "Suhu 24 jam ke depan: sekarang {sekarang} derajat, tertinggi {tertinggi}, terendah {terendah}",
+  "@grafikSuhuSemantik": {"placeholders": {"sekarang": {"type": "String"}, "tertinggi": {"type": "String"}, "terendah": {"type": "String"}}},
+  "sapaPagi": "Selamat pagi, {lokasi}",
+  "@sapaPagi": {"placeholders": {"lokasi": {"type": "String"}}},
+  "sapaSiang": "Selamat siang, {lokasi}",
+  "@sapaSiang": {"placeholders": {"lokasi": {"type": "String"}}},
+  "sapaSore": "Selamat sore, {lokasi}",
+  "@sapaSore": {"placeholders": {"lokasi": {"type": "String"}}},
+  "sapaMalam": "Selamat malam, {lokasi}",
+  "@sapaMalam": {"placeholders": {"lokasi": {"type": "String"}}}
 }

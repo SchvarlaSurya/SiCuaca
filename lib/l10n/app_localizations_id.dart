@@ -794,4 +794,36 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get siagaHeroKeterangan =>
       'Pelajari langkah aman dan lengkapi tas siaga secara bertahap.';
+
+  @override
+  String get grafikSuhuJudul => '24 jam ke depan';
+
+  @override
+  String grafikSuhuSemantik(
+    String sekarang,
+    String tertinggi,
+    String terendah,
+  ) {
+    return 'Suhu 24 jam ke depan: sekarang $sekarang derajat, tertinggi $tertinggi, terendah $terendah';
+  }
+
+  @override
+  String sapaPagi(String lokasi) {
+    return 'Selamat pagi, $lokasi';
+  }
+
+  @override
+  String sapaSiang(String lokasi) {
+    return 'Selamat siang, $lokasi';
+  }
+
+  @override
+  String sapaSore(String lokasi) {
+    return 'Selamat sore, $lokasi';
+  }
+
+  @override
+  String sapaMalam(String lokasi) {
+    return 'Selamat malam, $lokasi';
+  }
 }

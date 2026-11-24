@@ -13,6 +13,7 @@ import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
 import '../providers/weather_provider.dart';
 import '../widgets/aksi_wilayah.dart';
+import '../widgets/grafik_suhu.dart';
 import '../widgets/hero_cuaca.dart';
 import '../widgets/ikon_cuaca.dart';
 import '../widgets/lokasi_banner.dart';
@@ -358,6 +359,7 @@ class _Prakiraan extends StatelessWidget {
                     wilayah: wilayah,
                     entri: terdekat,
                     selisihZona: prakiraan.selisihZona,
+                    grafik: entri24Jam(prakiraan, terdekat),
                   ),
                 ),
                 const SizedBox(height: 8),

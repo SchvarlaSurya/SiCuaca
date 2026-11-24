@@ -8,6 +8,7 @@ import '../core/warna_semantik.dart';
 import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
 import '../services/share_service.dart';
+import 'grafik_suhu.dart';
 import 'ikon_cuaca.dart';
 import 'status_data.dart';
 
@@ -22,12 +23,16 @@ class HeroCuaca extends StatelessWidget {
     required this.wilayah,
     required this.entri,
     required this.selisihZona,
+    this.grafik = const [],
     this.aksi,
   });
 
   final Lokasi wilayah;
   final EntriPrakiraan entri;
   final Duration? selisihZona;
+
+  /// Titik grafik suhu 24 jam ke depan (lihat [entri24Jam]); kosong = tanpa grafik.
+  final List<EntriPrakiraan> grafik;
 
   /// Tombol di kanan atas (mis. favorit).
   final Widget? aksi;
@@ -183,6 +188,17 @@ class HeroCuaca extends StatelessWidget {
               ),
               style: theme.textTheme.bodySmall?.copyWith(color: redup),
             ),
+            if (grafik.length >= 3) ...[
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: GrafikSuhu(
+                  entri: grafik,
+                  warna: teks,
+                  warnaRedup: redup,
+                ),
+              ),
+            ],
           ],
         ),
       ),

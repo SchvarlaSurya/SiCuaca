@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/weather_provider.dart';
+import 'grafik_suhu.dart';
 import 'hero_cuaca.dart';
 import 'status_cuaca_view.dart';
 import 'status_data.dart';
@@ -40,6 +41,7 @@ class CuacaSaatIniCard extends StatelessWidget {
           wilayah: wilayah,
           entri: entri,
           selisihZona: prakiraan.selisihZona,
+          grafik: entri24Jam(prakiraan, entri),
           aksi: TombolFavorit(lokasi: wilayah),
         ),
         const SizedBox(height: 8),

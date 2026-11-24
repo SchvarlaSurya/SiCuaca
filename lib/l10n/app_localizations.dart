@@ -1487,6 +1487,42 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Pelajari langkah aman dan lengkapi tas siaga secara bertahap.'**
   String get siagaHeroKeterangan;
+
+  /// No description provided for @grafikSuhuJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'24 jam ke depan'**
+  String get grafikSuhuJudul;
+
+  /// No description provided for @grafikSuhuSemantik.
+  ///
+  /// In id, this message translates to:
+  /// **'Suhu 24 jam ke depan: sekarang {sekarang} derajat, tertinggi {tertinggi}, terendah {terendah}'**
+  String grafikSuhuSemantik(String sekarang, String tertinggi, String terendah);
+
+  /// No description provided for @sapaPagi.
+  ///
+  /// In id, this message translates to:
+  /// **'Selamat pagi, {lokasi}'**
+  String sapaPagi(String lokasi);
+
+  /// No description provided for @sapaSiang.
+  ///
+  /// In id, this message translates to:
+  /// **'Selamat siang, {lokasi}'**
+  String sapaSiang(String lokasi);
+
+  /// No description provided for @sapaSore.
+  ///
+  /// In id, this message translates to:
+  /// **'Selamat sore, {lokasi}'**
+  String sapaSore(String lokasi);
+
+  /// No description provided for @sapaMalam.
+  ///
+  /// In id, this message translates to:
+  /// **'Selamat malam, {lokasi}'**
+  String sapaMalam(String lokasi);
 }
 
 class _AppLocalizationsDelegate

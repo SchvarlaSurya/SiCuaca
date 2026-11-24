@@ -17,6 +17,15 @@ extension L10nKonteks on BuildContext {
 extension L10nTambahan on AppLocalizations {
   bool get inggris => localeName.startsWith('en');
 
+  /// Sapaan menurut jam setempat wilayah (bukan jam perangkat):
+  /// 04-10 pagi, 11-14 siang, 15-17 sore, selain itu malam.
+  String sapaan(int jam, String lokasi) {
+    if (jam >= 4 && jam < 11) return sapaPagi(lokasi);
+    if (jam >= 11 && jam < 15) return sapaSiang(lokasi);
+    if (jam >= 15 && jam < 18) return sapaSore(lokasi);
+    return sapaMalam(lokasi);
+  }
+
   /// Teks error untuk pengguna dari jenis [ApiException].
   String pesanGalat(Object? galat) {
     if (galat is! ApiException) return errTakTerduga;
