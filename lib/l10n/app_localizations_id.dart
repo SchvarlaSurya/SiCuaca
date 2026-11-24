@@ -1229,4 +1229,7 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get kacaCairKeterangan =>
       'Pembiasan kaca dan animasi tombol membelah. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.';
+
+  @override
+  String get lainnya => 'Lainnya';
 }

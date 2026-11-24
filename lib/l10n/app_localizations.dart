@@ -2183,6 +2183,12 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Pembiasan kaca dan animasi tombol membelah. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.'**
   String get kacaCairKeterangan;
+
+  /// No description provided for @lainnya.
+  ///
+  /// In id, this message translates to:
+  /// **'Lainnya'**
+  String get lainnya;
 }
 
 class _AppLocalizationsDelegate

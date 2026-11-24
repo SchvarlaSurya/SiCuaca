@@ -24,6 +24,7 @@ import '../widgets/app_chrome.dart';
 import 'perbandingan_cuaca_screen.dart';
 import '../widgets/pencet_lembut.dart';
 import '../widgets/tombol_kaca.dart';
+import '../providers/lokasi_provider.dart';
 
 /// Prakiraan cuaca: kartu hero (jam terdekat), lalu prakiraan per 3 jam
 /// dengan satu tab per tanggal. Semuanya satu daftar gulir, sehingga tarik
@@ -54,30 +55,44 @@ class CuacaScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          AksiWilayah(
-            sebelum: [
-              TombolKaca(
-                tooltip: context.l10n.bandingkanFavorit,
-                icon: const IkonDuo(IkonApp.bandingkan),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const PerbandinganCuacaScreen(),
-                  ),
-                ),
-              ),
+          // Maks. 3 tombol; aksi yang jarang dipakai masuk menu Lainnya.
+          GrupTombolKaca(
+            children: [
               if (berhasil) TombolFavorit(lokasi: wilayah),
-              if (berhasil)
-                TombolKaca(
-                  tooltip: context.l10n.bagikanCuaca,
-                  icon: const IkonDuo(IkonApp.bagikan),
-                  onPressed: () => _bukaKartuCuaca(
-                    context,
-                    wilayah,
-                    prakiraan.entriTerdekat(DateTime.now()),
-                    cuaca.diperbarui,
-                    cuaca.dariCache,
+              const TombolCariWilayah(),
+              TombolLainnya(
+                tooltip: context.l10n.lainnya,
+                item: [
+                  ItemLainnya(
+                    ikon: IkonApp.bandingkan,
+                    label: context.l10n.bandingkanFavorit,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const PerbandinganCuacaScreen(),
+                      ),
+                    ),
                   ),
-                ),
+                  if (berhasil)
+                    ItemLainnya(
+                      ikon: IkonApp.bagikan,
+                      label: context.l10n.bagikanCuaca,
+                      onTap: () => _bukaKartuCuaca(
+                        context,
+                        wilayah,
+                        prakiraan.entriTerdekat(DateTime.now()),
+                        cuaca.diperbarui,
+                        cuaca.dariCache,
+                      ),
+                    ),
+                  ItemLainnya(
+                    ikon: IkonApp.lokasiSaya,
+                    label: context.l10n.gunakanLokasiSaya,
+                    onTap: context.watch<LokasiProvider>().sedangMencari
+                        ? null
+                        : context.read<WeatherProvider>().pakaiLokasiGps,
+                  ),
+                ],
+              ),
             ],
           ),
         ],

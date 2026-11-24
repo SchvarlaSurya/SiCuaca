@@ -1260,4 +1260,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get kacaCairKeterangan =>
       'Glass refraction and splitting button animation. Turn off if your phone feels slow; the navbar and buttons stay, with simple glass.';
+
+  @override
+  String get lainnya => 'More';
 }

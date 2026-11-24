@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:app/core/ikon.dart';
 import 'package:app/core/l10n.dart';
 import 'package:app/core/panduan_siaga.dart';
 import 'package:app/core/ringkasan_gempa.dart';
@@ -195,7 +194,8 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(navTab('gempa'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byIcon(IkonApp.siaga));
+        // Siap Siaga dibuka lewat kartu pengantar di tab Gempa.
+        await tester.tap(find.text(t.gempaSiagaJudul));
         await tester.pumpAndSettle();
         expect(find.text(t.siagaJudul), findsOneWidget);
 
@@ -222,7 +222,8 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(navTab('gempa'));
         await tester.pumpAndSettle();
-        await tester.tap(find.byIcon(IkonApp.siaga));
+        // Siap Siaga dibuka lewat kartu pengantar di tab Gempa.
+        await tester.tap(find.text(t.gempaSiagaJudul));
         await tester.pumpAndSettle();
         await gulirKe(tester, find.byKey(const ValueKey('tas.dokumen')));
         expect(

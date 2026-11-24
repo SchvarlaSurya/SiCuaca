@@ -121,22 +121,50 @@ class _NavigasiBawahState extends State<_NavigasiBawah>
     super.dispose();
   }
 
-  void _sentuh() =>
-      _lensaDiam.animateBack(0, duration: const Duration(milliseconds: 110));
+  bool _ditekan = false;
 
-  // Muncul lagi setelah lensa jeli paket selesai meluncur dan memudar.
-  void _lepas() => _lensaDiam.animateTo(
-    1,
-    duration: const Duration(milliseconds: 720),
-    curve: const Interval(.55, 1, curve: Curves.easeOut),
-  );
+  void _sentuh() {
+    _ditekan = true;
+    _lensaDiam.animateBack(0, duration: const Duration(milliseconds: 90));
+  }
+
+  void _lepas() {
+    _ditekan = false;
+    _tampilkanNanti();
+  }
+
+  /// Lensa diam baru muncul setelah gelembung jeli milik paket sampai di tab
+  /// tujuan dan mulai memudar (sekitar 0,65 detik), lalu memudar masuk.
+  /// Kalau lebih cepat, lensa diam terlihat duluan di tab tujuan sebelum
+  /// gelembungnya tiba.
+  void _tampilkanNanti() {
+    if (MediaQuery.of(context).disableAnimations) {
+      _lensaDiam.value = 1;
+      return;
+    }
+    _lensaDiam.animateTo(
+      1,
+      duration: const Duration(milliseconds: 880),
+      curve: const Interval(.74, 1, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void didUpdateWidget(_NavigasiBawah lama) {
+    super.didUpdateWidget(lama);
+    if (lama.indeks == widget.indeks) return;
+    // Tab berganti (diketuk, digeser, atau lewat tautan): gelembung jeli paket
+    // sedang meluncur. Sembunyikan lensa diam seketika; ia pindah tanpa
+    // animasi dan muncul lagi setelah gelembung tiba.
+    _lensaDiam.value = 0;
+    if (!_ditekan) _tampilkanNanti();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
     final indeks = widget.indeks;
     final gelap = Theme.of(context).brightness == Brightness.dark;
-    final tanpaGerak = MediaQuery.of(context).disableAnimations;
     final warnaAktif = gelap ? _warnaIkonAktif : const Color(0xFF17151F);
     final warnaPasif = gelap ? _warnaIkonPasif : const Color(0xFF45424F);
 
@@ -250,11 +278,7 @@ class _NavigasiBawahState extends State<_NavigasiBawah>
                 ),
               ),
               // Lensa kaca kapsul yang menempel di tab aktif saat diam.
-              AnimatedPositioned(
-                duration: tanpaGerak
-                    ? Duration.zero
-                    : const Duration(milliseconds: 320),
-                curve: Curves.easeOutCubic,
+              Positioned(
                 left: _jarakSisi + _isiDeret + indeks * lebarTab + _isiLensa,
                 top: _jarakTegak + _isiLensa,
                 width: lebarTab - 2 * _isiLensa,
@@ -263,6 +287,7 @@ class _NavigasiBawahState extends State<_NavigasiBawah>
                   child: FadeTransition(
                     opacity: _lensaDiam,
                     child: GlassContainer(
+                      key: const ValueKey('nav.lensa'),
                       useOwnLayer: true,
                       shape: const LiquidRoundedSuperellipse(
                         borderRadius: (_tinggiBar - 2 * _isiLensa) / 2,

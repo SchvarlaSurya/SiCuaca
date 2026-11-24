@@ -7,7 +7,6 @@ import '../core/navigasi.dart';
 import '../models/gempa.dart';
 import '../providers/gempa_provider.dart';
 import 'riwayat_gempa_screen.dart';
-import 'siaga_gempa_screen.dart';
 import '../widgets/ajak_lokasi.dart';
 import '../widgets/gempa_item.dart';
 import '../widgets/gempa_terbaru_card.dart';
@@ -43,15 +42,6 @@ class GempaScreen extends StatelessWidget {
                   tooltip: context.l10n.navPeringatan,
                   icon: const IkonDuo(IkonApp.peringatan),
                   onPressed: Navigasi.bukaPeringatan,
-                ),
-                TombolKaca(
-                  tooltip: context.l10n.siagaJudul,
-                  icon: const IkonDuo(IkonApp.siaga),
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const SiagaGempaScreen(),
-                    ),
-                  ),
                 ),
                 TombolKaca(
                   tooltip: context.l10n.riwayatJudul,

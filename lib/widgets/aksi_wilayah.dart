@@ -9,36 +9,44 @@ import '../screens/pencarian_screen.dart';
 import 'tombol_kaca.dart';
 
 /// Tombol AppBar: gunakan lokasi GPS dan cari wilayah, dalam satu grup kaca.
-/// [sebelum] = tombol lain halaman itu (mis. bagikan) yang ikut satu grup.
 class AksiWilayah extends StatelessWidget {
-  const AksiWilayah({super.key, this.sebelum = const []});
+  const AksiWilayah({super.key});
 
-  final List<Widget> sebelum;
+  @override
+  Widget build(BuildContext context) =>
+      const GrupTombolKaca(children: [TombolLokasiSaya(), TombolCariWilayah()]);
+}
+
+/// Tombol kaca "gunakan lokasi saya" (memutar saat sedang mencari).
+class TombolLokasiSaya extends StatelessWidget {
+  const TombolLokasiSaya({super.key});
 
   @override
   Widget build(BuildContext context) {
     final mencari = context.watch<LokasiProvider>().sedangMencari;
-    return GrupTombolKaca(
-      children: [
-        ...sebelum,
-        TombolKaca(
-          tooltip: context.l10n.gunakanLokasiSaya,
-          onPressed: mencari
-              ? null
-              : context.read<WeatherProvider>().pakaiLokasiGps,
-          icon: mencari
-              ? const SizedBox.square(
-                  dimension: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const IkonDuo(IkonApp.lokasiSaya),
-        ),
-        TombolKaca(
-          tooltip: context.l10n.cariWilayah,
-          onPressed: () => bukaPencarian(context),
-          icon: const IkonDuo(IkonApp.cari),
-        ),
-      ],
+    return TombolKaca(
+      tooltip: context.l10n.gunakanLokasiSaya,
+      onPressed: mencari
+          ? null
+          : context.read<WeatherProvider>().pakaiLokasiGps,
+      icon: mencari
+          ? const SizedBox.square(
+              dimension: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const IkonDuo(IkonApp.lokasiSaya),
     );
   }
+}
+
+/// Tombol kaca "cari wilayah".
+class TombolCariWilayah extends StatelessWidget {
+  const TombolCariWilayah({super.key});
+
+  @override
+  Widget build(BuildContext context) => TombolKaca(
+    tooltip: context.l10n.cariWilayah,
+    onPressed: () => bukaPencarian(context),
+    icon: const IkonDuo(IkonApp.cari),
+  );
 }

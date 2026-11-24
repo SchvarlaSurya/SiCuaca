@@ -25,6 +25,10 @@ abstract final class IkonApp {
   ); // gearSix
 
   // Aksi.
+  static const IconData lainnya = IconData(
+    0xe1ff,
+    fontFamily: _duo,
+  ); // dotsThree
   static const IconData lokasiSaya = IconData(
     0xe1d7,
     fontFamily: _duo,
