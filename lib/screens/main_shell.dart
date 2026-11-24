@@ -59,6 +59,10 @@ class _MainShellState extends State<MainShell> {
     return ValueListenableBuilder<int>(
       valueListenable: Navigasi.tabAktif,
       builder: (context, indeks, _) => Scaffold(
+        // Isi layar tembus ke belakang navbar, jadi yang terlihat hanya
+        // pill-nya. Scaffold menambahkan tinggi navbar ke padding bawah
+        // MediaQuery; daftar di tiap tab memakai itu sebagai jarak bawah.
+        extendBody: true,
         body: IndexedStack(index: indeks, children: _halaman),
         bottomNavigationBar: _NavigasiBawah(indeks: indeks),
       ),

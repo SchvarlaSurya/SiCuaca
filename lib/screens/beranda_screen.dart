@@ -55,7 +55,12 @@ class BerandaScreen extends StatelessWidget {
           // Isi Beranda pendek (tiga bagian), jadi semuanya dibangun sekaligus.
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              0,
+              16,
+              24 + MediaQuery.paddingOf(context).bottom,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

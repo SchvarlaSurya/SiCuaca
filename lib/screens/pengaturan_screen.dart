@@ -39,7 +39,9 @@ class PengaturanScreen extends StatelessWidget {
       body: LatarAtmosfer(
         gelap: false,
         child: ListView(
-          padding: const EdgeInsets.only(bottom: 24),
+          padding: EdgeInsets.only(
+            bottom: 24 + MediaQuery.paddingOf(context).bottom,
+          ),
           children: [
             const Padding(
               padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
