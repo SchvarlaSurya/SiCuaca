@@ -28,6 +28,7 @@ import 'perbandingan_cuaca_screen.dart';
 import '../widgets/pencet_lembut.dart';
 import '../widgets/tombol_kaca.dart';
 import '../providers/lokasi_provider.dart';
+import '../core/theme.dart';
 
 /// Prakiraan cuaca: kartu hero (jam terdekat), lalu prakiraan per 3 jam
 /// dengan satu tab per tanggal. Semuanya satu daftar gulir, sehingga tarik
@@ -207,7 +208,7 @@ class KartuCuacaScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF302080), Color(0xFF6B56DC)],
+                    colors: [AppTheme.bannerAtas, AppTheme.bannerBawah],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -231,24 +232,24 @@ class KartuCuacaScreen extends StatelessWidget {
                     Text(
                       l.deskripsiCuaca(entri),
                       style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(color: const Color(0xFFF3F1FF)),
+                          ?.copyWith(color: AppTheme.bannerRedup),
                     ),
                     const SizedBox(height: 24),
                     if (dariCache)
                       Text(
                         l.modeOffline,
-                        style: const TextStyle(color: Color(0xFFF3F1FF)),
+                        style: const TextStyle(color: AppTheme.bannerRedup),
                       ),
                     if (diperbarui != null)
                       Text(
                         l.diperbarui(Format.waktuLengkap(l, diperbarui)),
-                        style: const TextStyle(color: Color(0xFFF3F1FF)),
+                        style: const TextStyle(color: AppTheme.bannerRedup),
                       ),
                     const SizedBox(height: 12),
                     Text(
                       '${l.sumberBmkg}. ${l.bukanResmi}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFFF3F1FF),
+                        color: AppTheme.bannerRedup,
                       ),
                     ),
                   ],

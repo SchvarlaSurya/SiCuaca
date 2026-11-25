@@ -270,7 +270,7 @@
   "aksiHapus": "Hapus",
   "urutanBerandaJudul": "Urutan Beranda",
   "urutanBerandaKeterangan": "Seret atau pakai tombol panah untuk mengubah urutan bagian di Beranda.",
-  "urutanBerandaRingkas": "Atur urutan Cuaca, Gempa, dan Peringatan",
+  "urutanBerandaRingkas": "Atur urutan bagian di Beranda",
   "setelUlangUrutan": "Setel ulang urutan",
   "naikkanBagian": "Naikkan {nama}",
   "@naikkanBagian": {"placeholders": {"nama": {"type": "String"}}},

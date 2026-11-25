@@ -17,8 +17,8 @@ class SplashGerbang extends StatefulWidget {
   final Widget child;
   final bool aktif;
 
-  static const warnaAwal = Color(0xFF17104A);
-  static const warnaAkhir = Color(0xFF6756D8);
+  static const warnaAwal = Color(0xFF0B2552);
+  static const warnaAkhir = Color(0xFF2F7BDB);
 
   @override
   State<SplashGerbang> createState() => _SplashGerbangState();
@@ -152,7 +152,7 @@ class _Splash extends StatelessWidget {
                             l.splashTagline,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              color: Color(0xFFE6E2FF),
+                              color: Color(0xFFE4EEFF),
                               fontSize: 15,
                               height: 1.4,
                               fontWeight: FontWeight.w400,
@@ -173,7 +173,7 @@ class _Splash extends StatelessWidget {
                       l.bukanResmi,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        color: Color(0xFFCFC9F5),
+                        color: Color(0xFFCFE0FA),
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         decoration: TextDecoration.none,

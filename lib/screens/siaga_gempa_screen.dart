@@ -7,6 +7,7 @@ import '../core/panduan_siaga.dart';
 import '../providers/siaga_provider.dart';
 import '../widgets/app_chrome.dart';
 import '../widgets/status_data.dart';
+import '../core/theme.dart';
 
 /// Siap siaga gempa: panduan Sebelum/Saat/Setelah, checklist tas siaga,
 /// dan istilah gempa. Seluruh isi berasal dari sumber resmi (BMKG, BNPB);
@@ -159,7 +160,7 @@ class _SiagaHero extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(26),
         gradient: const LinearGradient(
-          colors: [Color(0xFF2B1C78), Color(0xFF6651D7)],
+          colors: [AppTheme.bannerAtas, AppTheme.bannerBawah],
         ),
       ),
       child: Column(
@@ -178,7 +179,7 @@ class _SiagaHero extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             l.siagaHeroKeterangan,
-            style: const TextStyle(color: Color(0xFFF3F1FF)),
+            style: const TextStyle(color: AppTheme.bannerRedup),
           ),
         ],
       ),

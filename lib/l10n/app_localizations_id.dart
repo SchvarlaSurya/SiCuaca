@@ -811,7 +811,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Seret atau pakai tombol panah untuk mengubah urutan bagian di Beranda.';
 
   @override
-  String get urutanBerandaRingkas => 'Atur urutan Cuaca, Gempa, dan Peringatan';
+  String get urutanBerandaRingkas => 'Atur urutan bagian di Beranda';
 
   @override
   String get setelUlangUrutan => 'Setel ulang urutan';

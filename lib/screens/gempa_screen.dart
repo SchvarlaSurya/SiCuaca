@@ -14,6 +14,7 @@ import '../widgets/status_data.dart';
 import '../widgets/sumber_bmkg.dart';
 import '../widgets/app_chrome.dart';
 import '../widgets/tombol_kaca.dart';
+import '../core/theme.dart';
 
 /// Tab Gempa: Terbaru, M 5.0+, Dirasakan.
 class GempaScreen extends StatelessWidget {
@@ -137,7 +138,7 @@ class _GempaIntro extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
-          colors: [Color(0xFF31227F), Color(0xFF6856D8)],
+          colors: [AppTheme.bannerAtas, AppTheme.bannerBawah],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -177,7 +178,7 @@ class _GempaIntro extends StatelessWidget {
                 Text(
                   context.l10n.gempaSiagaKeterangan,
                   style: const TextStyle(
-                    color: Color(0xFFF3F1FF),
+                    color: AppTheme.bannerRedup,
                     fontSize: 12,
                   ),
                 ),

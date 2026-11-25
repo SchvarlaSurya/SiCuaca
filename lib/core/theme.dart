@@ -37,6 +37,13 @@ class AppTheme {
   static const Color langitTengahGelap = Color(0xFF0D1A36);
   static const Color langitBawahGelap = Color(0xFF0A1428);
 
+  /// Banner berlatar biru tua (gempa, siaga) dengan teks putih. Kontras
+  /// putih 10,9:1 di ujung gelap dan 6,1:1 di ujung terang; #EAF3FF (teks
+  /// sekunder) 9,8:1 dan 5,4:1.
+  static const Color bannerAtas = Color(0xFF123A7A);
+  static const Color bannerBawah = Color(0xFF1F5FBF);
+  static const Color bannerRedup = Color(0xFFEAF3FF);
+
   /// Isian dan tepi kaca untuk kartu/tile (tanpa blur, ringan).
   static Color kacaIsi(Brightness b) =>
       b == Brightness.dark ? const Color(0x661B2E55) : const Color(0xA6FFFFFF);

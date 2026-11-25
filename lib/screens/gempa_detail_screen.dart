@@ -80,7 +80,7 @@ class GempaDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF2B1C78), Color(0xFF6651D7)],
+                    colors: [AppTheme.bannerAtas, AppTheme.bannerBawah],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -110,7 +110,7 @@ class GempaDetailScreen extends StatelessWidget {
                         Format.waktuRelatif(l, gempa.waktuUtc, DateTime.now()),
                       ].join(' · '),
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFFF3F1FF),
+                        color: AppTheme.bannerRedup,
                       ),
                     ),
                   ],

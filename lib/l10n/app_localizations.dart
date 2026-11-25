@@ -1485,7 +1485,7 @@ abstract class AppLocalizations {
   /// No description provided for @urutanBerandaRingkas.
   ///
   /// In id, this message translates to:
-  /// **'Atur urutan Cuaca, Gempa, dan Peringatan'**
+  /// **'Atur urutan bagian di Beranda'**
   String get urutanBerandaRingkas;
 
   /// No description provided for @setelUlangUrutan.

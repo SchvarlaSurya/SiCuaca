@@ -279,7 +279,7 @@ void main() {
     });
 
     test('warna splash dalam aplikasi sama dengan splash Android', () {
-      expect(SplashGerbang.warnaAwal.toARGB32(), 0xFF17104A);
+      expect(SplashGerbang.warnaAwal.toARGB32(), 0xFF0B2552);
     });
   });
 

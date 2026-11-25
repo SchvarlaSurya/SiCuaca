@@ -846,7 +846,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Drag or use the arrow buttons to change the order of the Home sections.';
 
   @override
-  String get urutanBerandaRingkas => 'Arrange Weather, Earthquakes, and Alerts';
+  String get urutanBerandaRingkas => 'Arrange the sections on Home';
 
   @override
   String get setelUlangUrutan => 'Reset order';

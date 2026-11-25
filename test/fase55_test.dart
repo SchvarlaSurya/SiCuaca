@@ -126,6 +126,12 @@ void main() {
           greaterThanOrEqualTo(4.5),
         );
       }
+      // Banner biru tua (Gempa, Siaga, detail gempa): teks putih dan teks
+      // sekunder terhadap kedua ujung gradasi.
+      for (final latar in [AppTheme.bannerAtas, AppTheme.bannerBawah]) {
+        expect(kontras(Colors.white, latar), greaterThanOrEqualTo(4.5));
+        expect(kontras(AppTheme.bannerRedup, latar), greaterThanOrEqualTo(4.5));
+      }
       // Teks dan tautan langsung di atas latar langit (ketiga titik gradasi).
       for (final (s, langit) in [
         (
