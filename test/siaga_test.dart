@@ -160,6 +160,35 @@ void main() {
     });
   });
 
+  group('Jarak kartu panduan Siaga', () {
+    testWidgets('tiga kartu buka-tutup tidak menempel: ada jarak vertikal '
+        'antar kartu', (tester) async {
+      tester.view.physicalSize = const Size(1080, 2400);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(buatApp(gps: _gps, offline: true));
+      await tester.pumpAndSettle();
+      await tester.tap(navTab('gempa'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l.gempaSiagaJudul));
+      await tester.pumpAndSettle();
+
+      final bagian = panduanSiaga(l).map((b) => b.id).toList();
+      expect(bagian.length, greaterThanOrEqualTo(3));
+      final kartu = [
+        for (final id in bagian) find.byKey(ValueKey('siaga.$id')),
+      ];
+      for (var i = 0; i + 1 < kartu.length; i++) {
+        if (kartu[i].evaluate().isEmpty || kartu[i + 1].evaluate().isEmpty) {
+          break;
+        }
+        final bawah = tester.getBottomLeft(kartu[i]).dy;
+        final atas = tester.getTopLeft(kartu[i + 1]).dy;
+        expect(atas - bawah, greaterThanOrEqualTo(12), reason: 'kartu $i');
+      }
+    });
+  });
+
   group('Layar Siaga', () {
     Future<void> gulirKe(WidgetTester tester, Finder finder) =>
         tester.scrollUntilVisible(

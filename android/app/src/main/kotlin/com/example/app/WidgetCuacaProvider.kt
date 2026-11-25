@@ -4,11 +4,14 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.view.View
 import android.widget.RemoteViews
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import es.antonborri.home_widget.HomeWidgetLaunchIntent
@@ -17,18 +20,20 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 /**
- * Widget layar utama "Cuaca SiCuaca": suhu, kondisi, wilayah, dan jam data.
+ * Widget layar utama "Cuaca SiCuaca" (4x2): suhu dan ikon besar, kondisi,
+ * kelembapan dan angin, serta dua kartu kecil: indeks UV (perkiraan SiCuaca
+ * dari posisi matahari dan tutupan awan BMKG) dan kualitas udara (US AQI dari
+ * Open-Meteo, model CAMS). Footer selalu "Sumber: BMKG"; bila ada data udara
+ * ditambah "udara: Open-Meteo". SiCuaca bukan aplikasi resmi BMKG (deskripsi
+ * widget dan aplikasi menyatakannya).
  *
- * Datanya dari prakiraan BMKG yang disimpan aplikasi ke
- * SharedPreferences ("HomeWidgetPreferences", lewat paket home_widget).
- * Selama widget terpasang, [PembaruWidgetWorker] menyegarkan data dari
- * BMKG tiap jam di latar belakang, jadi widget tidak bergantung pada
- * aplikasi dibuka.
- *
- * Widget selalu menampilkan "Sumber: BMKG"; SiCuaca bukan aplikasi resmi
- * BMKG (dinyatakan di deskripsi widget dan di dalam aplikasi).
+ * Data cuaca disimpan aplikasi ke SharedPreferences "HomeWidgetPreferences"
+ * (paket home_widget). Selama widget terpasang, [PembaruWidgetWorker]
+ * menyegarkan data tiap jam di latar belakang. UV dihitung ulang di sini tiap
+ * widget digambar, jadi selalu sesuai jam sekarang.
  */
 class WidgetCuacaProvider : HomeWidgetProvider() {
 
@@ -39,7 +44,9 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
 
     override fun onDisabled(context: Context) {
         super.onDisabled(context)
-        WorkManager.getInstance(context).cancelUniqueWork(NAMA_KERJA)
+        val kerja = WorkManager.getInstance(context)
+        kerja.cancelUniqueWork(NAMA_KERJA)
+        kerja.cancelUniqueWork(NAMA_KERJA_SEKALI)
     }
 
     override fun onUpdate(
@@ -48,8 +55,13 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
         appWidgetIds: IntArray,
         widgetData: SharedPreferences,
     ) {
-        // Pastikan pembaruan latar belakang terjadwal (aman dipanggil ulang).
         jadwalkanPembaruan(context)
+        // Data udara belum ada atau sudah lama: segarkan sekarang juga (satu
+        // kali), tanpa menunggu jadwal jam berikutnya.
+        val aqiMs = widgetData.getString("aqi_ms", null)?.toLongOrNull()
+        val butuhUdara = widgetData.getString("lat", "").orEmpty().isNotEmpty() &&
+            (aqiMs == null || System.currentTimeMillis() - aqiMs > BASI_UDARA_MS)
+        if (butuhUdara) jalankanSekali(context)
         for (id in appWidgetIds) {
             appWidgetManager.updateAppWidget(id, buatTampilan(context, widgetData))
         }
@@ -57,17 +69,42 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
 
     companion object {
         const val NAMA_KERJA = "widget_cuaca_pembaruan"
+        const val NAMA_KERJA_SEKALI = "widget_cuaca_pembaruan_sekali"
         private const val LAMA_BASI_MS = 6L * 60 * 60 * 1000
+        private const val BASI_UDARA_MS = 50L * 60 * 1000
+
+        private val WARNA_UV = intArrayOf(
+            0xFF4EB400.toInt(), 0xFFF7E400.toInt(), 0xFFF85900.toInt(),
+            0xFFD8001D.toInt(), 0xFF6B49C8.toInt(),
+        )
+        private val WARNA_AQI = intArrayOf(
+            0xFF00B83F.toInt(), 0xFFE6C700.toInt(), 0xFFFF7E00.toInt(),
+            0xFFE60000.toInt(), 0xFF8F3F97.toInt(), 0xFF7E0023.toInt(),
+        )
+
+        private val SYARAT_JARINGAN = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
         fun jadwalkanPembaruan(context: Context) {
             val permintaan = PeriodicWorkRequestBuilder<PembaruWidgetWorker>(60, TimeUnit.MINUTES)
-                .setConstraints(
-                    Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-                )
+                .setConstraints(SYARAT_JARINGAN)
                 .build()
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 NAMA_KERJA,
                 ExistingPeriodicWorkPolicy.KEEP,
+                permintaan,
+            )
+        }
+
+        /** Satu kali jalan sekarang (bila belum ada yang antre). */
+        fun jalankanSekali(context: Context) {
+            val permintaan = OneTimeWorkRequestBuilder<PembaruWidgetWorker>()
+                .setConstraints(SYARAT_JARINGAN)
+                .build()
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                NAMA_KERJA_SEKALI,
+                ExistingWorkPolicy.KEEP,
                 permintaan,
             )
         }
@@ -102,6 +139,27 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
             95, 97 -> "⛈️"
             else -> "⛅"
         }
+
+        private fun namaUv(context: Context, kategori: Int): String = context.getString(
+            when (kategori) {
+                0 -> R.string.uv_0
+                1 -> R.string.uv_1
+                2 -> R.string.uv_2
+                3 -> R.string.uv_3
+                else -> R.string.uv_4
+            },
+        )
+
+        private fun namaAqi(context: Context, kategori: Int): String = context.getString(
+            when (kategori) {
+                0 -> R.string.aqi_0
+                1 -> R.string.aqi_1
+                2 -> R.string.aqi_2
+                3 -> R.string.aqi_3
+                4 -> R.string.aqi_4
+                else -> R.string.aqi_5
+            },
+        )
 
         private fun buatTampilan(context: Context, data: SharedPreferences): RemoteViews {
             val v = RemoteViews(context.packageName, R.layout.widget_cuaca)
@@ -142,15 +200,56 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
             }.joinToString(" · ")
             v.setTextViewText(R.id.widget_detail, detail)
 
+            // Indeks UV: dihitung dari posisi matahari dan tutupan awan BMKG.
+            val lat = data.getString("lat", null)?.toDoubleOrNull()
+            val lon = data.getString("lon", null)?.toDoubleOrNull()
+            if (lat != null && lon != null) {
+                v.setViewVisibility(R.id.widget_kartu_uv, View.VISIBLE)
+                val uvi = UvHitung.perkiraan(
+                    lat, lon, System.currentTimeMillis(), data.getString("awan", null)?.toIntOrNull(),
+                )
+                if (uvi < 0.5) {
+                    v.setTextColor(R.id.widget_uv_titik, Color.parseColor("#9FB8DC"))
+                    v.setTextViewText(R.id.widget_uv_nilai, context.getString(R.string.widget_uv_malam))
+                } else {
+                    val k = UvHitung.kategori(uvi)
+                    v.setTextColor(R.id.widget_uv_titik, WARNA_UV[k])
+                    v.setTextViewText(
+                        R.id.widget_uv_nilai,
+                        context.getString(R.string.widget_nilai_kategori, uvi.roundToInt().toString(), namaUv(context, k)),
+                    )
+                }
+            } else {
+                v.setViewVisibility(R.id.widget_kartu_uv, View.GONE)
+            }
+
+            // Kualitas udara: US AQI dari Open-Meteo (disegarkan pekerja).
+            val aqi = data.getString("aqi", null)?.toIntOrNull()
+            val adaUdara = aqi != null
+            if (aqi != null) {
+                val k = KategoriAqi.indeks(aqi)
+                v.setTextColor(R.id.widget_aqi_titik, WARNA_AQI[k])
+                v.setTextViewText(
+                    R.id.widget_aqi_nilai,
+                    context.getString(R.string.widget_nilai_kategori, aqi.toString(), namaAqi(context, k)),
+                )
+            } else {
+                v.setTextColor(R.id.widget_aqi_titik, Color.parseColor("#9FB8DC"))
+                v.setTextViewText(R.id.widget_aqi_nilai, context.getString(R.string.widget_aqi_kosong))
+            }
+            v.setViewVisibility(
+                R.id.widget_kartu_aqi,
+                if (lat != null && lon != null) View.VISIBLE else View.GONE,
+            )
+
             val diperbarui = data.getString("diperbarui_ms", null)?.toLongOrNull()
             val jam = if (diperbarui == null) "" else SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(diperbarui))
             val basi = diperbarui != null && System.currentTimeMillis() - diperbarui > LAMA_BASI_MS
-            val sumber = if (jam.isEmpty()) {
-                context.getString(R.string.widget_sumber_kosong)
-            } else if (basi) {
-                context.getString(R.string.widget_sumber_lama, jam)
-            } else {
-                context.getString(R.string.widget_sumber, jam)
+            val sumber = when {
+                jam.isEmpty() -> context.getString(R.string.widget_sumber_kosong)
+                basi -> context.getString(R.string.widget_sumber_lama, jam)
+                adaUdara -> context.getString(R.string.widget_sumber_udara, jam)
+                else -> context.getString(R.string.widget_sumber, jam)
             }
             v.setTextViewText(R.id.widget_sumber, sumber)
             return v

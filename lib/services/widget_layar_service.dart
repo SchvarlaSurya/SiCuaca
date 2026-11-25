@@ -55,8 +55,11 @@ PenyimpanWidget penyimpanWidgetBawaan() =>
 ///
 /// Yang dikirim hanya data prakiraan BMKG yang memang sudah tampil di
 /// aplikasi, tanpa lokasi tepat perangkat: nama wilayah, kode wilayah
-/// (adm4), dan nilai cuaca. Kode adm4 dipakai pekerja latar belakang widget
-/// untuk menyegarkan data dari BMKG tiap jam.
+/// (adm4), nilai cuaca, dan koordinat titik pusat WILAYAH (bukan GPS
+/// perangkat; dua desimal). Kode adm4 dipakai pekerja latar belakang widget
+/// untuk menyegarkan data dari BMKG tiap jam. Koordinat wilayah dipakai
+/// menghitung indeks UV dan, dibulatkan ke 0,1 derajat, meminta kualitas
+/// udara ke Open-Meteo.
 abstract final class WidgetLayar {
   /// Isi yang dibaca widget. Semua nilai berupa teks; kosong = tidak ada.
   static Map<String, String> susun({
@@ -81,6 +84,9 @@ abstract final class WidgetLayar {
       'kondisi_id': entri.deskripsi,
       'kondisi_en': entri.deskripsiEn,
       'kode': entri.kodeCuaca?.toString() ?? '',
+      'awan': entri.tutupanAwan?.toString() ?? '',
+      'lat': lokasi.lat?.toStringAsFixed(2) ?? '',
+      'lon': lokasi.lon?.toStringAsFixed(2) ?? '',
       'malam': entri.malam ? '1' : '0',
       'bahasa': bahasa,
       'diperbarui_ms': diperbarui.millisecondsSinceEpoch.toString(),

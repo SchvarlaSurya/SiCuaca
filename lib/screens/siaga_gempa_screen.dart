@@ -13,6 +13,9 @@ import '../core/theme.dart';
 /// dan istilah gempa. Seluruh isi berasal dari sumber resmi (BMKG, BNPB);
 /// setiap bagian menampilkan nama dan alamat sumbernya. Bersifat edukasi dan
 /// bukan pengganti arahan resmi.
+/// Jarak vertikal antarkartu panduan (dp).
+const _jarakBagian = 14.0;
+
 class SiagaGempaScreen extends StatelessWidget {
   const SiagaGempaScreen({super.key});
 
@@ -41,30 +44,34 @@ class SiagaGempaScreen extends StatelessWidget {
             const MasukLembut(child: _SiagaHero()),
             const SizedBox(height: 12),
             for (final (i, bagian) in panduan.indexed)
-              MasukLembut(
-                delay: Duration(milliseconds: 70 + 50 * i),
-                child: _Bagian(
-                  key: ValueKey('siaga.${bagian.id}'),
-                  judul: bagian.judul,
-                  sumber: bagian.sumber,
-                  anak: [
-                    for (final k in bagian.kelompok) ...[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12, bottom: 4),
-                        child: Semantics(
-                          header: true,
-                          child: Text(
-                            k.judul,
-                            style: theme.textTheme.titleSmall,
+              Padding(
+                // Jarak antarbagian: tiga kartu buka-tutup tidak menempel.
+                padding: const EdgeInsets.only(bottom: _jarakBagian),
+                child: MasukLembut(
+                  delay: Duration(milliseconds: 70 + 50 * i),
+                  child: _Bagian(
+                    key: ValueKey('siaga.${bagian.id}'),
+                    judul: bagian.judul,
+                    sumber: bagian.sumber,
+                    anak: [
+                      for (final k in bagian.kelompok) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12, bottom: 4),
+                          child: Semantics(
+                            header: true,
+                            child: Text(
+                              k.judul,
+                              style: theme.textTheme.titleSmall,
+                            ),
                           ),
                         ),
-                      ),
-                      for (final b in k.butir) _Butir(b),
+                        for (final b in k.butir) _Butir(b),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 4),
             JudulBagian(
               l.tasSiagaJudul('${siaga.jumlahSelesai}', '${siaga.total}'),
             ),
@@ -207,8 +214,9 @@ class _Bagian extends StatelessWidget {
       title: Text(judul),
       shape: const Border(),
       collapsedShape: const Border(),
+      tilePadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
-      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
       children: [
         ...anak,
         const SizedBox(height: 12),

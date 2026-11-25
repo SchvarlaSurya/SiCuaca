@@ -71,7 +71,7 @@ void main() {
       },
     );
 
-    test('hanya kunci yang dikenal widget; tanpa koordinat atau rahasia', () {
+    test('hanya kunci yang dikenal widget; koordinat wilayah, bukan GPS', () {
       final p = prakiraan();
       final isi = WidgetLayar.susun(
         prakiraan: p,
@@ -89,12 +89,19 @@ void main() {
         'kondisi_id',
         'kondisi_en',
         'kode',
+        'awan',
+        'lat',
+        'lon',
         'malam',
         'bahasa',
         'diperbarui_ms',
       });
+      // Koordinat adalah titik pusat wilayah fixture, dua desimal (bukan GPS).
+      expect(isi['lat'], p.lokasi.lat!.toStringAsFixed(2));
+      expect(isi['lon'], p.lokasi.lon!.toStringAsFixed(2));
+      expect(isi['lat'], matches(RegExp(r'^-?\d+\.\d{2}$')));
       expect(
-        isi.keys.any((k) => k.contains('lat') || k.contains('lon')),
+        isi.keys.any((k) => k.contains('token') || k.contains('key')),
         isFalse,
       );
     });
@@ -118,7 +125,7 @@ void main() {
         bahasa: 'en',
         diperbarui: DateTime.utc(2026),
       );
-      for (final k in ['suhu', 'kelembapan', 'angin', 'kode']) {
+      for (final k in ['suhu', 'kelembapan', 'angin', 'kode', 'awan']) {
         expect(isi[k], '', reason: k);
       }
       expect(isi.values, isNot(contains('null')));

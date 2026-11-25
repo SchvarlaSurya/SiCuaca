@@ -59,4 +59,8 @@ dependencies {
     // Pembaruan widget di latar belakang (PembaruWidgetWorker); versi sama
     // dengan yang dipakai paket home_widget.
     implementation("androidx.work:work-runtime-ktx:2.11.2")
+
+    // Uji unit logika murni widget di JVM (android/app/src/test).
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")
 }

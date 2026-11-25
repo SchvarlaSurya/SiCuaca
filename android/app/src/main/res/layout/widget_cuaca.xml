@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Widget cuaca: gradasi biru SiCuaca, teks putih. Hanya tampilan yang
-     didukung RemoteViews (LinearLayout, TextView). -->
+<!-- Widget cuaca 4x2: kiri suhu besar + ikon + kondisi, kanan dua kartu kecil
+     (indeks UV dan kualitas udara). Hanya tampilan yang didukung RemoteViews
+     (LinearLayout, TextView). -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_akar"
     android:layout_width="match_parent"
@@ -26,50 +27,167 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
+        <!-- Kiri: ikon + suhu besar, kondisi, detail -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1.25"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/widget_ikon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/widget_ikon_contoh"
+                    android:textSize="46sp" />
+
+                <TextView
+                    android:id="@+id/widget_suhu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="27°"
+                    android:textColor="#FFFFFF"
+                    android:textSize="58sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/widget_ikon"
-                android:layout_width="wrap_content"
+                android:id="@+id/widget_kondisi"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/widget_ikon_contoh"
-                android:textSize="34sp" />
-
-            <TextView
-                android:id="@+id/widget_suhu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="27°"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/widget_kondisi_contoh"
                 android:textColor="#FFFFFF"
-                android:textSize="40sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#CFE0FA"
+                android:textSize="12sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/widget_kondisi"
-            android:layout_width="match_parent"
+        <!-- Kanan: kartu UV dan kualitas udara -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/widget_kondisi_contoh"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp" />
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/widget_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#CFE0FA"
-            android:textSize="12sp" />
+            <LinearLayout
+                android:id="@+id/widget_kartu_uv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/widget_kartu"
+                android:orientation="vertical"
+                android:paddingBottom="7dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="7dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/widget_uv_titik"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="●"
+                        android:textColor="#4EB400"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/widget_uv_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:maxLines="1"
+                        android:text="@string/widget_uv_label"
+                        android:textColor="#CFE0FA"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/widget_uv_nilai"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/widget_kartu_aqi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/widget_kartu"
+                android:orientation="vertical"
+                android:paddingBottom="7dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="7dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/widget_aqi_titik"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="●"
+                        android:textColor="#E6C700"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/widget_aqi_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:maxLines="1"
+                        android:text="@string/widget_aqi_label"
+                        android:textColor="#CFE0FA"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/widget_aqi_nilai"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
@@ -81,7 +199,7 @@
         android:maxLines="3"
         android:text="@string/widget_kosong"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:visibility="gone" />
 
     <TextView
