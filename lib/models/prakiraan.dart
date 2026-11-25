@@ -14,6 +14,7 @@ class EntriPrakiraan {
     required this.kecepatanAngin,
     required this.arahAngin,
     required this.jarakPandang,
+    this.tutupanAwan,
   });
 
   factory EntriPrakiraan.fromJson(Map<String, dynamic> json) {
@@ -30,6 +31,7 @@ class EntriPrakiraan {
       kecepatanAngin: Baca.angka(json['ws']),
       arahAngin: Baca.teks(json['wd']),
       jarakPandang: Baca.teksAtauNull(json['vs_text']),
+      tutupanAwan: Baca.bulat(json['tcc']),
     );
   }
 
@@ -62,6 +64,9 @@ class EntriPrakiraan {
 
   /// Jarak pandang. Pada respons yang diperiksa nilainya selalu null.
   final String? jarakPandang;
+
+  /// Tutupan awan total, 0-100 persen (`tcc`). Dipakai memperkirakan UV.
+  final int? tutupanAwan;
 
   /// Malam bila jam setempat 18.00–05.59.
   bool get malam {

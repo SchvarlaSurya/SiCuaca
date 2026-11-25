@@ -1,0 +1,18 @@
+Kualitas udara (indeks US AQI, PM2,5, PM10, ozon, nitrogen dioksida)
+
+Sumber: Open-Meteo.com, Air Quality API (https://open-meteo.com/).
+Data modelnya dari Copernicus Atmosphere Monitoring Service (CAMS):
+untuk Indonesia dipakai prakiraan komposisi atmosfer global CAMS
+(resolusi sekitar 45 km), bukan sensor stasiun.
+
+Lisensi data: Creative Commons Attribution 4.0 International (CC BY 4.0),
+https://creativecommons.org/licenses/by/4.0/. SiCuaca memberi kredit,
+menautkan lisensi, dan menyatakan perubahan: nilai US AQI dikelompokkan ke
+kategori dan saran oleh SiCuaca. Data ini bukan data BMKG dan tidak
+disebutkan sebagai data BMKG.
+
+Open-Meteo tidak mendukung SiCuaca. Paket API gratis Open-Meteo hanya untuk
+penggunaan nonkomersial (https://open-meteo.com/en/terms).
+
+Yang dikirim ke Open-Meteo hanya koordinat titik pusat wilayah yang sedang
+dilihat, dibulatkan ke 0,1 derajat, tanpa identitas pengguna.

@@ -2562,6 +2562,240 @@ abstract class AppLocalizations {
   /// **'Di bawah cakrawala'**
   String get diBawahHorizon;
 
+  /// No description provided for @uvJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Indeks UV'**
+  String get uvJudul;
+
+  /// No description provided for @udaraUvJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Kualitas udara dan UV'**
+  String get udaraUvJudul;
+
+  /// No description provided for @udaraUvTautanKet.
+  ///
+  /// In id, this message translates to:
+  /// **'Perkiraan UV dan US AQI untuk wilayah ini'**
+  String get udaraUvTautanKet;
+
+  /// No description provided for @udaraUvTanpaKoordinat.
+  ///
+  /// In id, this message translates to:
+  /// **'Koordinat wilayah ini tidak tersedia, jadi UV dan kualitas udara tidak bisa dihitung.'**
+  String get udaraUvTanpaKoordinat;
+
+  /// No description provided for @udaraPrivasi.
+  ///
+  /// In id, this message translates to:
+  /// **'Hanya koordinat titik pusat wilayah ini, dibulatkan ke 0,1 derajat, yang dikirim ke Open-Meteo untuk kualitas udara. Tidak ada identitas atau lokasi tepat perangkat.'**
+  String get udaraPrivasi;
+
+  /// No description provided for @uvRendah.
+  ///
+  /// In id, this message translates to:
+  /// **'Rendah'**
+  String get uvRendah;
+
+  /// No description provided for @uvSedang.
+  ///
+  /// In id, this message translates to:
+  /// **'Sedang'**
+  String get uvSedang;
+
+  /// No description provided for @uvTinggi.
+  ///
+  /// In id, this message translates to:
+  /// **'Tinggi'**
+  String get uvTinggi;
+
+  /// No description provided for @uvSangatTinggi.
+  ///
+  /// In id, this message translates to:
+  /// **'Sangat tinggi'**
+  String get uvSangatTinggi;
+
+  /// No description provided for @uvEkstrem.
+  ///
+  /// In id, this message translates to:
+  /// **'Ekstrem'**
+  String get uvEkstrem;
+
+  /// No description provided for @uvSaranRendah.
+  ///
+  /// In id, this message translates to:
+  /// **'Aman beraktivitas di luar ruangan.'**
+  String get uvSaranRendah;
+
+  /// No description provided for @uvSaranSedang.
+  ///
+  /// In id, this message translates to:
+  /// **'Pakai tabir surya bila lama di luar ruangan.'**
+  String get uvSaranSedang;
+
+  /// No description provided for @uvSaranTinggi.
+  ///
+  /// In id, this message translates to:
+  /// **'Pakai tabir surya, topi, dan kacamata hitam.'**
+  String get uvSaranTinggi;
+
+  /// No description provided for @uvSaranSangatTinggi.
+  ///
+  /// In id, this message translates to:
+  /// **'Kurangi paparan matahari pukul 10.00 sampai 16.00. Pakai tabir surya, topi, dan kacamata.'**
+  String get uvSaranSangatTinggi;
+
+  /// No description provided for @uvSaranEkstrem.
+  ///
+  /// In id, this message translates to:
+  /// **'Hindari matahari langsung pukul 10.00 sampai 16.00. Lindungi kulit dan mata.'**
+  String get uvSaranEkstrem;
+
+  /// No description provided for @uvPerkiraan.
+  ///
+  /// In id, this message translates to:
+  /// **'Perkiraan {nilai}'**
+  String uvPerkiraan(int nilai);
+
+  /// No description provided for @uvMalam.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada sinar UV saat malam.'**
+  String get uvMalam;
+
+  /// No description provided for @uvPuncak.
+  ///
+  /// In id, this message translates to:
+  /// **'Puncak hari ini: {kategori}, sekitar pukul {jam}'**
+  String uvPuncak(String kategori, String jam);
+
+  /// No description provided for @uvCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Perkiraan dihitung SiCuaca dari posisi matahari dan tutupan awan BMKG; kabut asap tidak diperhitungkan.'**
+  String get uvCatatan;
+
+  /// No description provided for @udaraJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Kualitas udara'**
+  String get udaraJudul;
+
+  /// No description provided for @aqiNilai.
+  ///
+  /// In id, this message translates to:
+  /// **'US AQI {nilai}'**
+  String aqiNilai(int nilai);
+
+  /// No description provided for @aqiBaik.
+  ///
+  /// In id, this message translates to:
+  /// **'Baik'**
+  String get aqiBaik;
+
+  /// No description provided for @aqiSedang.
+  ///
+  /// In id, this message translates to:
+  /// **'Sedang'**
+  String get aqiSedang;
+
+  /// No description provided for @aqiSensitif.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak sehat bagi kelompok sensitif'**
+  String get aqiSensitif;
+
+  /// No description provided for @aqiTidakSehat.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak sehat'**
+  String get aqiTidakSehat;
+
+  /// No description provided for @aqiSangatTidakSehat.
+  ///
+  /// In id, this message translates to:
+  /// **'Sangat tidak sehat'**
+  String get aqiSangatTidakSehat;
+
+  /// No description provided for @aqiBerbahaya.
+  ///
+  /// In id, this message translates to:
+  /// **'Berbahaya'**
+  String get aqiBerbahaya;
+
+  /// No description provided for @aqiSaranBaik.
+  ///
+  /// In id, this message translates to:
+  /// **'Udara baik untuk beraktivitas di luar ruangan.'**
+  String get aqiSaranBaik;
+
+  /// No description provided for @aqiSaranSedang.
+  ///
+  /// In id, this message translates to:
+  /// **'Cukup baik. Orang yang sangat sensitif perhatikan gejala.'**
+  String get aqiSaranSedang;
+
+  /// No description provided for @aqiSaranSensitif.
+  ///
+  /// In id, this message translates to:
+  /// **'Anak, lansia, dan penderita asma kurangi aktivitas berat di luar ruangan.'**
+  String get aqiSaranSensitif;
+
+  /// No description provided for @aqiSaranTidakSehat.
+  ///
+  /// In id, this message translates to:
+  /// **'Kurangi aktivitas berat di luar ruangan; pertimbangkan memakai masker.'**
+  String get aqiSaranTidakSehat;
+
+  /// No description provided for @aqiSaranSangatTidakSehat.
+  ///
+  /// In id, this message translates to:
+  /// **'Hindari aktivitas di luar ruangan; pakai masker bila harus keluar.'**
+  String get aqiSaranSangatTidakSehat;
+
+  /// No description provided for @aqiSaranBerbahaya.
+  ///
+  /// In id, this message translates to:
+  /// **'Tetap di dalam ruangan; pakai masker N95 bila harus keluar.'**
+  String get aqiSaranBerbahaya;
+
+  /// No description provided for @udaraPm25.
+  ///
+  /// In id, this message translates to:
+  /// **'PM2,5 {nilai} µg/m³'**
+  String udaraPm25(String nilai);
+
+  /// No description provided for @udaraWaktuModel.
+  ///
+  /// In id, this message translates to:
+  /// **'Data model pukul {jam}'**
+  String udaraWaktuModel(String jam);
+
+  /// No description provided for @udaraDataTersimpan.
+  ///
+  /// In id, this message translates to:
+  /// **'Data tersimpan, belum diperbarui.'**
+  String get udaraDataTersimpan;
+
+  /// No description provided for @udaraMemuat.
+  ///
+  /// In id, this message translates to:
+  /// **'Memuat kualitas udara...'**
+  String get udaraMemuat;
+
+  /// No description provided for @udaraGagal.
+  ///
+  /// In id, this message translates to:
+  /// **'Kualitas udara tidak tersedia saat ini.'**
+  String get udaraGagal;
+
+  /// No description provided for @udaraSumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Sumber: Open-Meteo (CC BY 4.0), data CAMS/Copernicus. Perkiraan model beresolusi sekitar 45 km, bukan sensor; kategori dan saran disusun SiCuaca.'**
+  String get udaraSumber;
+
   /// No description provided for @lamaSiang.
   ///
   /// In id, this message translates to:

@@ -40,6 +40,19 @@ class ApiConstants {
   static String maritimPerairanUrl(String kode) =>
       '$maritimBaseUrl/perairan/$kode.json';
 
+  /// Kualitas udara dari Open-Meteo (BUKAN BMKG): model CAMS, tanpa kunci API,
+  /// lisensi data CC BY 4.0 (wajib kredit ke Open-Meteo dan CAMS), paket
+  /// gratis hanya untuk penggunaan nonkomersial.
+  static const String openMeteoUdaraUrl =
+      'https://air-quality-api.open-meteo.com/v1/air-quality';
+
+  /// Variabel `current` yang diminta.
+  static const String openMeteoUdaraParameter =
+      'us_aqi,pm2_5,pm10,ozone,nitrogen_dioxide';
+
+  /// Halaman sumber untuk tautan kredit.
+  static const String openMeteoHalaman = 'https://open-meteo.com/';
+
   static const Duration connectTimeout = Duration(seconds: 10);
   static const Duration receiveTimeout = Duration(seconds: 15);
 }

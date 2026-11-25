@@ -255,6 +255,17 @@ abstract final class Astronomi {
     );
   }
 
+  /// Ketinggian matahari (derajat di atas cakrawala) di [lat]/[lon] pada
+  /// [utc]; negatif bila di bawah cakrawala.
+  static double tinggiMatahari({
+    required double lat,
+    required double lon,
+    required DateTime utc,
+  }) {
+    final jd = _jd(utc);
+    return _tinggi(_posisiMatahari(jd), jd, lat, lon);
+  }
+
   /// Titik embun (°C) dari suhu (°C) dan kelembapan relatif (%), rumus
   /// Magnus. Nilai turunan, bukan pengukuran.
   static double titikEmbun(double suhuC, int kelembapan) {

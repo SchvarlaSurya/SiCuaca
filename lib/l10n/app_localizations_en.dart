@@ -1474,6 +1474,144 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diBawahHorizon => 'Below the horizon';
 
   @override
+  String get uvJudul => 'UV index';
+
+  @override
+  String get udaraUvJudul => 'Air quality and UV';
+
+  @override
+  String get udaraUvTautanKet => 'UV estimate and US AQI for this area';
+
+  @override
+  String get udaraUvTanpaKoordinat =>
+      'The coordinates of this area are not available, so UV and air quality cannot be calculated.';
+
+  @override
+  String get udaraPrivasi =>
+      'Only the centre coordinates of this area, rounded to 0.1 degree, are sent to Open-Meteo for air quality. No identity or exact device location.';
+
+  @override
+  String get uvRendah => 'Low';
+
+  @override
+  String get uvSedang => 'Moderate';
+
+  @override
+  String get uvTinggi => 'High';
+
+  @override
+  String get uvSangatTinggi => 'Very high';
+
+  @override
+  String get uvEkstrem => 'Extreme';
+
+  @override
+  String get uvSaranRendah => 'Safe to be outdoors.';
+
+  @override
+  String get uvSaranSedang => 'Wear sunscreen if you stay outdoors for long.';
+
+  @override
+  String get uvSaranTinggi => 'Wear sunscreen, a hat, and sunglasses.';
+
+  @override
+  String get uvSaranSangatTinggi =>
+      'Reduce sun exposure between 10:00 and 16:00. Wear sunscreen, a hat, and sunglasses.';
+
+  @override
+  String get uvSaranEkstrem =>
+      'Avoid direct sun between 10:00 and 16:00. Protect your skin and eyes.';
+
+  @override
+  String uvPerkiraan(int nilai) {
+    return 'Estimated $nilai';
+  }
+
+  @override
+  String get uvMalam => 'No UV at night.';
+
+  @override
+  String uvPuncak(String kategori, String jam) {
+    return 'Peak today: $kategori, around $jam';
+  }
+
+  @override
+  String get uvCatatan =>
+      'Estimated by SiCuaca from the position of the sun and BMKG cloud cover; haze is not taken into account.';
+
+  @override
+  String get udaraJudul => 'Air quality';
+
+  @override
+  String aqiNilai(int nilai) {
+    return 'US AQI $nilai';
+  }
+
+  @override
+  String get aqiBaik => 'Good';
+
+  @override
+  String get aqiSedang => 'Moderate';
+
+  @override
+  String get aqiSensitif => 'Unhealthy for sensitive groups';
+
+  @override
+  String get aqiTidakSehat => 'Unhealthy';
+
+  @override
+  String get aqiSangatTidakSehat => 'Very unhealthy';
+
+  @override
+  String get aqiBerbahaya => 'Hazardous';
+
+  @override
+  String get aqiSaranBaik => 'Air is good for outdoor activities.';
+
+  @override
+  String get aqiSaranSedang =>
+      'Acceptable. Very sensitive people should watch for symptoms.';
+
+  @override
+  String get aqiSaranSensitif =>
+      'Children, older adults, and people with asthma should limit heavy outdoor activity.';
+
+  @override
+  String get aqiSaranTidakSehat =>
+      'Limit heavy outdoor activity; consider wearing a mask.';
+
+  @override
+  String get aqiSaranSangatTidakSehat =>
+      'Avoid outdoor activity; wear a mask if you must go out.';
+
+  @override
+  String get aqiSaranBerbahaya =>
+      'Stay indoors; wear an N95 mask if you must go out.';
+
+  @override
+  String udaraPm25(String nilai) {
+    return 'PM2.5 $nilai µg/m³';
+  }
+
+  @override
+  String udaraWaktuModel(String jam) {
+    return 'Model data at $jam';
+  }
+
+  @override
+  String get udaraDataTersimpan => 'Saved data, not yet updated.';
+
+  @override
+  String get udaraMemuat => 'Loading air quality...';
+
+  @override
+  String get udaraGagal => 'Air quality is not available right now.';
+
+  @override
+  String get udaraSumber =>
+      'Source: Open-Meteo (CC BY 4.0), CAMS/Copernicus data. Model estimate at about 45 km resolution, not a sensor; categories and advice by SiCuaca.';
+
+  @override
   String get lamaSiang => 'Daylight';
 
   @override

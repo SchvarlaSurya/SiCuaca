@@ -1442,6 +1442,144 @@ class AppLocalizationsId extends AppLocalizations {
   String get diBawahHorizon => 'Di bawah cakrawala';
 
   @override
+  String get uvJudul => 'Indeks UV';
+
+  @override
+  String get udaraUvJudul => 'Kualitas udara dan UV';
+
+  @override
+  String get udaraUvTautanKet => 'Perkiraan UV dan US AQI untuk wilayah ini';
+
+  @override
+  String get udaraUvTanpaKoordinat =>
+      'Koordinat wilayah ini tidak tersedia, jadi UV dan kualitas udara tidak bisa dihitung.';
+
+  @override
+  String get udaraPrivasi =>
+      'Hanya koordinat titik pusat wilayah ini, dibulatkan ke 0,1 derajat, yang dikirim ke Open-Meteo untuk kualitas udara. Tidak ada identitas atau lokasi tepat perangkat.';
+
+  @override
+  String get uvRendah => 'Rendah';
+
+  @override
+  String get uvSedang => 'Sedang';
+
+  @override
+  String get uvTinggi => 'Tinggi';
+
+  @override
+  String get uvSangatTinggi => 'Sangat tinggi';
+
+  @override
+  String get uvEkstrem => 'Ekstrem';
+
+  @override
+  String get uvSaranRendah => 'Aman beraktivitas di luar ruangan.';
+
+  @override
+  String get uvSaranSedang => 'Pakai tabir surya bila lama di luar ruangan.';
+
+  @override
+  String get uvSaranTinggi => 'Pakai tabir surya, topi, dan kacamata hitam.';
+
+  @override
+  String get uvSaranSangatTinggi =>
+      'Kurangi paparan matahari pukul 10.00 sampai 16.00. Pakai tabir surya, topi, dan kacamata.';
+
+  @override
+  String get uvSaranEkstrem =>
+      'Hindari matahari langsung pukul 10.00 sampai 16.00. Lindungi kulit dan mata.';
+
+  @override
+  String uvPerkiraan(int nilai) {
+    return 'Perkiraan $nilai';
+  }
+
+  @override
+  String get uvMalam => 'Tidak ada sinar UV saat malam.';
+
+  @override
+  String uvPuncak(String kategori, String jam) {
+    return 'Puncak hari ini: $kategori, sekitar pukul $jam';
+  }
+
+  @override
+  String get uvCatatan =>
+      'Perkiraan dihitung SiCuaca dari posisi matahari dan tutupan awan BMKG; kabut asap tidak diperhitungkan.';
+
+  @override
+  String get udaraJudul => 'Kualitas udara';
+
+  @override
+  String aqiNilai(int nilai) {
+    return 'US AQI $nilai';
+  }
+
+  @override
+  String get aqiBaik => 'Baik';
+
+  @override
+  String get aqiSedang => 'Sedang';
+
+  @override
+  String get aqiSensitif => 'Tidak sehat bagi kelompok sensitif';
+
+  @override
+  String get aqiTidakSehat => 'Tidak sehat';
+
+  @override
+  String get aqiSangatTidakSehat => 'Sangat tidak sehat';
+
+  @override
+  String get aqiBerbahaya => 'Berbahaya';
+
+  @override
+  String get aqiSaranBaik => 'Udara baik untuk beraktivitas di luar ruangan.';
+
+  @override
+  String get aqiSaranSedang =>
+      'Cukup baik. Orang yang sangat sensitif perhatikan gejala.';
+
+  @override
+  String get aqiSaranSensitif =>
+      'Anak, lansia, dan penderita asma kurangi aktivitas berat di luar ruangan.';
+
+  @override
+  String get aqiSaranTidakSehat =>
+      'Kurangi aktivitas berat di luar ruangan; pertimbangkan memakai masker.';
+
+  @override
+  String get aqiSaranSangatTidakSehat =>
+      'Hindari aktivitas di luar ruangan; pakai masker bila harus keluar.';
+
+  @override
+  String get aqiSaranBerbahaya =>
+      'Tetap di dalam ruangan; pakai masker N95 bila harus keluar.';
+
+  @override
+  String udaraPm25(String nilai) {
+    return 'PM2,5 $nilai µg/m³';
+  }
+
+  @override
+  String udaraWaktuModel(String jam) {
+    return 'Data model pukul $jam';
+  }
+
+  @override
+  String get udaraDataTersimpan => 'Data tersimpan, belum diperbarui.';
+
+  @override
+  String get udaraMemuat => 'Memuat kualitas udara...';
+
+  @override
+  String get udaraGagal => 'Kualitas udara tidak tersedia saat ini.';
+
+  @override
+  String get udaraSumber =>
+      'Sumber: Open-Meteo (CC BY 4.0), data CAMS/Copernicus. Perkiraan model beresolusi sekitar 45 km, bukan sensor; kategori dan saran disusun SiCuaca.';
+
+  @override
   String get lamaSiang => 'Lama siang';
 
   @override

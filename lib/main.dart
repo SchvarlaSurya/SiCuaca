@@ -12,6 +12,7 @@ import 'core/navigasi.dart';
 import 'core/theme.dart';
 import 'providers/favorit_provider.dart';
 import 'providers/gempa_provider.dart';
+import 'providers/kualitas_udara_provider.dart';
 import 'providers/lokasi_provider.dart';
 import 'providers/maritim_provider.dart';
 import 'providers/notifikasi_provider.dart';
@@ -25,6 +26,7 @@ import 'services/api_service.dart';
 import 'services/bmkg_repository.dart';
 import 'services/cache_service.dart';
 import 'services/gps_service.dart';
+import 'services/kualitas_udara_repository.dart';
 import 'services/maritim_repository.dart';
 import 'services/notifikasi_service.dart';
 import 'services/preferences_service.dart';
@@ -48,6 +50,8 @@ Future<void> main() async {
       ('Phosphor Icons', 'assets/fonts/LICENSE-Phosphor.txt'),
       // Foto dan relief bulan (NASA SVS CGI Moon Kit, data LRO).
       ('NASA SVS CGI Moon Kit', 'assets/bulan/KREDIT-NASA.txt'),
+      // Kualitas udara dari Open-Meteo (model CAMS).
+      ('Open-Meteo', 'assets/data/KREDIT-OPEN-METEO.txt'),
     ]) {
       yield LicenseEntryWithLineBreaks([
         nama,
@@ -194,6 +198,16 @@ class SiCuacaApp extends StatelessWidget {
               ubahPosisi: lokasi,
             )..muat();
           },
+        ),
+        Provider<KualitasUdaraRepository>(
+          create: (context) => KualitasUdaraRepository(
+            context.read<ApiService>(),
+            cacheService ?? CacheService(),
+          ),
+        ),
+        ChangeNotifierProvider<KualitasUdaraProvider>(
+          create: (context) =>
+              KualitasUdaraProvider(context.read<KualitasUdaraRepository>()),
         ),
         Provider<MaritimRepository>(
           create: (context) => MaritimRepository(

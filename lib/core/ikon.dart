@@ -32,6 +32,7 @@ abstract final class IkonApp {
   static const IconData isiAwanKabut = IconData(0xe53c, fontFamily: _isi);
   static const IconData isiAwanPetir = IconData(0xe1b2, fontFamily: _isi);
 
+  static const IconData udara = IconData(0xe2db, fontFamily: _duo); // leaf
   static const IconData titikEmbun = IconData(
     0xe5c7,
     fontFamily: _duo,
