@@ -5,7 +5,9 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../core/ikon.dart';
+import '../core/theme.dart';
 import '../providers/pengaturan_provider.dart';
+import 'mode_kaca.dart';
 
 /// Pengaturan kaca untuk tombol bulat di AppBar, mengikuti terang/gelap tema.
 /// Refraksi dibuat rendah (kaca tipis) supaya ikon tetap tajam.
@@ -66,6 +68,50 @@ class TombolKaca extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    if (!kacaCairAktif(context)) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: jarak),
+        child: Tooltip(
+          message: tooltip,
+          child: Semantics(
+            button: true,
+            enabled: onPressed != null,
+            label: tooltip,
+            excludeSemantics: true,
+            onTap: onPressed,
+            // Mode ringan: lingkaran biasa, tanpa kaca/shader/jeli.
+            child: Material(
+              color: AppTheme.kacaIsi(Theme.of(context).brightness),
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: AppTheme.kacaTepi(Theme.of(context).brightness),
+                ),
+              ),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: onPressed,
+                child: SizedBox.square(
+                  dimension: ukuran,
+                  child: Center(
+                    child: IconTheme.merge(
+                      data: IconThemeData(
+                        size: 26,
+                        color: onPressed == null
+                            ? scheme.onSurface.withValues(alpha: .38)
+                            : aktif
+                            ? scheme.primary
+                            : scheme.onSurface,
+                      ),
+                      child: icon,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: jarak),
       child: Tooltip(
@@ -431,6 +477,27 @@ class LingkaranKaca extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!kacaCairAktif(context)) {
+      final b = Theme.of(context).brightness;
+      return Container(
+        width: TombolKaca.ukuran,
+        height: TombolKaca.ukuran,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppTheme.kacaIsi(b),
+          border: Border.all(color: AppTheme.kacaTepi(b)),
+        ),
+        child: Center(
+          child: IconTheme.merge(
+            data: IconThemeData(
+              size: 24,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            child: child,
+          ),
+        ),
+      );
+    }
     return GlassContainer(
       useOwnLayer: true,
       width: TombolKaca.ukuran,

@@ -14,6 +14,8 @@ import '../providers/weather_provider.dart';
 import '../services/notifikasi_service.dart';
 import '../widgets/ikon_cuaca.dart';
 import '../widgets/transisi_tab.dart';
+import '../widgets/mode_kaca.dart';
+import '../core/theme.dart';
 import 'beranda_screen.dart';
 import 'cuaca_screen.dart';
 import 'gempa_screen.dart';
@@ -168,25 +170,58 @@ class _NavigasiBawahState extends State<_NavigasiBawah>
     final warnaAktif = gelap ? _warnaIkonAktif : const Color(0xFF17151F);
     final warnaPasif = gelap ? _warnaIkonPasif : const Color(0xFF45424F);
 
+    final data = <_DataTab>[
+      _DataTab(
+        urutan: TabUtama.beranda,
+        kunci: 'beranda',
+        label: l.navBeranda,
+        isi: (warna, aktif) => _IkonTab(IkonApp.beranda, warna, aktif),
+      ),
+      _DataTab(
+        urutan: TabUtama.cuaca,
+        kunci: 'cuaca',
+        label: l.navCuaca,
+        nilai: _nilaiCuaca(context),
+        isi: (warna, aktif) => _IsiCuaca(warna: warna, aktif: aktif),
+      ),
+      _DataTab(
+        urutan: TabUtama.gempa,
+        kunci: 'gempa',
+        label: l.navGempa,
+        nilai: _nilaiGempa(context),
+        isi: (warna, aktif) => _IsiGempa(warna: warna, aktif: aktif),
+      ),
+      _DataTab(
+        urutan: TabUtama.pengaturan,
+        kunci: 'pengaturan',
+        label: l.navPengaturan,
+        isi: (warna, aktif) => _IkonTab(IkonApp.pengaturan, warna, aktif),
+      ),
+    ];
+
+    // Efek kaca cair mati: navbar biasa tanpa GlassTabBar/lensa/shader.
+    if (!kacaCairAktif(context)) {
+      return _NavigasiRingan(
+        data: data,
+        indeks: indeks,
+        warnaAktif: warnaAktif,
+        warnaPasif: warnaPasif,
+      );
+    }
+
     // Satu widget untuk keadaan aktif dan tidak aktif (tanpa activeIcon).
-    GlassTab tab({
-      required int urutan,
-      required String kunci,
-      required String label,
-      required Widget Function(Color warna, bool aktif) isi,
-      String? nilai,
-    }) {
-      final aktif = indeks == urutan;
+    GlassTab tab(_DataTab d) {
+      final aktif = indeks == d.urutan;
       return GlassTab(
-        label: aktif ? label : null,
+        label: aktif ? d.label : null,
         // Node semantik tab dibuat GlassTabBar (tombol, terpilih, aksi
         // ketuk); isi ikon dikecualikan, jadi nilai data langsung (suhu,
         // magnitudo) ikut dibacakan lewat label ini.
-        semanticLabel: nilai == null ? label : '$label, $nilai',
+        semanticLabel: d.nilai == null ? d.label : '${d.label}, ${d.nilai}',
         icon: KeyedSubtree(
-          key: ValueKey('nav.$kunci'),
+          key: ValueKey('nav.${d.kunci}'),
           child: Builder(
-            builder: (context) => isi(
+            builder: (context) => d.isi(
               IconTheme.of(context).color ?? (aktif ? warnaAktif : warnaPasif),
               aktif,
             ),
@@ -195,34 +230,7 @@ class _NavigasiBawahState extends State<_NavigasiBawah>
       );
     }
 
-    final tabs = [
-      tab(
-        urutan: TabUtama.beranda,
-        kunci: 'beranda',
-        label: l.navBeranda,
-        isi: (warna, aktif) => _IkonTab(IkonApp.beranda, warna, aktif),
-      ),
-      tab(
-        urutan: TabUtama.cuaca,
-        kunci: 'cuaca',
-        label: l.navCuaca,
-        nilai: _nilaiCuaca(context),
-        isi: (warna, aktif) => _IsiCuaca(warna: warna, aktif: aktif),
-      ),
-      tab(
-        urutan: TabUtama.gempa,
-        kunci: 'gempa',
-        label: l.navGempa,
-        nilai: _nilaiGempa(context),
-        isi: (warna, aktif) => _IsiGempa(warna: warna, aktif: aktif),
-      ),
-      tab(
-        urutan: TabUtama.pengaturan,
-        kunci: 'pengaturan',
-        label: l.navPengaturan,
-        isi: (warna, aktif) => _IkonTab(IkonApp.pengaturan, warna, aktif),
-      ),
-    ];
+    final tabs = [for (final d in data) tab(d)];
 
     // Pil: kaca bening TANPA refraksi (indeks bias 1,0), lensa tetap
     // membias. Gelap: tint gelap tipis + ikon terang; terang: tint putih +
@@ -331,6 +339,156 @@ EntriPrakiraan? _entriSekarang(BuildContext context) {
 
 const _warnaIkonPasif = Color(0xFFE4E2EC);
 const _warnaIkonAktif = Color(0xFFFFFFFF);
+
+class _DataTab {
+  const _DataTab({
+    required this.urutan,
+    required this.kunci,
+    required this.label,
+    required this.isi,
+    this.nilai,
+  });
+
+  final int urutan;
+  final String kunci;
+  final String label;
+  final String? nilai;
+  final Widget Function(Color warna, bool aktif) isi;
+}
+
+/// Navbar ringan (efek kaca cair mati): pil biasa berisi deretan tab dan satu
+/// kapsul sorot yang bergeser ke tab aktif. Tanpa kaca, shader, blur, atau
+/// lensa; node semantik, kunci `nav.<tab>`, dan data langsung (suhu,
+/// magnitudo) sama dengan navbar kaca.
+class _NavigasiRingan extends StatelessWidget {
+  const _NavigasiRingan({
+    required this.data,
+    required this.indeks,
+    required this.warnaAktif,
+    required this.warnaPasif,
+  });
+
+  final List<_DataTab> data;
+  final int indeks;
+  final Color warnaAktif;
+  final Color warnaPasif;
+
+  static const _tinggi = 66.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gelap = theme.brightness == Brightness.dark;
+    final tanpaGerak = MediaQuery.of(context).disableAnimations;
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+        child: Container(
+          height: _tinggi,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(_tinggi / 2),
+            color: gelap ? const Color(0xF50E1A33) : const Color(0xF8FFFFFF),
+            border: Border.all(color: AppTheme.kacaTepi(theme.brightness)),
+          ),
+          child: LayoutBuilder(
+            builder: (context, batas) {
+              final lebar = (batas.maxWidth - 8) / data.length;
+              return Stack(
+                children: [
+                  AnimatedPositioned(
+                    duration: tanpaGerak
+                        ? Duration.zero
+                        : const Duration(milliseconds: 240),
+                    curve: Curves.easeOutCubic,
+                    left: 4 + indeks * lebar + 3,
+                    top: 5,
+                    width: lebar - 6,
+                    height: _tinggi - 10,
+                    child: DecoratedBox(
+                      key: const ValueKey('nav.sorot'),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(_tinggi / 2),
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: gelap ? .24 : .16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Row(
+                      children: [
+                        for (final d in data)
+                          Expanded(
+                            child: _SelRingan(
+                              d: d,
+                              aktif: d.urutan == indeks,
+                              warna: d.urutan == indeks
+                                  ? warnaAktif
+                                  : warnaPasif,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SelRingan extends StatelessWidget {
+  const _SelRingan({required this.d, required this.aktif, required this.warna});
+
+  final _DataTab d;
+  final bool aktif;
+  final Color warna;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Semantics(
+      button: true,
+      selected: aktif,
+      label: d.nilai == null ? d.label : '${d.label}, ${d.nilai}',
+      excludeSemantics: true,
+      onTap: () => Navigasi.bukaTab(d.urutan),
+      child: InkWell(
+        customBorder: const StadiumBorder(),
+        onTap: () => Navigasi.bukaTab(d.urutan),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              KeyedSubtree(
+                key: ValueKey('nav.${d.kunci}'),
+                child: d.isi(warna, aktif),
+              ),
+              if (aktif)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(
+                    d.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: warna,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class _IkonTab extends StatelessWidget {
   const _IkonTab(this.ikon, this.warna, this.aktif);

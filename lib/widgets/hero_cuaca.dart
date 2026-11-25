@@ -74,6 +74,7 @@ class HeroCuaca extends StatelessWidget {
                 children: [
                   SuhuBerhitung(
                     nilai: entri.suhu,
+                    pendek: true,
                     style: TextStyle(
                       fontFamily: AppTheme.hurufIsi,
                       fontSize: 84,

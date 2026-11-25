@@ -8,10 +8,18 @@ import '../core/format.dart';
 /// Tanpa gerak (pengaturan "kurangi gerakan") langsung menampilkan nilai
 /// akhir, begitu juga bila suhu kosong.
 class SuhuBerhitung extends StatelessWidget {
-  const SuhuBerhitung({super.key, required this.nilai, this.style});
+  const SuhuBerhitung({
+    super.key,
+    required this.nilai,
+    this.style,
+    this.pendek = false,
+  });
 
   final double? nilai;
   final TextStyle? style;
+
+  /// Tanpa satuan ("27°" bukan "27°C"), untuk angka besar di hero.
+  final bool pendek;
 
   /// Jarak awal hitungan dari nilai akhir.
   static const _selisihAwal = 8.0;
@@ -19,18 +27,20 @@ class SuhuBerhitung extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final akhir = nilai;
+    String teks(double? v) =>
+        pendek && v != null ? '${v.round()}°' : Format.suhu(v);
     if (akhir == null || MediaQuery.of(context).disableAnimations) {
-      return Text(Format.suhu(akhir), style: style);
+      return Text(teks(akhir), style: style);
     }
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: akhir - _selisihAwal, end: akhir),
       duration: const Duration(milliseconds: 900),
       curve: Curves.easeOutCubic,
       builder: (context, v, _) => Semantics(
-        // Pembaca layar langsung membaca nilai akhir, bukan angka di tengah.
+        // Pembaca layar langsung membaca nilai akhir lengkap (dengan satuan).
         label: Format.suhu(akhir),
         excludeSemantics: true,
-        child: Text(Format.suhu(v), style: style),
+        child: Text(teks(v), style: style),
       ),
     );
   }

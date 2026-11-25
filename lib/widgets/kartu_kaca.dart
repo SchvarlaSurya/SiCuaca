@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import '../core/theme.dart';
+import 'mode_kaca.dart';
 
 /// Kartu kaca cair untuk blok utama Beranda/Cuaca (gaya "Langit Kaca").
 ///
 /// Kacanya digambar sebagai lapisan latar terpisah di BAWAH isi, bukan
 /// membungkus isi: lapisan kaca bisa menyimpan tampilan isinya, sehingga isi
 /// yang beranimasi bisa tersimpan setengah jadi. Isi di atasnya digambar
-/// biasa. Bila efek kaca cair dimatikan, kaca otomatis jadi kaca sederhana
-/// (GlassTheme minimal di main.dart).
+/// biasa. Bila efek kaca cair dimatikan, kartu jadi kotak biasa tanpa lapisan
+/// kaca, shader, atau blur (lihat [kacaCairAktif]).
 class KartuKaca extends StatelessWidget {
   const KartuKaca({
     super.key,
@@ -23,6 +24,17 @@ class KartuKaca extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final b = Theme.of(context).brightness;
+    if (!kacaCairAktif(context)) {
+      // Mode ringan: kotak biasa, tanpa lapisan kaca/shader/blur.
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppTheme.kacaIsi(b),
+          borderRadius: BorderRadius.circular(AppTheme.radiusKartu),
+          border: Border.all(color: AppTheme.kacaTepi(b)),
+        ),
+        child: Padding(padding: padding, child: child),
+      );
+    }
     final kaca =
         (b == Brightness.dark
                 ? LiquidGlassSettings.ios27Dark

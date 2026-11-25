@@ -63,8 +63,10 @@ Future<void> main() async {
   await pengaturan.muat();
   final sudahOnboarding = await preferences.sudahOnboarding();
 
-  // Kaca cair untuk navbar: muat shader lebih dulu agar tidak ada kedip.
-  await LiquidGlassWidgets.initialize();
+  // Kaca cair: muat shader lebih dulu agar tidak ada kedip. Dilewati bila
+  // pengguna mematikan efek kaca cair (hemat memori dan waktu mulai); bila
+  // dinyalakan lagi, shader dimuat saat pertama dipakai.
+  if (pengaturan.kacaCair) await LiquidGlassWidgets.initialize();
 
   runApp(
     LiquidGlassWidgets.wrap(
