@@ -2495,6 +2495,41 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'↗ membuka halaman resmi BMKG.'**
   String get menuTautanCatatan;
+
+  /// No description provided for @perJamJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Per jam'**
+  String get perJamJudul;
+
+  /// No description provided for @sekarang.
+  ///
+  /// In id, this message translates to:
+  /// **'Sekarang'**
+  String get sekarang;
+
+  /// No description provided for @jarakPandang.
+  ///
+  /// In id, this message translates to:
+  /// **'Jarak pandang'**
+  String get jarakPandang;
+
+  /// No description provided for @harianJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Prakiraan harian'**
+  String get harianJudul;
+
+  /// No description provided for @harianSemantik.
+  ///
+  /// In id, this message translates to:
+  /// **'{hari}, {kondisi}, tertinggi {tertinggi}, terendah {terendah}'**
+  String harianSemantik(
+    String hari,
+    String kondisi,
+    String tertinggi,
+    String terendah,
+  );
 }
 
 class _AppLocalizationsDelegate

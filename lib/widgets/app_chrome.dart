@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme.dart';
+
 /// Small motion primitives shared by the redesigned screens.  Motion is kept
 /// deliberately short, and honours the operating system's reduced-motion
 /// preference.
@@ -84,8 +86,11 @@ class TekanLembut extends StatefulWidget {
   State<TekanLembut> createState() => _TekanLembutState();
 }
 
-/// Atmospheric layer for the earthquake experience. It is decorative only,
-/// so it never captures gestures or compromises the data surface above it.
+/// Latar langit "Langit Kaca": gradasi biru dari atas ke bawah (siang di
+/// tema terang, langit malam di tema gelap) dengan dua gumpalan awan lembut.
+/// Hanya hiasan: tidak menangkap ketukan. Ujung atasnya sama dengan warna
+/// AppBar sehingga menyambung. [gelap] dipertahankan untuk kompatibilitas
+/// pemanggil lama; tema yang menentukan.
 class LatarAtmosfer extends StatelessWidget {
   const LatarAtmosfer({super.key, required this.child, this.gelap = true});
 
@@ -94,12 +99,18 @@ class LatarAtmosfer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Theme mode always takes precedence, so no screen can get stuck in the
-    // wrong palette when the user switches light/dark mode.
     final dark = Theme.of(context).brightness == Brightness.dark;
     final colors = dark
-        ? const [Color(0xFF17104A), Color(0xFF34218B), Color(0xFF6756D8)]
-        : const [Color(0xFFF8F7FF), Color(0xFFECE8FF), Color(0xFFDCD5FF)];
+        ? const [
+            AppTheme.langitAtasGelap,
+            AppTheme.langitTengahGelap,
+            AppTheme.langitBawahGelap,
+          ]
+        : const [
+            AppTheme.langitAtasTerang,
+            AppTheme.langitTengahTerang,
+            AppTheme.langitBawahTerang,
+          ];
     return Stack(
       children: [
         Positioned.fill(
@@ -107,44 +118,49 @@ class LatarAtmosfer extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: colors,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                stops: const [0, .45, 1],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
         ),
         Positioned(
-          right: -80,
-          top: 30,
-          child: IgnorePointer(
-            child: Container(
-              width: 230,
-              height: 230,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: dark ? .08 : .34),
-              ),
-            ),
-          ),
+          right: -70,
+          top: 40,
+          child: IgnorePointer(child: _Awan(lebar: 220, dark: dark)),
         ),
         Positioned(
           left: -90,
-          top: 230,
-          child: IgnorePointer(
-            child: Container(
-              width: 210,
-              height: 210,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: dark ? .05 : .22),
-              ),
-            ),
-          ),
+          top: 300,
+          child: IgnorePointer(child: _Awan(lebar: 200, dark: dark)),
         ),
         child,
       ],
     );
   }
+}
+
+class _Awan extends StatelessWidget {
+  const _Awan({required this.lebar, required this.dark});
+
+  final double lebar;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: lebar,
+    height: lebar * .55,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(lebar),
+      gradient: RadialGradient(
+        colors: [
+          Colors.white.withValues(alpha: dark ? .06 : .55),
+          Colors.white.withValues(alpha: 0),
+        ],
+      ),
+    ),
+  );
 }
 
 class _TekanLembutState extends State<TekanLembut> {

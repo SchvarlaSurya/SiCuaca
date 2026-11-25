@@ -455,5 +455,11 @@
   "gelombangSangatTinggi": "Sangat tinggi",
   "gelombangEkstrem": "Ekstrem",
   "gelombangSangatEkstrem": "Sangat ekstrem",
-  "menuTautanCatatan": "↗ membuka halaman resmi BMKG."
+  "menuTautanCatatan": "↗ membuka halaman resmi BMKG.",
+  "perJamJudul": "Per jam",
+  "sekarang": "Sekarang",
+  "jarakPandang": "Jarak pandang",
+  "harianJudul": "Prakiraan harian",
+  "harianSemantik": "{hari}, {kondisi}, tertinggi {tertinggi}, terendah {terendah}",
+  "@harianSemantik": {"placeholders": {"hari": {"type": "String"}, "kondisi": {"type": "String"}, "tertinggi": {"type": "String"}, "terendah": {"type": "String"}}}
 }

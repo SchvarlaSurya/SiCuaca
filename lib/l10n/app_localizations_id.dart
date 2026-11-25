@@ -1407,4 +1407,26 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get menuTautanCatatan => '↗ membuka halaman resmi BMKG.';
+
+  @override
+  String get perJamJudul => 'Per jam';
+
+  @override
+  String get sekarang => 'Sekarang';
+
+  @override
+  String get jarakPandang => 'Jarak pandang';
+
+  @override
+  String get harianJudul => 'Prakiraan harian';
+
+  @override
+  String harianSemantik(
+    String hari,
+    String kondisi,
+    String tertinggi,
+    String terendah,
+  ) {
+    return '$hari, $kondisi, tertinggi $tertinggi, terendah $terendah';
+  }
 }

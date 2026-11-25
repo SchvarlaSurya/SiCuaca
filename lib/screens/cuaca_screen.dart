@@ -13,7 +13,10 @@ import '../models/lokasi.dart';
 import '../models/prakiraan.dart';
 import '../providers/weather_provider.dart';
 import '../widgets/aksi_wilayah.dart';
+import '../core/ringkas_harian.dart';
+import '../widgets/deret_cuaca.dart';
 import '../widgets/grafik_suhu.dart';
+import '../widgets/kartu_kaca.dart';
 import '../widgets/hero_cuaca.dart';
 import '../widgets/ikon_cuaca.dart';
 import '../widgets/lokasi_banner.dart';
@@ -381,13 +384,29 @@ class _Prakiraan extends StatelessWidget {
                     wilayah: wilayah,
                     entri: terdekat,
                     selisihZona: prakiraan.selisihZona,
-                    grafik: entri24Jam(prakiraan, terdekat),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 MasukLembut(
-                  delay: const Duration(milliseconds: 70),
-                  child: KisiTile(children: tileCuaca(context, terdekat)),
+                  delay: const Duration(milliseconds: 60),
+                  child: DeretPerJam(entri: entri24Jam(prakiraan, terdekat)),
+                ),
+                const SizedBox(height: 10),
+                MasukLembut(
+                  delay: const Duration(milliseconds: 90),
+                  child: RingkasDetail(entri: terdekat),
+                ),
+                const SizedBox(height: 16),
+                MasukLembut(
+                  delay: const Duration(milliseconds: 110),
+                  child: JudulBagian(l.harianJudul),
+                ),
+                MasukLembut(
+                  delay: const Duration(milliseconds: 130),
+                  child: DaftarHarian(
+                    hari: ringkasHarian(prakiraan),
+                    hariIni: hariIni,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 MasukLembut(
@@ -411,7 +430,8 @@ class _Prakiraan extends StatelessWidget {
                     final hari = prakiraan.hari[tab.index];
                     return MasukLembut(
                       delay: const Duration(milliseconds: 160),
-                      child: Card(
+                      child: KartuKaca(
+                        padding: EdgeInsets.zero,
                         child: Column(
                           children: [
                             for (var i = 0; i < hari.length; i++) ...[

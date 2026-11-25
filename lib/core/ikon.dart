@@ -24,6 +24,19 @@ abstract final class IkonApp {
     fontFamily: _duo,
   ); // gearSix
 
+  // Ikon cuaca berwarna (gaya isi/fill), ditumpuk di IkonCuaca.
+  static const IconData isiMatahari = IconData(0xe472, fontFamily: _isi);
+  static const IconData isiBulan = IconData(0xe330, fontFamily: _isi);
+  static const IconData isiAwan = IconData(0xe1aa, fontFamily: _isi);
+  static const IconData isiAwanHujan = IconData(0xe1b4, fontFamily: _isi);
+  static const IconData isiAwanKabut = IconData(0xe53c, fontFamily: _isi);
+  static const IconData isiAwanPetir = IconData(0xe1b2, fontFamily: _isi);
+
+  static const IconData jarakPandang = IconData(
+    0xe221,
+    fontFamily: _duo,
+  ); // eye
+
   // Layanan BMKG lainnya.
   static const IconData layanan = IconData(
     0xe28b,

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import '../widgets/tombol_kaca.dart';
 import 'ikon.dart';
 
-/// Token tampilan SiCuaca (arah "Dashboard Nusantara", Material 3).
+/// Token tampilan SiCuaca, arah "Langit Kaca" (Material 3): latar langit
+/// biru, kartu kaca bening, dan kaca cair untuk navbar/tombol.
 ///
 /// Warna ditetapkan manual, tidak memakai warna dinamis dari wallpaper,
-/// supaya warna semantik (magnitudo, kartu cuaca) tidak berubah.
+/// supaya warna semantik (magnitudo, gelombang) tidak berubah. Kontras teks
+/// utama terhadap latar langit dan kartu kaca dicatat di komentar (WCAG).
 ///
 /// Skala huruf 5 ukuran, 2 keluarga (di-bundle di assets/fonts):
 /// - display 64 Plus Jakarta Sans 700 : satu angka utama per layar
@@ -21,30 +23,45 @@ class AppTheme {
 
   /// Sudut membulat: kartu utama (hero) dan kartu/tile biasa.
   static const double radiusHero = 30;
-  static const double radiusKartu = 22;
+  static const double radiusKartu = 24;
   static const double radiusTile = 18;
 
-  static const Color _primerTerang = Color(0xFF5B4BDB);
+  // Putih di atasnya 8,2:1; di langit atas #9DCDF8 4,7:1.
+  static const Color _primerTerang = Color(0xFF154F9E);
+
+  /// Ujung atas latar langit (juga warna AppBar, agar menyambung).
+  static const Color langitAtasTerang = Color(0xFF9DCDF8);
+  static const Color langitTengahTerang = Color(0xFFC3E0FB);
+  static const Color langitBawahTerang = Color(0xFFEDF5FD);
+  static const Color langitAtasGelap = Color(0xFF10234A);
+  static const Color langitTengahGelap = Color(0xFF0D1A36);
+  static const Color langitBawahGelap = Color(0xFF0A1428);
+
+  /// Isian dan tepi kaca untuk kartu/tile (tanpa blur, ringan).
+  static Color kacaIsi(Brightness b) =>
+      b == Brightness.dark ? const Color(0x661B2E55) : const Color(0xA6FFFFFF);
+  static Color kacaTepi(Brightness b) =>
+      b == Brightness.dark ? const Color(0x33FFFFFF) : const Color(0xCCFFFFFF);
 
   static final ColorScheme skemaTerang =
       ColorScheme.fromSeed(seedColor: _primerTerang).copyWith(
         primary: _primerTerang,
         onPrimary: Colors.white,
-        primaryContainer: const Color(0xFFE9E5FF),
-        onPrimaryContainer: const Color(0xFF211456),
+        primaryContainer: const Color(0xFFD8E9FF),
+        onPrimaryContainer: const Color(0xFF0A2A55),
         // Banner offline: kuning lembut, bukan merah muda bawaan seed.
         tertiaryContainer: const Color(0xFFFFE7B3),
         onTertiaryContainer: const Color(0xFF261A00),
-        surface: const Color(0xFFF8F7FF),
-        onSurface: const Color(0xFF1D1B27),
-        onSurfaceVariant: const Color(0xFF625F70),
+        surface: langitBawahTerang,
+        onSurface: const Color(0xFF0F1E33), // 13,9:1 di #8CC4F6 = 8,9:1
+        onSurfaceVariant: const Color(0xFF3D4D63), // 7,9:1; di #8CC4F6 5,1:1
         surfaceContainerLowest: Colors.white,
-        surfaceContainerLow: const Color(0xFFF2F0FA),
-        surfaceContainer: const Color(0xFFEDEAF7),
-        surfaceContainerHigh: const Color(0xFFE7E3F1),
-        surfaceContainerHighest: const Color(0xFFE2DEEC), // primary 4,57:1
-        outline: const Color(0xFF7A7589),
-        outlineVariant: const Color(0xFFE0DDEA),
+        surfaceContainerLow: const Color(0xFFF3F8FE),
+        surfaceContainer: const Color(0xFFE8F1FC),
+        surfaceContainerHigh: const Color(0xFFDDEAF9),
+        surfaceContainerHighest: const Color(0xFFD2E3F6),
+        outline: const Color(0xFF6B7A8E),
+        outlineVariant: const Color(0xFFCFDDEE),
         surfaceTint: Colors.transparent,
       );
 
@@ -53,22 +70,22 @@ class AppTheme {
         seedColor: _primerTerang,
         brightness: Brightness.dark,
       ).copyWith(
-        primary: const Color(0xFFC9C1FF),
-        onPrimary: const Color(0xFF2C1E76),
-        primaryContainer: const Color(0xFF40328E),
-        onPrimaryContainer: const Color(0xFFE8E3FF),
+        primary: const Color(0xFF9CCBFF),
+        onPrimary: const Color(0xFF07264C),
+        primaryContainer: const Color(0xFF1C3F72),
+        onPrimaryContainer: const Color(0xFFD6E8FF),
         tertiaryContainer: const Color(0xFF4A3A10),
         onTertiaryContainer: const Color(0xFFFFE7B3),
-        surface: const Color(0xFF111418),
-        onSurface: const Color(0xFFE1E2E8),
-        onSurfaceVariant: const Color(0xFFC1C7CF),
-        surfaceContainerLowest: const Color(0xFF0C0F12),
-        surfaceContainerLow: const Color(0xFF191C20),
-        surfaceContainer: const Color(0xFF1D2024),
-        surfaceContainerHigh: const Color(0xFF272A2F),
-        surfaceContainerHighest: const Color(0xFF32353A),
-        outline: const Color(0xFF8B9199),
-        outlineVariant: const Color(0xFF3A4048),
+        surface: langitBawahGelap,
+        onSurface: const Color(0xFFE7EEF8), // 15,9:1
+        onSurfaceVariant: const Color(0xFFB2C1D6), // 9,6:1
+        surfaceContainerLowest: const Color(0xFF08101F),
+        surfaceContainerLow: const Color(0xFF111D35),
+        surfaceContainer: const Color(0xFF15233F),
+        surfaceContainerHigh: const Color(0xFF1C2C4C),
+        surfaceContainerHighest: const Color(0xFF243658),
+        outline: const Color(0xFF8292A8),
+        outlineVariant: const Color(0xFF2A3B5C),
         surfaceTint: Colors.transparent,
       );
 
@@ -152,7 +169,10 @@ class AppTheme {
             const LingkaranKaca(child: IkonDuo(IkonApp.tutup)),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: skema.surface,
+        // Sama dengan ujung atas latar langit, jadi menyambung.
+        backgroundColor: skema.brightness == Brightness.dark
+            ? langitAtasGelap
+            : langitAtasTerang,
         foregroundColor: skema.onSurface,
         surfaceTintColor: Colors.transparent,
         scrolledUnderElevation: 0,
@@ -160,15 +180,23 @@ class AppTheme {
         toolbarHeight: 64,
         titleTextStyle: huruf.titleLarge?.copyWith(color: skema.onSurface),
       ),
+      // Kartu kaca bening (tanpa blur): isian tembus pandang + tepi terang.
       cardTheme: CardThemeData(
         elevation: 0,
         margin: EdgeInsets.zero,
-        color: skema.surfaceContainerLowest,
+        color: kacaIsi(skema.brightness),
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(radiusKartu),
-          side: BorderSide(color: skema.outlineVariant),
+          side: BorderSide(color: kacaTepi(skema.brightness)),
         ),
+      ),
+      tabBarTheme: TabBarThemeData(
+        labelStyle: huruf.titleSmall,
+        unselectedLabelStyle: huruf.titleSmall,
+        labelColor: skema.primary,
+        unselectedLabelColor: skema.onSurfaceVariant,
+        dividerColor: Colors.transparent,
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: skema.surfaceContainerLowest,
@@ -188,13 +216,6 @@ class AppTheme {
                 : skema.onSurfaceVariant,
           ),
         ),
-      ),
-      tabBarTheme: TabBarThemeData(
-        labelStyle: huruf.titleSmall,
-        unselectedLabelStyle: huruf.titleSmall,
-        labelColor: skema.primary,
-        unselectedLabelColor: skema.onSurfaceVariant,
-        dividerColor: skema.outlineVariant,
       ),
       dividerTheme: DividerThemeData(
         color: skema.outlineVariant,

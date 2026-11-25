@@ -126,6 +126,31 @@ void main() {
           greaterThanOrEqualTo(4.5),
         );
       }
+      // Teks dan tautan langsung di atas latar langit (ketiga titik gradasi).
+      for (final (s, langit) in [
+        (
+          AppTheme.skemaTerang,
+          [
+            AppTheme.langitAtasTerang,
+            AppTheme.langitTengahTerang,
+            AppTheme.langitBawahTerang,
+          ],
+        ),
+        (
+          AppTheme.skemaGelap,
+          [
+            AppTheme.langitAtasGelap,
+            AppTheme.langitTengahGelap,
+            AppTheme.langitBawahGelap,
+          ],
+        ),
+      ]) {
+        for (final latar in langit) {
+          expect(kontras(s.onSurface, latar), greaterThanOrEqualTo(4.5));
+          expect(kontras(s.onSurfaceVariant, latar), greaterThanOrEqualTo(4.5));
+          expect(kontras(s.primary, latar), greaterThanOrEqualTo(4.5));
+        }
+      }
     });
   });
 
@@ -161,11 +186,13 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        // Kisi tile Beranda turun ke 1 kolom.
+        // Ringkasan detail (Langit Kaca): kelembapan dan angin sejajar dalam
+        // satu kartu kaca, tetap muat di 360 dp + 1,3x (tanpa overflow).
         final l = lookupAppLocalizations(const Locale('en'));
         final kelembapan = tester.getTopLeft(find.text(l.kelembapan).first);
         final angin = tester.getTopLeft(find.text(l.angin).first);
-        expect(angin.dy, greaterThan(kelembapan.dy));
+        expect(angin.dy, closeTo(kelembapan.dy, 1));
+        expect(angin.dx, greaterThan(kelembapan.dx));
 
         for (final tab in ['cuaca', 'gempa', 'pengaturan', 'beranda']) {
           await tester.tap(navTab(tab));

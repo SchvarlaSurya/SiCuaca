@@ -224,16 +224,16 @@ class _NavigasiBawahState extends State<_NavigasiBawah>
       ),
     ];
 
-    // Kaca bening, refraksi rendah. Gelap: tint gelap tipis + ikon terang;
-    // terang: tint putih + ikon gelap, supaya ikon tetap terbaca di atas
-    // konten apa pun yang lewat di belakangnya (kaca juga di-frost).
+    // Pil: kaca bening TANPA refraksi (indeks bias 1,0), lensa tetap
+    // membias. Gelap: tint gelap tipis + ikon terang; terang: tint putih +
+    // ikon gelap, supaya ikon terbaca di atas konten apa pun (kaca di-frost).
     final kacaPil =
         (gelap
                 ? LiquidGlassSettings.ios27Dark.copyWith(
                     glassColor: const Color(0x590B0C10),
                   )
                 : LiquidGlassSettings.ios27Light)
-            .copyWith(thickness: 18, refractiveIndex: 1.12);
+            .copyWith(thickness: 18, refractiveIndex: 1.0);
     final kacaLensa = LiquidGlassSettings.ios27Indicator.copyWith(
       thickness: 22,
       refractiveIndex: 1.1,

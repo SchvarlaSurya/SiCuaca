@@ -409,5 +409,10 @@
   "gelombangSangatTinggi": "Very high",
   "gelombangEkstrem": "Extreme",
   "gelombangSangatEkstrem": "Very extreme",
-  "menuTautanCatatan": "↗ opens the official BMKG page."
+  "menuTautanCatatan": "↗ opens the official BMKG page.",
+  "perJamJudul": "Hourly",
+  "sekarang": "Now",
+  "jarakPandang": "Visibility",
+  "harianJudul": "Daily forecast",
+  "harianSemantik": "{hari}, {kondisi}, high {tertinggi}, low {terendah}"
 }

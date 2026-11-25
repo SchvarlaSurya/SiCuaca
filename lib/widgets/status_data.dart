@@ -407,8 +407,9 @@ class TileInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: scheme.surfaceContainer,
+        color: AppTheme.kacaIsi(theme.brightness),
         borderRadius: BorderRadius.circular(AppTheme.radiusTile),
+        border: Border.all(color: AppTheme.kacaTepi(theme.brightness)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

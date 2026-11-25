@@ -122,6 +122,16 @@ void main() {
 
     await tester.tap(navTab('cuaca'));
     await tester.pumpAndSettle();
+    // Tab per hari ada di bawah hero, per jam, detail, dan prakiraan harian.
+    await tester.scrollUntilVisible(
+      find.byType(TabBar),
+      300,
+      scrollable: find
+          .byWidgetPredicate(
+            (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+          )
+          .first,
+    );
     expect(find.byType(Tab), findsNWidgets(3));
   });
 

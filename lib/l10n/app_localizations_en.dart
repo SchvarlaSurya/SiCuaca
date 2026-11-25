@@ -1439,4 +1439,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuTautanCatatan => '↗ opens the official BMKG page.';
+
+  @override
+  String get perJamJudul => 'Hourly';
+
+  @override
+  String get sekarang => 'Now';
+
+  @override
+  String get jarakPandang => 'Visibility';
+
+  @override
+  String get harianJudul => 'Daily forecast';
+
+  @override
+  String harianSemantik(
+    String hari,
+    String kondisi,
+    String tertinggi,
+    String terendah,
+  ) {
+    return '$hari, $kondisi, high $tertinggi, low $terendah';
+  }
 }

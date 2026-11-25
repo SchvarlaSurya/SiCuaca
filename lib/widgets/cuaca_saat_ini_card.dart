@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/weather_provider.dart';
+import 'deret_cuaca.dart';
 import 'grafik_suhu.dart';
 import 'hero_cuaca.dart';
 import 'status_cuaca_view.dart';
@@ -9,8 +10,8 @@ import 'status_data.dart';
 import 'sumber_bmkg.dart';
 import 'tombol_favorit.dart';
 
-/// Bagian cuaca di Beranda: kartu hero pada jam prakiraan terdekat dengan
-/// sekarang, tile kelembapan/angin, dan sumber data.
+/// Bagian cuaca di Beranda: hero pada jam prakiraan terdekat dengan
+/// sekarang, deret per jam, ringkasan detail, dan sumber data.
 class CuacaSaatIniCard extends StatelessWidget {
   const CuacaSaatIniCard({super.key});
 
@@ -41,11 +42,12 @@ class CuacaSaatIniCard extends StatelessWidget {
           wilayah: wilayah,
           entri: entri,
           selisihZona: prakiraan.selisihZona,
-          grafik: entri24Jam(prakiraan, entri),
           aksi: TombolFavorit(lokasi: wilayah),
         ),
-        const SizedBox(height: 8),
-        KisiTile(children: tileCuaca(context, entri)),
+        const SizedBox(height: 16),
+        DeretPerJam(entri: entri24Jam(prakiraan, entri)),
+        const SizedBox(height: 10),
+        RingkasDetail(entri: entri),
         const SizedBox(height: 8),
         Row(
           children: [
