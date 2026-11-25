@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/langit_latar.dart';
 import '../widgets/tombol_kaca.dart';
 import 'ikon.dart';
 
@@ -162,7 +163,8 @@ class AppTheme {
       colorScheme: skema,
       fontFamily: hurufIsi,
       textTheme: _huruf,
-      scaffoldBackgroundColor: skema.surface,
+      // Latar langit digambar per halaman (LangitLatar), jadi Scaffold bening.
+      scaffoldBackgroundColor: Colors.transparent,
     );
     final huruf = dasar.textTheme;
 
@@ -176,10 +178,8 @@ class AppTheme {
             const LingkaranKaca(child: IkonDuo(IkonApp.tutup)),
       ),
       appBarTheme: AppBarTheme(
-        // Sama dengan ujung atas latar langit, jadi menyambung.
-        backgroundColor: skema.brightness == Brightness.dark
-            ? langitAtasGelap
-            : langitAtasTerang,
+        // Top bar bening: hanya judul dan tombol di atas langit.
+        backgroundColor: Colors.transparent,
         foregroundColor: skema.onSurface,
         surfaceTintColor: Colors.transparent,
         scrolledUnderElevation: 0,
@@ -272,13 +272,15 @@ class _TransisiHalaman extends PageTransitionsBuilder {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    if (MediaQuery.of(context).disableAnimations) return child;
+    // Langit ikut halaman (juga di belakang top bar) dan ikut memudar.
+    final halaman = LangitLatar(child: child);
+    if (MediaQuery.of(context).disableAnimations) return halaman;
     return _dasar.buildTransitions<T>(
       route,
       context,
       animation,
       secondaryAnimation,
-      child,
+      halaman,
     );
   }
 }

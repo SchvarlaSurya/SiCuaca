@@ -129,7 +129,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     final adalahHalamanTerakhir = _halamanAktif == daftarSlide.length - 1;
 
     return Scaffold(
-      backgroundColor: scheme.surface,
+      backgroundColor: Colors.transparent,
       body: LatarAtmosfer(
         child: SafeArea(
           child: Column(

@@ -53,8 +53,8 @@ class TombolKaca extends StatelessWidget {
   /// Keadaan "menyala" (mis. sudah difavoritkan): ikon memakai warna utama.
   final bool aktif;
 
-  /// 44 = ukuran sentuh standar iOS.
-  static const ukuran = 44.0;
+  /// Sedikit lebih besar dari 44 (ukuran sentuh iOS) agar mudah ditekan.
+  static const ukuran = 50.0;
   static const jarak = 2.0;
 
   /// Lebar satu tempat tombol di baris (tombol + jarak kiri-kanan).
@@ -95,7 +95,7 @@ class TombolKaca extends StatelessWidget {
                   child: ExcludeSemantics(
                     child: IconTheme.merge(
                       data: IconThemeData(
-                        size: 24,
+                        size: 26,
                         color: onPressed == null
                             ? scheme.onSurface.withValues(alpha: .38)
                             : aktif
@@ -440,7 +440,7 @@ class LingkaranKaca extends StatelessWidget {
       child: Center(
         child: IconTheme.merge(
           data: IconThemeData(
-            size: 22,
+            size: 24,
             color: Theme.of(context).colorScheme.onSurface,
           ),
           child: child,
