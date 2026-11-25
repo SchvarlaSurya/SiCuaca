@@ -480,7 +480,7 @@
   "faseCembungAkhir": "Cembung akhir",
   "fasePerempatAkhir": "Perempat akhir",
   "faseSabitAkhir": "Sabit akhir",
-  "langitCatatan": "Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan.",
+  "langitCatatan": "Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan. Foto bulan: NASA/LRO.",
   "harianJudul": "Prakiraan harian",
   "harianSemantik": "{hari}, {kondisi}, tertinggi {tertinggi}, terendah {terendah}",
   "@harianSemantik": {"placeholders": {"hari": {"type": "String"}, "kondisi": {"type": "String"}, "tertinggi": {"type": "String"}, "terendah": {"type": "String"}}}

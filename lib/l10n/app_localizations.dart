@@ -2631,7 +2631,7 @@ abstract class AppLocalizations {
   /// No description provided for @langitCatatan.
   ///
   /// In id, this message translates to:
-  /// **'Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan.'**
+  /// **'Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan. Foto bulan: NASA/LRO.'**
   String get langitCatatan;
 
   /// No description provided for @harianJudul.

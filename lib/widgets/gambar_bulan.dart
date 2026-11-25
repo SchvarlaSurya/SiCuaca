@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import 'aset_bulan.dart';
+
 /// Bagian bulan yang terang, dalam koordinat dengan pusat (0,0) dan jari-jari
 /// [r], untuk bulan yang membesar (sisi kanan terang). [elongasi] 0..360:
 /// 0 bulan baru, 90 perempat pertama, 180 purnama; di atas 180 bentuknya sama
@@ -40,9 +42,14 @@ const _mare = <(double, double, double)>[
   (-.06, .08, .09), // Vapores
 ];
 
-/// Melukis bulan dengan bayangan sesuai fase: cakram berbintik (mare dan
-/// kawah kasar), lalu sisi gelap menutupinya mengikuti [jalurTerangBulan].
-/// Sisi gelap sedikit tembus (cahaya bumi) supaya cakramnya tetap terbaca.
+/// Melukis bulan dengan bayangan sesuai fase.
+///
+/// Bila foto bulan NASA dan shadernya sudah dimuat ([AsetBulan]), bulan
+/// digambar dari fotonya dengan pencahayaan fisik (batas terang-gelap lembut,
+/// kawah berbayang). Selain itu (belum dimuat, atau perangkat tanpa dukungan
+/// shader) dipakai gambar prosedural: cakram berbintik (mare dan kawah kasar)
+/// lalu sisi gelap menutupinya mengikuti [jalurTerangBulan]. Sisi gelap
+/// sedikit tembus (cahaya bumi) supaya cakramnya tetap terbaca.
 ///
 /// Dari belahan bumi selatan bulan tampak terbalik 180 derajat dibanding
 /// utara, jadi sisi terangnya berpindah dan mare ikut terbalik ([selatan]).
@@ -53,6 +60,64 @@ void lukisBulan(
   double elongasi, {
   bool selatan = false,
 }) {
+  final dpr =
+      ui.PlatformDispatcher.instance.views.firstOrNull?.devicePixelRatio ?? 2.0;
+  final shader = AsetBulan.shader(
+    diameterPiksel: 2 * r * dpr,
+    ukuranLokal: 2 * r,
+    elongasi: elongasi,
+  );
+  if (shader != null) {
+    _lukisFoto(canvas, pusat, r, elongasi, selatan, shader);
+    return;
+  }
+  _lukisProsedural(canvas, pusat, r, elongasi, selatan);
+}
+
+/// Jalur foto: pendar di sisi terang, lalu cakram foto yang disinari shader.
+/// Shader dilukis di kotak berukuran 2r yang digeser ke pojok (0,0) lokal,
+/// supaya koordinatnya cocok dengan foto; belahan selatan memutar kanvas.
+void _lukisFoto(
+  Canvas canvas,
+  Offset pusat,
+  double r,
+  double elongasi,
+  bool selatan,
+  ui.FragmentShader shader,
+) {
+  canvas.save();
+  canvas.translate(pusat.dx, pusat.dy);
+  if (selatan) canvas.rotate(math.pi);
+
+  // Pendar lembut di sekitar sisi yang terang (bentuk sama dengan jalur
+  // prosedural; bulan menyusut dicerminkan).
+  canvas.save();
+  if (elongasi % 360 > 180) canvas.scale(-1, 1);
+  canvas.drawPath(
+    jalurTerangBulan(elongasi, r),
+    Paint()
+      ..color = const Color(0xFFFFF3C4).withValues(alpha: .30)
+      ..maskFilter = ui.MaskFilter.blur(ui.BlurStyle.normal, r * .22),
+  );
+  canvas.restore();
+
+  canvas.translate(-r, -r);
+  canvas.drawRect(
+    Rect.fromLTWH(0, 0, 2 * r, 2 * r),
+    Paint()
+      ..shader = shader
+      ..filterQuality = FilterQuality.high,
+  );
+  canvas.restore();
+}
+
+void _lukisProsedural(
+  Canvas canvas,
+  Offset pusat,
+  double r,
+  double elongasi,
+  bool selatan,
+) {
   final membesar = elongasi % 360 <= 180;
   canvas.save();
   canvas.translate(pusat.dx, pusat.dy);
@@ -156,6 +221,8 @@ class GambarBulan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Mulai memuat foto bulan (sekali); selama belum siap, gambar prosedural.
+    AsetBulan.muat();
     final gambar = SizedBox.square(
       dimension: ukuran,
       child: CustomPaint(
@@ -170,7 +237,7 @@ class GambarBulan extends StatelessWidget {
 }
 
 class _PelukisBulan extends CustomPainter {
-  _PelukisBulan(this.elongasi, this.selatan);
+  _PelukisBulan(this.elongasi, this.selatan) : super(repaint: AsetBulan.siap);
 
   final double elongasi;
   final bool selatan;

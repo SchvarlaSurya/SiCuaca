@@ -1512,7 +1512,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get langitCatatan =>
-      'Calculated by the app from location and date, not BMKG data. Dew point is derived from temperature and humidity.';
+      'Calculated by the app from location and date, not BMKG data. Dew point is derived from temperature and humidity. Moon photo: NASA/LRO.';
 
   @override
   String get harianJudul => 'Daily forecast';

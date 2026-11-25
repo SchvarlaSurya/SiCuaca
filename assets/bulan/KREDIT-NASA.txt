@@ -1,0 +1,14 @@
+Foto dan relief bulan
+
+Sumber: NASA Scientific Visualization Studio, "CGI Moon Kit"
+(https://svs.gsfc.nasa.gov/4720), visualisasi oleh Ernie Wright.
+Dibuat dari data kamera dan altimeter laser Lunar Reconnaissance Orbiter
+(LROC dan LOLA).
+
+Berkas asal: lroc_color_2k.jpg (peta warna) dan ldem_3_8bit.jpg (peta
+ketinggian). Di sini keduanya diubah menjadi cakram sisi dekat (proyeksi
+ortografik) pada beberapa ukuran, dan peta ketinggian diubah menjadi peta
+kemiringan permukaan. Pengubahan dilakukan oleh SiCuaca.
+
+Materi NASA umumnya tidak berhak cipta dan boleh dipakai dengan mencantumkan
+kredit. Penggunaan ini tidak menyiratkan dukungan NASA terhadap SiCuaca.

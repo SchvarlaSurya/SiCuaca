@@ -432,7 +432,7 @@
   "faseCembungAkhir": "Waning gibbous",
   "fasePerempatAkhir": "Last quarter",
   "faseSabitAkhir": "Waning crescent",
-  "langitCatatan": "Calculated by the app from location and date, not BMKG data. Dew point is derived from temperature and humidity.",
+  "langitCatatan": "Calculated by the app from location and date, not BMKG data. Dew point is derived from temperature and humidity. Moon photo: NASA/LRO.",
   "harianJudul": "Daily forecast",
   "harianSemantik": "{hari}, {kondisi}, high {tertinggi}, low {terendah}"
 }

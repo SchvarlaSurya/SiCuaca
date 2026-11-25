@@ -31,6 +31,7 @@ import 'services/preferences_service.dart';
 import 'services/riwayat_gempa_repository.dart';
 import 'services/riwayat_gempa_sqflite.dart';
 import 'services/wilayah_service.dart';
+import 'widgets/aset_bulan.dart';
 import 'widgets/splash_gerbang.dart';
 
 Future<void> main() async {
@@ -45,6 +46,8 @@ Future<void> main() async {
       ('Inter', 'assets/fonts/OFL-Inter.txt'),
       ('Plus Jakarta Sans', 'assets/fonts/OFL-PlusJakartaSans.txt'),
       ('Phosphor Icons', 'assets/fonts/LICENSE-Phosphor.txt'),
+      // Foto dan relief bulan (NASA SVS CGI Moon Kit, data LRO).
+      ('NASA SVS CGI Moon Kit', 'assets/bulan/KREDIT-NASA.txt'),
     ]) {
       yield LicenseEntryWithLineBreaks([
         nama,
@@ -92,6 +95,10 @@ Future<void> main() async {
       ),
     ),
   );
+
+  // Foto bulan dimuat sesudah splash selesai supaya tidak berebut dengan
+  // animasi pembuka; kartu bulan memakai gambar cadangan bila belum siap.
+  unawaited(Future<void>.delayed(const Duration(seconds: 3), AsetBulan.muat));
 }
 
 class SiCuacaApp extends StatelessWidget {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../core/astronomi.dart';
 import '../core/format.dart';
 import '../core/l10n.dart';
+import 'aset_bulan.dart';
 import 'gambar_bulan.dart';
 
 /// Garis lintasan matahari atau bulan dari terbit ke terbenam, dengan ikon
@@ -64,6 +65,7 @@ class LintasanLangitView extends StatelessWidget {
         ),
       );
     }
+    if (benda == BendaLangit.bulan) AsetBulan.muat();
     final garis = benda == BendaLangit.matahari ? _jingga : scheme.primary;
     final reduksi = MediaQuery.of(context).disableAnimations;
     final di = lin.posisi;
@@ -150,7 +152,7 @@ class _PelukisLintasan extends CustomPainter {
     required this.warnaGaris,
     required this.elongasi,
     required this.selatan,
-  });
+  }) : super(repaint: AsetBulan.siap);
 
   final LintasanLangit lintasan;
 
@@ -172,19 +174,21 @@ class _PelukisLintasan extends CustomPainter {
     final lebar = size.width - _tepi * 2;
     final titik = lintasan.titik;
     final n = titik.length - 1;
-    // Tinggi dinormalkan ke 40 derajat atau lebih supaya lengkung rendah
-    // (bulan di lintang tinggi) tetap terbaca; bentuknya tetap sebenarnya.
+    // Garis dibuat mulus (setengah gelombang sinus dari terbit ke terbenam),
+    // bukan jejak tinggi mentah: matahari yang lewat dekat zenit (Indonesia)
+    // punya jejak tinggi berbentuk tenda yang runcing. Tinggi puncaknya tetap
+    // mengikuti kenyataan: lengkung lebih rendah bila benda tidak naik tinggi.
     final tertinggi = titik.fold<double>(0, (a, t) => math.max(a, t.tinggi));
-    final skala = math.max(tertinggi, 40);
+    final tinggiRelatif = (tertinggi / 70).clamp(.35, 1.0);
     final area = dasar - _atas;
 
-    // Titik ke-i di layar; ujung lintasan tepat di cakrawala.
-    Offset di(int i) => Offset(
-      _tepi + lebar * i / n,
-      i == 0 || i == n
-          ? dasar
-          : dasar - area * (titik[i].tinggi.clamp(0, 90) / skala).clamp(0, 1),
-    );
+    Offset di(int i) {
+      final t = i / n;
+      return Offset(
+        _tepi + lebar * t,
+        dasar - area * tinggiRelatif * math.sin(math.pi * t),
+      );
+    }
 
     final jalur = Path()..moveTo(di(0).dx, di(0).dy);
     for (var i = 1; i <= n; i++) {

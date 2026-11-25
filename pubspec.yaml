@@ -80,6 +80,11 @@ flutter:
     - assets/fonts/OFL-Inter.txt
     - assets/fonts/OFL-PlusJakartaSans.txt
     - assets/fonts/LICENSE-Phosphor.txt
+    - assets/bulan/
+
+  # Shader pencahayaan bulan (foto bulan NASA, lihat assets/bulan).
+  shaders:
+    - shaders/bulan.frag
 
   # Huruf di-bundle (SIL OFL 1.1), tidak diunduh saat aplikasi berjalan.
   fonts:

@@ -1480,7 +1480,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get langitCatatan =>
-      'Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan.';
+      'Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan. Foto bulan: NASA/LRO.';
 
   @override
   String get harianJudul => 'Prakiraan harian';
