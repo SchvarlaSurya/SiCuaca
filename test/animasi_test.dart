@@ -354,6 +354,38 @@ void main() {
       expect(find.text('isi-aplikasi'), findsOneWidget);
     });
 
+    testWidgets('splash menutupi seluruh layar sejak frame pertama, juga saat '
+        'induknya hanya memberi batas longgar (aplikasi belum dipasang)', (
+      tester,
+    ) async {
+      final siap = Completer<void>();
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('id'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          // Align memberi batas longgar, seperti latar langit di rute asli.
+          home: Align(
+            alignment: Alignment.topLeft,
+            child: SplashGerbang(
+              siapkan: siap.future,
+              child: const Text('isi-aplikasi'),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(find.text('isi-aplikasi'), findsNothing);
+      final layar = tester.view.physicalSize / tester.view.devicePixelRatio;
+      // Logo tepat di tengah layar, bukan di pojok.
+      expect(
+        tester.getCenter(find.byType(TampilanLogo)),
+        Offset(layar.width / 2, layar.height / 2),
+      );
+      siap.complete();
+      await tester.pumpAndSettle();
+    });
+
     testWidgets('menahan ketukan selama tampil', (tester) async {
       await tester.pumpWidget(buatApp(gps: _gps, offline: true, splash: true));
       await _pompa(tester, 304);

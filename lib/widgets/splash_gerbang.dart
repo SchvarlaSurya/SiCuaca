@@ -124,7 +124,12 @@ class _SplashGerbangState extends State<SplashGerbang>
     final tampil = !_selesai && !MediaQuery.of(context).disableAnimations;
     // Struktur tetap sama sebelum dan sesudah splash, supaya [child] (dan
     // seluruh state-nya) tidak dibangun ulang saat splash selesai.
+    // StackFit.expand: sebelum [child] dipasang, tidak ada anak tanpa posisi
+    // yang memberi ukuran, jadi tanpa ini Stack mengecil jadi 0x0 di bawah
+    // batas longgar dan splash tidak terlihat (yang tampak hanya latar langit
+    // halaman).
     return Stack(
+      fit: StackFit.expand,
       children: [
         _anakSiap || !tampil ? widget.child : const SizedBox.shrink(),
         if (tampil)
