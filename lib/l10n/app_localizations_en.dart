@@ -1471,6 +1471,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tidakAdaHariIni => 'None';
 
   @override
+  String get diBawahHorizon => 'Below the horizon';
+
+  @override
   String get lamaSiang => 'Daylight';
 
   @override

@@ -466,6 +466,7 @@
   "terbit": "Terbit",
   "terbenam": "Terbenam",
   "tidakAdaHariIni": "Tidak ada",
+  "diBawahHorizon": "Di bawah cakrawala",
   "lamaSiang": "Lama siang",
   "lamaSiangNilai": "{jam} j {menit} m",
   "@lamaSiangNilai": {"placeholders": {"jam": {"type": "int"}, "menit": {"type": "int"}}},

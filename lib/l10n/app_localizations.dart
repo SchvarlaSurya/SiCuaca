@@ -2556,6 +2556,12 @@ abstract class AppLocalizations {
   /// **'Tidak ada'**
   String get tidakAdaHariIni;
 
+  /// No description provided for @diBawahHorizon.
+  ///
+  /// In id, this message translates to:
+  /// **'Di bawah cakrawala'**
+  String get diBawahHorizon;
+
   /// No description provided for @lamaSiang.
   ///
   /// In id, this message translates to:

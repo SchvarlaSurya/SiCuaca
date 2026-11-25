@@ -72,35 +72,76 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('hari bulan tidak terbit/terbenam: tampil teks pengganti, tidak '
-      'ada overflow', (tester) async {
+  testWidgets('bulan masih di bawah cakrawala: lintasan malam ini dengan '
+      'tanda hari berikutnya, matahari di atas', (tester) async {
     setelUkuran(tester);
-    DateTime? hari;
-    for (var i = 0; i < 30; i++) {
-      final t = DateTime.utc(2026, 3, 1).add(Duration(days: i));
-      final a = Astronomi.hitung(
-        lat: -6.2088,
-        lon: 106.8456,
-        tanggalSetempat: t,
-        selisih: _wib,
-      );
-      if (a.bulan.terbit == null || a.bulan.terbenam == null) {
-        hari = t;
-        break;
-      }
-    }
-    expect(hari, isNotNull);
+    // Purnama 3 Mar 2026, sore hari: bulan terbit nanti malam, terbenam
+    // besok pagi.
     await tester.pumpWidget(
       _app(
         KartuMatahariBulan(
           lat: -6.2088,
           lon: 106.8456,
-          hariSetempat: hari!,
+          hariSetempat: DateTime.utc(2026, 3, 3, 15, 10),
           selisih: _wib,
         ),
       ),
     );
-    expect(find.text(l.tidakAdaHariIni), findsOneWidget);
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text(l.diBawahHorizon), findsOneWidget);
+    expect(find.textContaining('(+1)'), findsOneWidget);
+    expect(find.text(l.fasePurnama), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('bulan sedang di atas cakrawala: tidak ada teks di bawah '
+      'cakrawala untuk keduanya', (tester) async {
+    setelUkuran(tester);
+    // Purnama, tengah malam: matahari di bawah, bulan di atas. Matahari
+    // menampilkan teks "di bawah cakrawala", bulan tidak.
+    await tester.pumpWidget(
+      _app(
+        KartuMatahariBulan(
+          lat: -6.2088,
+          lon: 106.8456,
+          hariSetempat: DateTime.utc(2026, 3, 3, 23, 30),
+          selisih: _wib,
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 2));
+    expect(find.text(l.diBawahHorizon), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('kurangi gerakan: ikon langsung di posisinya, tanpa error', (
+    tester,
+  ) async {
+    setelUkuran(tester);
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('id'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: MediaQuery(
+          data: const MediaQueryData(
+            size: Size(360, 800),
+            disableAnimations: true,
+          ),
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: KartuMatahariBulan(
+                lat: -6.2088,
+                lon: 106.8456,
+                hariSetempat: DateTime.utc(2026, 3, 20, 9),
+                selisih: _wib,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
     expect(tester.takeException(), isNull);
   });
 

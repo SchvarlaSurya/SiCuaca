@@ -1439,6 +1439,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get tidakAdaHariIni => 'Tidak ada';
 
   @override
+  String get diBawahHorizon => 'Di bawah cakrawala';
+
+  @override
   String get lamaSiang => 'Lama siang';
 
   @override

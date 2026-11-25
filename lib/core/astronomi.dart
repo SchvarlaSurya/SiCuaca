@@ -33,6 +33,7 @@ class DataAstronomi {
     required this.lamaSiang,
     required this.terangBulan,
     required this.fase,
+    required this.elongasi,
   });
 
   final PeristiwaLangit matahari;
@@ -45,6 +46,48 @@ class DataAstronomi {
   /// Bagian piringan bulan yang terang, 0..1.
   final double terangBulan;
   final FaseBulan fase;
+
+  /// Sudut bulan di timur matahari, 0..360 derajat: 0 bulan baru, 90 perempat
+  /// pertama, 180 purnama, 270 perempat akhir. Di bawah 180 bulan membesar.
+  final double elongasi;
+
+  bool get membesar => elongasi < 180;
+}
+
+/// Benda langit yang lintasannya bisa dihitung.
+enum BendaLangit { matahari, bulan }
+
+/// Satu titik lintasan: tinggi benda di atas horizon (derajat) pada waktu
+/// jam dinding setempat (DateTime UTC yang sudah digeser zona).
+class TitikLintasan {
+  const TitikLintasan(this.waktu, this.tinggi);
+
+  final DateTime waktu;
+  final double tinggi;
+}
+
+/// Satu lintasan benda di langit dari terbit sampai terbenam, dengan tinggi
+/// sebenarnya sepanjang jalan (bukan setengah lingkaran buatan). Terbenam
+/// bisa jatuh di hari berikutnya (bulan).
+class LintasanLangit {
+  const LintasanLangit({
+    required this.terbit,
+    required this.terbenam,
+    required this.titik,
+    this.posisi,
+    this.tinggiSekarang,
+  });
+
+  final DateTime terbit;
+  final DateTime terbenam;
+  final List<TitikLintasan> titik;
+
+  /// 0..1 sepanjang lintasan bila benda sedang di atas horizon, selain itu
+  /// null.
+  final double? posisi;
+  final double? tinggiSekarang;
+
+  bool get diAtasHorizon => posisi != null;
 }
 
 /// Perhitungan astronomi dan cuaca turunan yang dilakukan di dalam aplikasi,
@@ -128,6 +171,87 @@ abstract final class Astronomi {
           : null,
       terangBulan: terang,
       fase: FaseBulan.values[indeks],
+      elongasi: elongasi,
+    );
+  }
+
+  /// Lintasan [benda] yang relevan saat [sekarangSetempat]: yang sedang
+  /// berlangsung bila benda di atas horizon; bila tidak, lintasan hari ini;
+  /// bila hari ini tidak ada, yang berikutnya. Null bila tidak ada lintasan
+  /// dalam jendela 60 jam (mis. dekat kutub).
+  static LintasanLangit? lintasan({
+    required BendaLangit benda,
+    required double lat,
+    required double lon,
+    required DateTime sekarangSetempat,
+    required Duration selisih,
+  }) {
+    final tinggi = benda == BendaLangit.matahari
+        ? (double jd) => _tinggi(_posisiMatahari(jd), jd, lat, lon)
+        : (double jd) => _tinggi(_posisiBulan(jd), jd, lat, lon);
+    final tepi = benda == BendaLangit.matahari ? _tepiMatahari : _tepiBulan;
+    final sekarang = sekarangSetempat.subtract(selisih);
+
+    // Semua terbit dan terbenam dalam jendela, urut waktu.
+    final awal = sekarang.subtract(const Duration(hours: 30));
+    final peristiwa = <(DateTime, bool)>[];
+    var t0 = awal;
+    var f0 = tinggi(_jd(t0)) - tepi;
+    for (var m = 10; m <= 60 * 60; m += 10) {
+      final t1 = awal.add(Duration(minutes: m));
+      final f1 = tinggi(_jd(t1)) - tepi;
+      if ((f0 < 0) != (f1 < 0)) {
+        peristiwa.add((_belah(tinggi, tepi, t0, t1), f1 >= 0));
+      }
+      t0 = t1;
+      f0 = f1;
+    }
+
+    // Lintasan utuh: terbit lalu terbenam berikutnya.
+    final lintasan = <(DateTime, DateTime)>[];
+    for (var i = 0; i + 1 < peristiwa.length; i++) {
+      if (peristiwa[i].$2 && !peristiwa[i + 1].$2) {
+        lintasan.add((peristiwa[i].$1, peristiwa[i + 1].$1));
+      }
+    }
+    if (lintasan.isEmpty) return null;
+
+    (DateTime, DateTime)? pilih;
+    for (final l in lintasan) {
+      if (!sekarang.isBefore(l.$1) && sekarang.isBefore(l.$2)) pilih = l;
+    }
+    final hariIni = DateTime.utc(
+      sekarangSetempat.year,
+      sekarangSetempat.month,
+      sekarangSetempat.day,
+    );
+    bool hariSama(DateTime utc) {
+      final lokal = utc.add(selisih);
+      return DateTime.utc(lokal.year, lokal.month, lokal.day) == hariIni;
+    }
+
+    pilih ??= lintasan.where((l) => hariSama(l.$1)).firstOrNull;
+    pilih ??= lintasan.where((l) => l.$1.isAfter(sekarang)).firstOrNull;
+    pilih ??= lintasan.last;
+
+    const jumlah = 36;
+    final durasi = pilih.$2.difference(pilih.$1);
+    final titik = [
+      for (var i = 0; i <= jumlah; i++)
+        () {
+          final saat = pilih!.$1.add(durasi * (i / jumlah));
+          return TitikLintasan(saat.add(selisih), tinggi(_jd(saat)));
+        }(),
+    ];
+    final di = !sekarang.isBefore(pilih.$1) && sekarang.isBefore(pilih.$2);
+    return LintasanLangit(
+      terbit: pilih.$1.add(selisih),
+      terbenam: pilih.$2.add(selisih),
+      titik: titik,
+      posisi: di
+          ? sekarang.difference(pilih.$1).inMicroseconds / durasi.inMicroseconds
+          : null,
+      tinggiSekarang: di ? tinggi(_jd(sekarang)) : null,
     );
   }
 

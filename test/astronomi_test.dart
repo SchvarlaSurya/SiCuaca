@@ -187,4 +187,80 @@ void main() {
       expect(Astronomi.titikEmbun(25, 130).isFinite, isTrue);
     });
   });
+
+  group('Lintasan', () {
+    LintasanLangit? matahari(DateTime sekarang) => Astronomi.lintasan(
+      benda: BendaLangit.matahari,
+      lat: _lat,
+      lon: _lon,
+      sekarangSetempat: sekarang,
+      selisih: _wib,
+    );
+    LintasanLangit? bulan(DateTime sekarang) => Astronomi.lintasan(
+      benda: BendaLangit.bulan,
+      lat: _lat,
+      lon: _lon,
+      sekarangSetempat: sekarang,
+      selisih: _wib,
+    );
+
+    test('matahari tengah hari: di atas cakrawala, kira-kira di puncak', () {
+      final l = matahari(DateTime.utc(2026, 3, 20, 12))!;
+      expect(l.diAtasHorizon, isTrue);
+      expect(l.posisi, inInclusiveRange(.4, .6));
+      expect(l.tinggiSekarang!, greaterThan(70));
+      expect(l.terbit.isBefore(l.terbenam), isTrue);
+      expect(l.terbit.day, 20);
+    });
+
+    test('titik lintasan: seragam dalam waktu, ujungnya di cakrawala, '
+        'puncak di tengah', () {
+      final l = matahari(DateTime.utc(2026, 3, 20, 12))!;
+      expect(l.titik.length, greaterThan(20));
+      expect(l.titik.first.tinggi.abs(), lessThan(1.2));
+      expect(l.titik.last.tinggi.abs(), lessThan(1.2));
+      final tertinggi = l.titik.reduce((a, b) => a.tinggi > b.tinggi ? a : b);
+      final i = l.titik.indexOf(tertinggi);
+      expect(
+        i,
+        inInclusiveRange(l.titik.length ~/ 2 - 3, l.titik.length ~/ 2 + 3),
+      );
+      for (var k = 1; k < l.titik.length; k++) {
+        final selang = l.titik[k].waktu.difference(l.titik[k - 1].waktu);
+        final awal = l.titik[1].waktu.difference(l.titik[0].waktu);
+        expect((selang - awal).inSeconds.abs(), lessThan(2));
+      }
+    });
+
+    test('malam hari: matahari di bawah cakrawala, lintasan hari ini tetap '
+        'dikembalikan', () {
+      final l = matahari(DateTime.utc(2026, 3, 20, 22))!;
+      expect(l.diAtasHorizon, isFalse);
+      expect(l.posisi, isNull);
+      expect(l.terbit.day, 20);
+      expect(l.terbenam.day, 20);
+    });
+
+    test('purnama: bulan naik sore hari, tinggi tengah malam, terbenam hari '
+        'berikutnya', () {
+      final malam = bulan(DateTime.utc(2026, 3, 3, 23, 30))!;
+      expect(malam.diAtasHorizon, isTrue);
+      expect(malam.tinggiSekarang!, greaterThan(30));
+      expect(malam.terbenam.day, 4);
+
+      final sore = bulan(DateTime.utc(2026, 3, 3, 15, 10))!;
+      expect(sore.diAtasHorizon, isFalse);
+      expect(sore.terbit.day, 3);
+      expect(sore.terbenam.day, 4);
+    });
+
+    test('di atas cakrawala posisi bergerak naik seiring waktu', () {
+      var terakhir = -1.0;
+      for (var jam = 7; jam <= 17; jam++) {
+        final l = matahari(DateTime.utc(2026, 3, 20, jam))!;
+        expect(l.posisi!, greaterThan(terakhir));
+        terakhir = l.posisi!;
+      }
+    });
+  });
 }

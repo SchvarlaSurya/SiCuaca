@@ -420,6 +420,7 @@
   "terbit": "Rise",
   "terbenam": "Set",
   "tidakAdaHariIni": "None",
+  "diBawahHorizon": "Below the horizon",
   "lamaSiang": "Daylight",
   "lamaSiangNilai": "{jam} h {menit} m",
   "terangBulan": "{persen}% lit",
