@@ -32,6 +32,27 @@ abstract final class IkonApp {
   static const IconData isiAwanKabut = IconData(0xe53c, fontFamily: _isi);
   static const IconData isiAwanPetir = IconData(0xe1b2, fontFamily: _isi);
 
+  // Pengaturan.
+  static const IconData panahSerong = IconData(
+    0xe093,
+    fontFamily: _duo,
+  ); // arrowUpRight
+  static const IconData labu = IconData(0xe79f, fontFamily: _duo); // flask
+  static const IconData segitigaPeringatan = IconData(
+    0xe4e1,
+    fontFamily: _duo,
+  ); // warning
+  static const IconData bantuan = IconData(
+    0xe3eb,
+    fontFamily: _duo,
+  ); // question
+  static const IconData buku = IconData(0xe0e7, fontFamily: _duo); // bookOpen
+  static const IconData globe = IconData(0xe289, fontFamily: _duo); // globe
+  static const IconData pinWilayah = IconData(
+    0xe317,
+    fontFamily: _duo,
+  ); // mapPin
+  static const IconData kode = IconData(0xe1bd, fontFamily: _duo); // code
   static const IconData udara = IconData(0xe2db, fontFamily: _duo); // leaf
   static const IconData titikEmbun = IconData(
     0xe5c7,

@@ -893,8 +893,38 @@ abstract class AppLocalizations {
   /// No description provided for @pengaturanTampilan.
   ///
   /// In id, this message translates to:
-  /// **'Tampilan'**
+  /// **'Tampilan & tata letak'**
   String get pengaturanTampilan;
+
+  /// No description provided for @pengaturanAktif.
+  ///
+  /// In id, this message translates to:
+  /// **'Aktif'**
+  String get pengaturanAktif;
+
+  /// No description provided for @pengaturanLokal.
+  ///
+  /// In id, this message translates to:
+  /// **'Lokal'**
+  String get pengaturanLokal;
+
+  /// No description provided for @pengaturanPeringatanCepat.
+  ///
+  /// In id, this message translates to:
+  /// **'Peringatan cepat'**
+  String get pengaturanPeringatanCepat;
+
+  /// No description provided for @kacaCairLencana.
+  ///
+  /// In id, this message translates to:
+  /// **'iOS Glass'**
+  String get kacaCairLencana;
+
+  /// No description provided for @versiTerpasang.
+  ///
+  /// In id, this message translates to:
+  /// **'Terpasang di perangkat ini'**
+  String get versiTerpasang;
 
   /// No description provided for @pengaturanPreferensi.
   ///

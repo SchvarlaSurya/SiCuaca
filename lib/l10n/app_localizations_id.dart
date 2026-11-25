@@ -458,7 +458,22 @@ class AppLocalizationsId extends AppLocalizations {
   String get navPengaturan => 'Pengaturan';
 
   @override
-  String get pengaturanTampilan => 'Tampilan';
+  String get pengaturanTampilan => 'Tampilan & tata letak';
+
+  @override
+  String get pengaturanAktif => 'Aktif';
+
+  @override
+  String get pengaturanLokal => 'Lokal';
+
+  @override
+  String get pengaturanPeringatanCepat => 'Peringatan cepat';
+
+  @override
+  String get kacaCairLencana => 'iOS Glass';
+
+  @override
+  String get versiTerpasang => 'Terpasang di perangkat ini';
 
   @override
   String get pengaturanPreferensi => 'Preferensi aplikasi';

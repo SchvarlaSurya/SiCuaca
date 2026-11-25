@@ -476,7 +476,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navPengaturan => 'Settings';
 
   @override
-  String get pengaturanTampilan => 'Display';
+  String get pengaturanTampilan => 'Appearance & layout';
+
+  @override
+  String get pengaturanAktif => 'Active';
+
+  @override
+  String get pengaturanLokal => 'Local';
+
+  @override
+  String get pengaturanPeringatanCepat => 'Quick alert';
+
+  @override
+  String get kacaCairLencana => 'iOS Glass';
+
+  @override
+  String get versiTerpasang => 'Installed on this device';
 
   @override
   String get pengaturanPreferensi => 'App preferences';

@@ -320,7 +320,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(navTab('pengaturan'));
       await tester.pumpAndSettle();
-      expect(find.text(l.pengaturanTampilan), findsOneWidget);
+      expect(find.text(l.pengaturanTampilan.toUpperCase()), findsOneWidget);
       expect(find.text(l.kacaCairJudul), findsOneWidget);
 
       await tester.ensureVisible(find.text(l.notifJudul).last);
