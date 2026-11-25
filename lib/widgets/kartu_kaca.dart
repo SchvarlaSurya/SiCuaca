@@ -9,7 +9,9 @@ import 'mode_kaca.dart';
 /// Kacanya digambar sebagai lapisan latar terpisah di BAWAH isi, bukan
 /// membungkus isi: lapisan kaca bisa menyimpan tampilan isinya, sehingga isi
 /// yang beranimasi bisa tersimpan setengah jadi. Isi di atasnya digambar
-/// biasa. Bila efek kaca cair dimatikan, kartu jadi kotak biasa tanpa lapisan
+/// biasa. Tiap kartu memakai shader kaca ringan, bukan premium: kartu banyak
+/// dan ikut di-scroll, jadi biayanya dijaga rendah. Bila efek kaca cair
+/// dimatikan, kartu jadi kotak biasa tanpa lapisan
 /// kaca, shader, atau blur (lihat [kacaCairAktif]).
 class KartuKaca extends StatelessWidget {
   const KartuKaca({
@@ -49,6 +51,10 @@ class KartuKaca extends StatelessWidget {
         Positioned.fill(
           child: GlassContainer(
             useOwnLayer: true,
+            // Kartu ada di daftar yang di-scroll dan jumlahnya banyak: shader
+            // ringan (standard) sesuai anjuran paket untuk daftar. Kualitas
+            // premium dipakai navbar dan tombol atas yang statis.
+            quality: GlassQuality.standard,
             shape: const LiquidRoundedSuperellipse(
               borderRadius: AppTheme.radiusKartu,
             ),

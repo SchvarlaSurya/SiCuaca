@@ -49,6 +49,14 @@ class _HitungState extends State<_Hitung> {
   );
 }
 
+/// Memajukan waktu dalam langkah kecil (16 ms). Jam splash membatasi lompatan
+/// waktu per frame, jadi satu pump besar tidak memajukan animasinya.
+Future<void> _pompa(WidgetTester tester, int ms) async {
+  for (var i = 0; i < ms ~/ 16; i++) {
+    await tester.pump(const Duration(milliseconds: 16));
+  }
+}
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -263,7 +271,7 @@ void main() {
         ),
       );
       // Awal: hanya logo (sama dengan splash native), teks belum keluar.
-      await tester.pump(const Duration(milliseconds: 100));
+      await _pompa(tester, 96);
       expect(find.byType(TampilanLogo), findsOneWidget);
       // Teks splash dibuka dari samping logo lewat ClipRect: lebarnya 0 di
       // awal lalu tumbuh.
@@ -274,7 +282,7 @@ void main() {
 
       // Setelah teks keluar dari samping logo, tulisannya terbuka penuh dan
       // penegasan bukan resmi ikut tampil.
-      await tester.pump(const Duration(milliseconds: 1200));
+      await _pompa(tester, 1200);
       expect(tester.getSize(klipTeks).width, greaterThan(80));
       expect(find.text(l.bukanResmi), findsOneWidget);
 
@@ -285,9 +293,27 @@ void main() {
       expect(tester.state(find.byType(MainShell)), same(shell));
     });
 
+    testWidgets('frame tersendat tidak menghabiskan animasi: teks tetap '
+        'sempat keluar', (tester) async {
+      await tester.pumpWidget(buatApp(gps: _gps, offline: true, splash: true));
+      // Frame pertama hanya splash; aplikasi dipasang setelahnya.
+      expect(find.byType(MainShell), findsNothing);
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(find.byType(MainShell), findsOneWidget);
+      // Satu frame yang sangat lambat (mis. shader pertama kali): waktu yang
+      // dihitung dibatasi, bukan 1,5 detik sekaligus.
+      await tester.pump(const Duration(milliseconds: 1500));
+      expect(find.byType(TampilanLogo), findsOneWidget);
+      final klip = find.byKey(const ValueKey('splash.teks'));
+      expect(tester.getSize(klip).width, lessThan(80));
+      await _pompa(tester, 2400);
+      await tester.pumpAndSettle();
+      expect(find.byType(TampilanLogo), findsNothing);
+    });
+
     testWidgets('menahan ketukan selama tampil', (tester) async {
       await tester.pumpWidget(buatApp(gps: _gps, offline: true, splash: true));
-      await tester.pump(const Duration(milliseconds: 300));
+      await _pompa(tester, 304);
       await tester.tap(navTab('gempa'), warnIfMissed: false);
       await tester.pump(const Duration(milliseconds: 100));
       await tester.pumpAndSettle();
