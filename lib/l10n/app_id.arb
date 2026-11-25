@@ -158,6 +158,8 @@
   "@magnitudoSemantik": {"placeholders": {"nilai": {"type": "String"}, "tingkat": {"type": "String"}}},
   "navPengaturan": "Pengaturan",
   "pengaturanTampilan": "Tampilan",
+  "pengaturanPreferensi": "Preferensi aplikasi",
+  "pengaturanPeringatan": "Peringatan",
   "tentangJudul": "Tentang SiCuaca",
   "dataTidakTersedia": "Data tidak tersedia untuk lokasi ini.",
   "pilihDariDaftar": "Pilih dari daftar wilayah",

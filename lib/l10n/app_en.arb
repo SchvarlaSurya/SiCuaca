@@ -145,6 +145,8 @@
   "magnitudoSemantik": "Magnitude {nilai}, {tingkat}",
   "navPengaturan": "Settings",
   "pengaturanTampilan": "Display",
+  "pengaturanPreferensi": "App preferences",
+  "pengaturanPeringatan": "Alerts",
   "tentangJudul": "About SiCuaca",
   "dataTidakTersedia": "Data is not available for this location.",
   "pilihDariDaftar": "Browse regions",

@@ -5,23 +5,31 @@ import 'package:provider/provider.dart';
 import '../core/ikon.dart';
 import '../core/l10n.dart';
 import '../core/navigasi.dart';
+import '../core/theme.dart';
 import '../models/ambang_gempa.dart';
 import '../providers/notifikasi_provider.dart';
 import '../providers/pengaturan_provider.dart';
-import '../widgets/status_data.dart';
 import '../widgets/app_chrome.dart';
+import '../widgets/kartu_kaca.dart';
+import '../widgets/status_data.dart';
 import 'onboarding_screen.dart';
 import 'urutan_beranda_screen.dart';
 
-/// Pengaturan: tampilan (tema, bahasa), ambang notifikasi gempa, dan
-/// informasi tentang aplikasi. Semua pilihan tersimpan di perangkat lewat
-/// provider masing-masing.
+/// Pengaturan dalam daftar berkelompok: satu kartu kaca per bagian, isinya
+/// baris rapat (ikon, judul, nilai di kanan) yang dipisah garis tipis.
+///
+/// Bagian: preferensi (tema, bahasa), peringatan (notifikasi gempa), tampilan
+/// (efek kaca cair, urutan Beranda), dan tentang. Teks panjang tentang sumber
+/// data bukan baris yang bisa diketuk, jadi ditaruh sebagai catatan di bawah
+/// kartu Tentang. Semua pilihan tersimpan di perangkat lewat provider masing-
+/// masing.
 class PengaturanScreen extends StatelessWidget {
   const PengaturanScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    final theme = Theme.of(context);
     final pengaturan = context.watch<PengaturanProvider>();
     final notif = context.watch<NotifikasiProvider>();
 
@@ -31,28 +39,33 @@ class PengaturanScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(l.navPengaturan),
-            Text(
-              l.subjudulPengaturan,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text(l.subjudulPengaturan, style: theme.textTheme.bodySmall),
           ],
         ),
       ),
       body: LatarAtmosfer(
         gelap: false,
         child: ListView(
-          padding: EdgeInsets.only(
-            bottom: 24 + MediaQuery.paddingOf(context).bottom,
+          padding: EdgeInsets.fromLTRB(
+            16,
+            4,
+            16,
+            24 + MediaQuery.paddingOf(context).bottom,
           ),
           children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
-              child: MasukLembut(child: _PengaturanIntro()),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
+              child: Text(
+                l.pengaturanIntro,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
             _Bagian(
-              judul: l.pengaturanTampilan,
+              judul: l.pengaturanPreferensi,
               children: [
-                _Pilihan<PilihanTema>(
+                _BarisPilihan<PilihanTema>(
                   ikon: IkonApp.tema,
                   judul: l.tentangTema,
                   nilai: pengaturan.tema,
@@ -63,7 +76,7 @@ class PengaturanScreen extends StatelessWidget {
                   },
                   onPilih: pengaturan.pilihTema,
                 ),
-                _Pilihan<PilihanBahasa>(
+                _BarisPilihan<PilihanBahasa>(
                   ikon: IkonApp.bahasa,
                   judul: l.tentangBahasa,
                   nilai: pengaturan.bahasa,
@@ -74,31 +87,12 @@ class PengaturanScreen extends StatelessWidget {
                   },
                   onPilih: pengaturan.pilihBahasa,
                 ),
-                SwitchListTile(
-                  key: const ValueKey('pengaturan.kacaCair'),
-                  secondary: const IkonDuo(IkonApp.tema),
-                  title: Text(l.kacaCairJudul),
-                  subtitle: Text(l.kacaCairKeterangan),
-                  value: pengaturan.kacaCair,
-                  onChanged: pengaturan.aturKacaCair,
-                ),
-                ListTile(
-                  leading: const IkonDuo(IkonApp.urutan),
-                  title: Text(l.urutanBerandaJudul),
-                  subtitle: Text(l.urutanBerandaRingkas),
-                  trailing: const IkonDuo(IkonApp.selengkapnya),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const UrutanBerandaScreen(),
-                    ),
-                  ),
-                ),
               ],
             ),
             _Bagian(
-              judul: l.notifJudul,
+              judul: l.pengaturanPeringatan,
               children: [
-                _Pilihan<AmbangGempa>(
+                _BarisPilihan<AmbangGempa>(
                   ikon: notif.ambang == AmbangGempa.mati
                       ? IkonApp.notifMati
                       : IkonApp.notifAktif,
@@ -117,31 +111,49 @@ class PengaturanScreen extends StatelessWidget {
               ],
             ),
             _Bagian(
+              judul: l.pengaturanTampilan,
+              children: [
+                SwitchListTile(
+                  key: const ValueKey('pengaturan.kacaCair'),
+                  contentPadding: _paddingBaris,
+                  secondary: const _KotakIkon(IkonApp.tema),
+                  title: Text(l.kacaCairJudul),
+                  subtitle: Text(l.kacaCairKeterangan),
+                  value: pengaturan.kacaCair,
+                  onChanged: pengaturan.aturKacaCair,
+                ),
+                ListTile(
+                  contentPadding: _paddingBaris,
+                  leading: const _KotakIkon(IkonApp.urutan),
+                  title: Text(l.urutanBerandaJudul),
+                  subtitle: Text(l.urutanBerandaRingkas),
+                  trailing: const _Panah(),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const UrutanBerandaScreen(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            _Bagian(
               judul: l.tentangJudul,
               children: [
                 ListTile(
                   key: const ValueKey('pengaturan.layanan'),
-                  leading: const IkonDuo(IkonApp.layanan),
+                  contentPadding: _paddingBaris,
+                  leading: const _KotakIkon(IkonApp.layanan),
                   title: Text(l.layananJudul),
                   subtitle: Text(l.layananRingkas),
-                  trailing: const IkonDuo(IkonApp.selengkapnya),
+                  trailing: const _Panah(),
                   onTap: Navigasi.bukaLayanan,
                 ),
                 ListTile(
-                  leading: const IkonDuo(IkonApp.info),
-                  title: Text(l.appName),
-                  subtitle: Text(l.tentangSumber),
-                ),
-                ListTile(
-                  leading: const IkonDuo(IkonApp.peta),
-                  title: Text(l.lisensiDataWilayah),
-                  subtitle: Text(l.tentangDataWilayah),
-                ),
-                ListTile(
-                  leading: const IkonDuo(IkonApp.info),
+                  contentPadding: _paddingBaris,
+                  leading: const _KotakIkon(IkonApp.info),
                   title: Text(l.panduanAplikasi),
                   subtitle: Text(l.panduanAplikasiKeterangan),
-                  trailing: const IkonDuo(IkonApp.selengkapnya),
+                  trailing: const _Panah(),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => OnboardingScreen(
@@ -151,16 +163,44 @@ class PengaturanScreen extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  leading: const IkonDuo(IkonApp.lisensi),
+                  contentPadding: _paddingBaris,
+                  leading: const _KotakIkon(IkonApp.lisensi),
                   title: Text(l.lisensiSumberTerbuka),
-                  trailing: const IkonDuo(IkonApp.selengkapnya),
+                  trailing: const _Panah(),
                   onTap: () => showLicensePage(
                     context: context,
                     applicationName: l.appName,
                   ),
                 ),
-                const _Versi(),
+                const _BarisVersi(),
               ],
+            ),
+            // Informasi sumber data: teks panjang, bukan baris yang bisa
+            // diketuk, jadi dijadikan catatan di bawah kartu.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 16, 4, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l.appName, style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 4),
+                  Text(
+                    l.tentangSumber,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(l.lisensiDataWilayah, style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 4),
+                  Text(
+                    l.tentangDataWilayah,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -169,38 +209,43 @@ class PengaturanScreen extends StatelessWidget {
   }
 }
 
-class _PengaturanIntro extends StatelessWidget {
-  const _PengaturanIntro();
+const _paddingBaris = EdgeInsets.symmetric(horizontal: 14, vertical: 2);
+
+/// Ikon dalam kotak bulat bertint, ciri tiap baris.
+class _KotakIkon extends StatelessWidget {
+  const _KotakIkon(this.ikon);
+
+  final IconData ikon;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Container(
-      padding: const EdgeInsets.all(18),
+      width: 36,
+      height: 36,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22),
-        color: scheme.surfaceContainerLow,
+        color: scheme.primaryContainer.withValues(alpha: .75),
+        borderRadius: BorderRadius.circular(11),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: scheme.primaryContainer,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: IkonDuo(IkonApp.setelan, color: scheme.primary),
-          ),
-          const SizedBox(width: 12),
-          Expanded(child: Text(context.l10n.pengaturanIntro)),
-        ],
-      ),
+      child: IkonDuo(ikon, size: 20, color: scheme.onPrimaryContainer),
     );
   }
 }
 
-/// Judul bagian + kartu berisi baris pengaturan, dipisah garis.
+class _Panah extends StatelessWidget {
+  const _Panah();
+
+  @override
+  Widget build(BuildContext context) => IkonDuo(
+    IkonApp.selengkapnya,
+    size: 20,
+    color: Theme.of(context).colorScheme.onSurfaceVariant,
+  );
+}
+
+/// Judul bagian + satu kartu kaca berisi baris-baris yang dipisah garis tipis.
+/// Isinya dibungkus Material transparan supaya efek ketuk tergambar di atas
+/// kaca (bukan di bawahnya).
 class _Bagian extends StatelessWidget {
   const _Bagian({required this.judul, required this.children});
 
@@ -209,21 +254,35 @@ class _Bagian extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final garis = AppTheme.kacaTepi(Theme.of(context).brightness);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.only(top: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           JudulBagian(judul),
-          Card(
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              children: [
-                for (var i = 0; i < children.length; i++) ...[
-                  if (i > 0) const Divider(indent: 56),
-                  children[i],
-                ],
-              ],
+          KartuKaca(
+            padding: EdgeInsets.zero,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppTheme.radiusKartu),
+              child: Material(
+                type: MaterialType.transparency,
+                child: Column(
+                  children: [
+                    for (var i = 0; i < children.length; i++) ...[
+                      if (i > 0)
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          indent: 64,
+                          endIndent: 14,
+                          color: garis,
+                        ),
+                      children[i],
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -232,9 +291,10 @@ class _Bagian extends StatelessWidget {
   }
 }
 
-/// Satu pengaturan dengan pilihan tetap (dialog radio).
-class _Pilihan<T> extends StatelessWidget {
-  const _Pilihan({
+/// Satu pengaturan dengan pilihan tetap (dialog radio): nilai terpilih di
+/// kanan, panah menandakan bisa diketuk.
+class _BarisPilihan<T> extends StatelessWidget {
+  const _BarisPilihan({
     required this.ikon,
     required this.judul,
     required this.nilai,
@@ -251,7 +311,7 @@ class _Pilihan<T> extends StatelessWidget {
   final Future<void> Function(T) onPilih;
   final bool aktif;
 
-  /// Pengganti subjudul (mis. alasan pengaturan tidak bisa diubah).
+  /// Subjudul (mis. alasan pengaturan tidak bisa diubah).
   final String? keterangan;
 
   Future<void> _buka(BuildContext context) async {
@@ -279,33 +339,62 @@ class _Pilihan<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ListTile(
-      leading: IkonDuo(ikon),
+      contentPadding: _paddingBaris,
+      leading: _KotakIkon(ikon),
       title: Text(judul),
-      subtitle: Text(keterangan ?? pilihan[nilai] ?? ''),
+      subtitle: keterangan == null ? null : Text(keterangan!),
+      trailing: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.sizeOf(context).width * .38,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                pilihan[nilai] ?? '',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+            const _Panah(),
+          ],
+        ),
+      ),
       enabled: aktif,
       onTap: () => _buka(context),
     );
   }
 }
 
-class _Versi extends StatelessWidget {
-  const _Versi();
+class _BarisVersi extends StatelessWidget {
+  const _BarisVersi();
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    final theme = Theme.of(context);
     return FutureBuilder<PackageInfo>(
       future: PackageInfo.fromPlatform(),
       builder: (context, snap) {
         final info = snap.data;
         return ListTile(
-          leading: const IkonDuo(IkonApp.versi),
+          contentPadding: _paddingBaris,
+          leading: const _KotakIkon(IkonApp.versi),
           title: Text(l.tentangVersi),
-          subtitle: Text(
+          trailing: Text(
             info == null
                 ? '-'
                 : l.versiAplikasi(info.version, info.buildNumber),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         );
       },

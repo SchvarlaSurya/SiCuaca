@@ -131,6 +131,10 @@ void main() {
 
     await tester.tap(navTab('pengaturan'));
     await tester.pumpAndSettle();
+    await gulirKeTengah(
+      tester,
+      find.byKey(const ValueKey('pengaturan.kacaCair')),
+    );
     await tester.tap(find.byKey(const ValueKey('pengaturan.kacaCair')));
     await tester.pumpAndSettle();
     expect(find.byType(GlassTabBar), findsOneWidget);

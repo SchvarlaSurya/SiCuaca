@@ -163,6 +163,7 @@ void main() {
     await tester.pumpAndSettle();
 
     final sakelar = find.byKey(const ValueKey('pengaturan.kacaCair'));
+    await gulirKeTengah(tester, sakelar);
     expect(tester.widget<SwitchListTile>(sakelar).value, isTrue);
     await tester.tap(sakelar);
     await tester.pumpAndSettle();

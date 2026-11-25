@@ -896,6 +896,18 @@ abstract class AppLocalizations {
   /// **'Tampilan'**
   String get pengaturanTampilan;
 
+  /// No description provided for @pengaturanPreferensi.
+  ///
+  /// In id, this message translates to:
+  /// **'Preferensi aplikasi'**
+  String get pengaturanPreferensi;
+
+  /// No description provided for @pengaturanPeringatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Peringatan'**
+  String get pengaturanPeringatan;
+
   /// No description provided for @tentangJudul.
   ///
   /// In id, this message translates to:

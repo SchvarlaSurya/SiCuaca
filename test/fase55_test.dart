@@ -738,6 +738,7 @@ void main() {
 
       await tester.tap(navTab('pengaturan'));
       await tester.pumpAndSettle();
+      await gulirKeTengah(tester, find.text(l.urutanBerandaJudul));
       await tester.tap(find.text(l.urutanBerandaJudul));
       await tester.pumpAndSettle();
       expect(find.text(l.urutanBerandaKeterangan), findsOneWidget);
@@ -767,6 +768,7 @@ void main() {
       // Setel ulang mengembalikan urutan bawaan.
       await tester.tap(navTab('pengaturan'));
       await tester.pumpAndSettle();
+      await gulirKeTengah(tester, find.text(l.urutanBerandaJudul));
       await tester.tap(find.text(l.urutanBerandaJudul));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l.setelUlangUrutan));

@@ -479,6 +479,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pengaturanTampilan => 'Display';
 
   @override
+  String get pengaturanPreferensi => 'App preferences';
+
+  @override
+  String get pengaturanPeringatan => 'Alerts';
+
+  @override
   String get tentangJudul => 'About SiCuaca';
 
   @override

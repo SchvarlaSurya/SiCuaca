@@ -195,7 +195,11 @@ class TautanUdaraUv extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
+              IkonDuo(
+                IkonApp.selengkapnya,
+                size: 20,
+                color: scheme.onSurfaceVariant,
+              ),
             ],
           ),
         ),

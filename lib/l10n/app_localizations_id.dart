@@ -461,6 +461,12 @@ class AppLocalizationsId extends AppLocalizations {
   String get pengaturanTampilan => 'Tampilan';
 
   @override
+  String get pengaturanPreferensi => 'Preferensi aplikasi';
+
+  @override
+  String get pengaturanPeringatan => 'Peringatan';
+
+  @override
   String get tentangJudul => 'Tentang SiCuaca';
 
   @override

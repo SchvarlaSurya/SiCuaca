@@ -143,6 +143,20 @@ Widget buatApp({
 // terpilih), jadi ambil yang pertama.
 Finder navTab(String nama) => find.byKey(ValueKey('nav.$nama')).first;
 
+/// Menggulir [f] ke sekitar tengah layar supaya tidak tertutup navbar
+/// melayang, lalu menunggu animasi selesai.
+Future<void> gulirKeTengah(WidgetTester tester, Finder f) async {
+  if (f.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      f,
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
+  }
+  await Scrollable.ensureVisible(tester.element(f), alignment: .4);
+  await tester.pumpAndSettle();
+}
+
 /// Membuka pengaturan notifikasi lewat tombol lonceng di tab Gempa.
 Future<void> bukaPeringatan(WidgetTester tester) async {
   await tester.tap(navTab('gempa'));
