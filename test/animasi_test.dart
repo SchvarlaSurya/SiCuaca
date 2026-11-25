@@ -59,6 +59,18 @@ Future<void> _pompa(WidgetTester tester, int ms) async {
   }
 }
 
+/// Opasitas tulisan SiCuaca di splash (0 = belum keluar, 1 = penuh).
+double _opasitasTeksSplash(WidgetTester tester) => tester
+    .widget<Opacity>(
+      find
+          .ancestor(
+            of: find.byKey(const ValueKey('splash.teks')),
+            matching: find.byType(Opacity),
+          )
+          .first,
+    )
+    .opacity;
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -277,15 +289,13 @@ void main() {
       expect(find.byType(TampilanLogo), findsOneWidget);
       // Teks splash dibuka dari samping logo lewat ClipRect: lebarnya 0 di
       // awal lalu tumbuh.
-      final klipTeks = find.byKey(const ValueKey('splash.teks'));
-      final lebarAwal = tester.getSize(klipTeks).width;
-      expect(lebarAwal, lessThan(1));
+      expect(_opasitasTeksSplash(tester), 0);
       final shell = tester.state(find.byType(MainShell));
 
       // Setelah teks keluar dari samping logo, tulisannya terbuka penuh dan
       // penegasan bukan resmi ikut tampil.
       await _pompa(tester, 1200);
-      expect(tester.getSize(klipTeks).width, greaterThan(80));
+      expect(_opasitasTeksSplash(tester), greaterThan(.95));
       expect(find.text(l.bukanResmi), findsOneWidget);
 
       await tester.pumpAndSettle();
@@ -306,8 +316,7 @@ void main() {
       // dihitung dibatasi, bukan 1,5 detik sekaligus.
       await tester.pump(const Duration(milliseconds: 1500));
       expect(find.byType(TampilanLogo), findsOneWidget);
-      final klip = find.byKey(const ValueKey('splash.teks'));
-      expect(tester.getSize(klip).width, lessThan(80));
+      expect(_opasitasTeksSplash(tester), lessThan(.5));
       await _pompa(tester, 2400);
       await tester.pumpAndSettle();
       expect(find.byType(TampilanLogo), findsNothing);
@@ -327,19 +336,18 @@ void main() {
           ),
         ),
       );
-      final teks = find.byKey(const ValueKey('splash.teks'));
       // Lama menunggu: logo tampil, teks tetap tertutup, aplikasi belum ada.
       await _pompa(tester, 1200);
       expect(find.byType(TampilanLogo), findsOneWidget);
       expect(find.text('isi-aplikasi'), findsNothing);
-      expect(tester.getSize(teks).width, lessThan(1));
+      expect(_opasitasTeksSplash(tester), 0);
 
       // Setelah siap: aplikasi dipasang lalu teks keluar dari samping logo.
       siap.complete();
       await _pompa(tester, 64);
       expect(find.text('isi-aplikasi'), findsOneWidget);
       await _pompa(tester, 800);
-      expect(tester.getSize(teks).width, greaterThan(80));
+      expect(_opasitasTeksSplash(tester), greaterThan(.95));
       await _pompa(tester, 1600);
       await tester.pumpAndSettle();
       expect(find.byType(TampilanLogo), findsNothing);

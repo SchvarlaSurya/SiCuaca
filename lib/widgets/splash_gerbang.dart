@@ -152,13 +152,38 @@ class _Splash extends StatelessWidget {
   static double _antara(double nilai, double a, double b) =>
       ((nilai - a) / (b - a)).clamp(0.0, 1.0);
 
+  static const _jarak = 16.0;
+  static const _gayaTeks = TextStyle(
+    fontFamily: AppTheme.hurufJudul,
+    color: Colors.white,
+    fontSize: 38,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -.5,
+    decoration: TextDecoration.none,
+  );
+
+  /// Lebar teks, diukur sekali per teks supaya susunan akhir (logo + teks)
+  /// bisa diletakkan tetap dan hanya digeser dengan transform.
+  static final _lebarTeks = <String, double>{};
+  static double _ukur(String teks) => _lebarTeks.putIfAbsent(teks, () {
+    final p = TextPainter(
+      text: TextSpan(text: teks, style: _gayaTeks),
+      textDirection: TextDirection.ltr,
+      textScaler: TextScaler.noScaling,
+      maxLines: 1,
+    )..layout();
+    final w = p.width;
+    p.dispose();
+    return w;
+  });
+
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final keluar = _antara(t, .10, .45);
-    final teks = Curves.easeOutCubic.transform(keluar);
+    final teks = Curves.easeOutCubic.transform(_antara(t, .10, .45));
     final gradasi = _antara(t, 0, .4);
     final pudar = 1 - Curves.easeIn.transform(_antara(t, .80, 1));
+    final lebarTeks = _ukur(l.appName);
 
     return Opacity(
       opacity: pudar,
@@ -168,63 +193,67 @@ class _Splash extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             // Awalnya datar seperti splash native; gradasi biru menyusul.
+            // Gradasinya digambar sekali (RepaintBoundary), lalu hanya
+            // dipudarkan.
             const ColoredBox(color: SplashGerbang.warnaAwal),
             Opacity(
               opacity: gradasi,
-              child: const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [SplashGerbang.warnaAwal, SplashGerbang.warnaAkhir],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+              child: const RepaintBoundary(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        SplashGerbang.warnaAwal,
+                        SplashGerbang.warnaAkhir,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
+                  child: SizedBox.expand(),
                 ),
               ),
             ),
-            SafeArea(
-              child: Column(
+            // Susunan akhir (logo di kiri, teks di kanan) diletakkan tetap di
+            // tengah. Gerakannya murni transform dan opacity pada lapisan
+            // yang sudah digambar, tanpa menyusun ulang tata letak tiap frame:
+            // logo mulai dari tengah layar (sama dengan splash native) lalu
+            // bergeser ke kiri, teks muncul dari sisinya.
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Spacer(),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const TampilanLogo(lebar: SplashGerbang.lebarLogo),
-                      // Teks dibuka dari samping logo: lebarnya tumbuh (logo
-                      // ikut bergeser ke kiri), dan teks sedikit meluncur.
-                      ClipRect(
-                        key: const ValueKey('splash.teks'),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: teks,
-                          child: Opacity(
-                            opacity: teks,
-                            child: Transform.translate(
-                              offset: Offset(-24 * (1 - teks), 0),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 16),
-                                child: Text(
-                                  l.appName,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                  textScaler: TextScaler.noScaling,
-                                  style: const TextStyle(
-                                    fontFamily: AppTheme.hurufJudul,
-                                    color: Colors.white,
-                                    fontSize: 38,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: -.5,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                  Transform.translate(
+                    offset: Offset((_jarak + lebarTeks) / 2 * (1 - teks), 0),
+                    child: const RepaintBoundary(
+                      child: TampilanLogo(lebar: SplashGerbang.lebarLogo),
+                    ),
+                  ),
+                  const SizedBox(width: _jarak),
+                  Opacity(
+                    opacity: teks,
+                    child: Transform.translate(
+                      offset: Offset(-36 * (1 - teks), 0),
+                      child: RepaintBoundary(
+                        child: Text(
+                          l.appName,
+                          key: const ValueKey('splash.teks'),
+                          maxLines: 1,
+                          softWrap: false,
+                          textScaler: TextScaler.noScaling,
+                          style: _gayaTeks,
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                  const Spacer(),
-                  Opacity(
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SafeArea(
+                child: RepaintBoundary(
+                  child: Opacity(
                     opacity: _antara(t, .3, .5),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(32, 0, 32, 28),
@@ -240,7 +269,7 @@ class _Splash extends StatelessWidget {
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ],
