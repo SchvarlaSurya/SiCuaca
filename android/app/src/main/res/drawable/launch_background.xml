@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Warna sama dengan splash dalam aplikasi (SplashGerbang.warnaAwal) -->
+<!-- Splash native (Android 11 ke bawah): latar biru tua + logo SiCuaca di
+     tengah, selebar 128 dp, sama dengan awal splash dalam aplikasi sehingga
+     peralihannya tidak terlihat. Android 12+ memakai windowSplashScreen*
+     (lihat values-v31/styles.xml). -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/splash_latar" />
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/logo_splash" />
+    </item>
 </layer-list>

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 /// Tumpukan tab yang tetap hidup (state dan posisi scroll tidak hilang),
-/// dengan transisi saat pindah: tab baru memudar masuk sambil bergeser tipis
-/// searah perpindahan, tab lama tetap penuh di bawahnya lalu dilepas.
+/// dengan transisi saat pindah berurutan, tidak bertumpuk: tab lama memudar
+/// keluar lebih dulu sambil bergeser tipis, lalu tab baru memudar masuk dari
+/// sisi perpindahan. Isi kedua tab tidak pernah tampak bersamaan.
 ///
 /// Tab yang tidak terlihat dimatikan tickernya, jadi animasi masuk di tab itu
 /// baru berjalan saat pertama kali dibuka. Tanpa gerak (pengaturan "kurangi
@@ -19,10 +20,11 @@ class TransisiTab extends StatefulWidget {
 
 class _TransisiTabState extends State<TransisiTab>
     with SingleTickerProviderStateMixin {
-  static const _durasi = Duration(milliseconds: 280);
+  static const _durasi = Duration(milliseconds: 300);
 
   late final AnimationController _kontrol;
-  late final Animation<double> _kurva;
+  late final Animation<double> _kurva; // tab baru, paruh akhir
+  late final Animation<double> _kurvaKeluar; // tab lama, paruh awal
 
   int? _sebelumnya;
   double _arah = 1;
@@ -31,7 +33,14 @@ class _TransisiTabState extends State<TransisiTab>
   void initState() {
     super.initState();
     _kontrol = AnimationController(vsync: this, duration: _durasi, value: 1);
-    _kurva = CurvedAnimation(parent: _kontrol, curve: Curves.easeOutCubic);
+    _kurva = CurvedAnimation(
+      parent: _kontrol,
+      curve: const Interval(.4, 1, curve: Curves.easeOutCubic),
+    );
+    _kurvaKeluar = CurvedAnimation(
+      parent: _kontrol,
+      curve: const Interval(0, .4, curve: Curves.easeIn),
+    );
   }
 
   @override
@@ -64,12 +73,14 @@ class _TransisiTabState extends State<TransisiTab>
 
     // Rantai pembungkus selalu sama, apa pun keadaannya, supaya state anak
     // tidak hilang saat transisi mulai atau selesai.
+    // Tab lama habis memudar sebelum tab baru mulai tampak.
     final Animation<double> opasitas = aktif && bergerak
         ? _kurva
+        : keluar
+        ? ReverseAnimation(_kurvaKeluar)
         : const AlwaysStoppedAnimation<double>(1);
-    // Tab baru bergeser masuk dari sisi perpindahan. Tab lama tetap penuh di
-    // bawah dan hanya bergeser sedikit ke arah berlawanan, jadi tidak ada
-    // kedipan latar di tengah transisi.
+    // Tab baru bergeser masuk dari sisi perpindahan, tab lama bergeser sedikit
+    // ke arah berlawanan sambil menghilang.
     final Animation<Offset> posisi = aktif && bergerak
         ? Tween<Offset>(
             begin: Offset(.06 * _arah, 0),
@@ -79,7 +90,7 @@ class _TransisiTabState extends State<TransisiTab>
         ? Tween<Offset>(
             begin: Offset.zero,
             end: Offset(-.04 * _arah, 0),
-          ).animate(_kurva)
+          ).animate(_kurvaKeluar)
         : const AlwaysStoppedAnimation<Offset>(Offset.zero);
 
     return Offstage(

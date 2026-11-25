@@ -8,6 +8,7 @@ import 'package:app/providers/pengaturan_provider.dart';
 import 'package:app/screens/main_shell.dart';
 import 'package:app/services/gps_service.dart';
 import 'package:app/services/preferences_service.dart';
+import 'package:app/core/logo_sicuaca.dart';
 import 'package:app/widgets/angka_berhitung.dart';
 import 'package:app/widgets/pencet_lembut.dart';
 import 'package:app/widgets/splash_gerbang.dart';
@@ -60,16 +61,32 @@ void main() {
       tanpaGerak: tanpaGerak,
     );
 
-    testWidgets('selama transisi tab lama dan baru sama-sama tampil, '
-        'setelah selesai hanya tab baru', (tester) async {
+    testWidgets('transisi berurutan: tab lama habis memudar sebelum tab baru '
+        'tampak, setelah selesai hanya tab baru', (tester) async {
       await tester.pumpWidget(susun(0));
       expect(find.text('A:0'), findsOneWidget);
       expect(find.text('B:0'), findsNothing);
 
+      double opasitas(String teks) {
+        final f = find.ancestor(
+          of: find.text(teks),
+          matching: find.byType(FadeTransition),
+        );
+        return tester.widget<FadeTransition>(f.first).opacity.value;
+      }
+
       await tester.pumpWidget(susun(1));
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 60));
+      // Paruh awal: lama masih ada tapi memudar, baru belum tampak.
       expect(find.text('A:0'), findsOneWidget);
       expect(find.text('B:0'), findsOneWidget);
+      expect(opasitas('A:0'), lessThan(1));
+      expect(opasitas('B:0'), 0);
+
+      await tester.pump(const Duration(milliseconds: 150));
+      // Paruh akhir: lama sudah hilang, baru memudar masuk.
+      expect(opasitas('A:0'), 0);
+      expect(opasitas('B:0'), greaterThan(0));
 
       await tester.pumpAndSettle();
       expect(find.text('A:0'), findsNothing);
@@ -245,13 +262,25 @@ void main() {
           ),
         ),
       );
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.text(l.splashTagline), findsOneWidget);
-      expect(find.text(l.bukanResmi), findsOneWidget);
+      // Awal: hanya logo (sama dengan splash native), teks belum keluar.
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byType(TampilanLogo), findsOneWidget);
+      // Teks splash dibuka dari samping logo lewat ClipRect: lebarnya 0 di
+      // awal lalu tumbuh.
+      final klipTeks = find.byKey(const ValueKey('splash.teks'));
+      final lebarAwal = tester.getSize(klipTeks).width;
+      expect(lebarAwal, lessThan(1));
       final shell = tester.state(find.byType(MainShell));
 
+      // Setelah teks keluar dari samping logo, tulisannya terbuka penuh dan
+      // penegasan bukan resmi ikut tampil.
+      await tester.pump(const Duration(milliseconds: 1200));
+      expect(tester.getSize(klipTeks).width, greaterThan(80));
+      expect(find.text(l.bukanResmi), findsOneWidget);
+
       await tester.pumpAndSettle();
-      expect(find.text(l.splashTagline), findsNothing);
+      expect(find.byType(TampilanLogo), findsNothing);
+      expect(find.text(l.bukanResmi), findsNothing);
       expect(find.byType(MainShell), findsOneWidget);
       expect(tester.state(find.byType(MainShell)), same(shell));
     });
@@ -274,7 +303,7 @@ void main() {
       );
       await tester.pumpWidget(buatApp(gps: _gps, offline: true, splash: true));
       await tester.pump();
-      expect(find.text(l.splashTagline), findsNothing);
+      expect(find.byType(TampilanLogo), findsNothing);
       expect(find.byType(MainShell), findsOneWidget);
     });
 

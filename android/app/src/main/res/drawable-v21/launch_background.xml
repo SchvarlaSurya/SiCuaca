@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Warna sama dengan splash dalam aplikasi (SplashGerbang.warnaAwal) -->
+<!-- Splash native (Android 5-11): latar biru tua + logo SiCuaca di tengah. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/splash_latar" />
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/logo_splash" />
+    </item>
 </layer-list>

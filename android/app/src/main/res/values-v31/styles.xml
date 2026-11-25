@@ -3,7 +3,8 @@
     <!-- Layar pembuka Android 12+: latar sama dengan splash dalam aplikasi -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
-        <item name="android:windowSplashScreenBackground">#FF0B2552</item>
+        <item name="android:windowSplashScreenBackground">@color/splash_latar</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
     </style>
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
