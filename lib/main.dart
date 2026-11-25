@@ -32,8 +32,10 @@ import 'services/notifikasi_service.dart';
 import 'services/preferences_service.dart';
 import 'services/riwayat_gempa_repository.dart';
 import 'services/riwayat_gempa_sqflite.dart';
+import 'services/widget_layar_service.dart';
 import 'services/wilayah_service.dart';
 import 'widgets/aset_bulan.dart';
+import 'widgets/sinkron_widget_layar.dart';
 import 'widgets/splash_gerbang.dart';
 
 Future<void> main() async {
@@ -120,6 +122,7 @@ class SiCuacaApp extends StatelessWidget {
     this.sudahOnboarding = true,
     this.tampilkanSplash = false,
     this.siapkan,
+    this.penyimpanWidget,
   });
 
   final ApiService? apiService;
@@ -138,11 +141,18 @@ class SiCuacaApp extends StatelessWidget {
   /// Pekerjaan awal yang ditunggu splash sebelum aplikasi dipasang.
   final Future<void>? siapkan;
 
+  /// Tempat data widget layar utama; bawaannya sesuai platform (pengujian
+  /// bisa menggantinya).
+  final PenyimpanWidget? penyimpanWidget;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<ApiService>(create: (_) => apiService ?? ApiService()),
+        Provider<PenyimpanWidget>(
+          create: (_) => penyimpanWidget ?? penyimpanWidgetBawaan(),
+        ),
         Provider<GpsService>(create: (_) => gpsService ?? GpsService()),
         Provider<WilayahService>(
           create: (_) => (wilayahService ?? WilayahService())..siapkan(),
@@ -308,11 +318,13 @@ class _AplikasiState extends State<_Aplikasi> {
       // Efek kaca cair bisa dimatikan di Pengaturan: kaca sederhana tanpa
       // shader (GlassQuality.minimal). Pembungkusnya selalu ada supaya
       // berganti mode tidak membangun ulang seluruh aplikasi.
-      builder: (context, anak) => GlassTheme(
-        data: pengaturan.kacaCair
-            ? const GlassThemeData()
-            : const GlassThemeData.minimal(),
-        child: anak!,
+      builder: (context, anak) => SinkronWidgetLayar(
+        child: GlassTheme(
+          data: pengaturan.kacaCair
+              ? const GlassThemeData()
+              : const GlassThemeData.minimal(),
+          child: anak!,
+        ),
       ),
       home: SplashGerbang(
         aktif: widget.tampilkanSplash,

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_nama">SiCuaca</string>
+    <string name="widget_deskripsi">Current weather from BMKG open data. SiCuaca is not an official BMKG app.</string>
+    <string name="widget_kosong">Open SiCuaca once to load the weather.</string>
+    <string name="widget_sumber">Source: BMKG · %1$s</string>
+    <string name="widget_sumber_lama">Source: BMKG · %1$s · old data</string>
+    <string name="widget_sumber_kosong">Source: BMKG</string>
+    <string name="widget_lembap">Humidity %1$s%%</string>
+    <string name="widget_angin">Wind %1$s km/h</string>
+</resources>

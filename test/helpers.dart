@@ -16,6 +16,7 @@ import 'package:app/services/gps_service.dart';
 import 'package:app/services/notifikasi_service.dart';
 import 'package:app/services/preferences_service.dart';
 import 'package:app/services/riwayat_gempa_repository.dart';
+import 'package:app/services/widget_layar_service.dart';
 import 'package:app/services/wilayah_service.dart';
 
 /// Teks Bahasa Indonesia (bahasa default) untuk dicocokkan di test.
@@ -120,7 +121,9 @@ Widget buatApp({
   bool sudahOnboarding = true,
   RiwayatGempaRepository? riwayatGempa,
   bool splash = false,
+  PenyimpanWidget? penyimpanWidget,
 }) => SiCuacaApp(
+  penyimpanWidget: penyimpanWidget ?? PenyimpanWidgetDiam(),
   sudahOnboarding: sudahOnboarding,
   tampilkanSplash: splash,
   // Memori, bukan SQLite: pengujian widget tidak punya platform channel.

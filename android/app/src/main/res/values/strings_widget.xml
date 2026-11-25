@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_nama">SiCuaca</string>
+    <string name="widget_deskripsi">Cuaca terkini dari data terbuka BMKG. SiCuaca bukan aplikasi resmi BMKG.</string>
+    <string name="widget_kosong">Buka SiCuaca sekali untuk memuat cuaca.</string>
+    <string name="widget_sumber">Sumber: BMKG · %1$s</string>
+    <string name="widget_sumber_lama">Sumber: BMKG · %1$s · data lama</string>
+    <string name="widget_sumber_kosong">Sumber: BMKG</string>
+    <string name="widget_lembap">Lembap %1$s%%</string>
+    <string name="widget_angin">Angin %1$s km/j</string>
+    <string name="widget_kondisi_contoh">Cerah Berawan</string>
+    <string name="widget_ikon_contoh">🌤️</string>
+</resources>

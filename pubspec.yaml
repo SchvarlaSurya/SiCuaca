@@ -50,6 +50,7 @@ dependencies:
   path: ^1.9.1
   liquid_glass_widgets: ^1.20.0
   url_launcher: ^6.3.3
+  home_widget: ^0.10.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
