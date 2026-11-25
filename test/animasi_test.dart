@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -309,6 +311,39 @@ void main() {
       await _pompa(tester, 2400);
       await tester.pumpAndSettle();
       expect(find.byType(TampilanLogo), findsNothing);
+    });
+
+    testWidgets('inisialisasi lambat: hanya logo yang diam, aplikasi belum '
+        'dipasang, animasi teks jalan setelah siap', (tester) async {
+      final siap = Completer<void>();
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('id'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SplashGerbang(
+            siapkan: siap.future,
+            child: const Scaffold(body: Text('isi-aplikasi')),
+          ),
+        ),
+      );
+      final teks = find.byKey(const ValueKey('splash.teks'));
+      // Lama menunggu: logo tampil, teks tetap tertutup, aplikasi belum ada.
+      await _pompa(tester, 1200);
+      expect(find.byType(TampilanLogo), findsOneWidget);
+      expect(find.text('isi-aplikasi'), findsNothing);
+      expect(tester.getSize(teks).width, lessThan(1));
+
+      // Setelah siap: aplikasi dipasang lalu teks keluar dari samping logo.
+      siap.complete();
+      await _pompa(tester, 64);
+      expect(find.text('isi-aplikasi'), findsOneWidget);
+      await _pompa(tester, 800);
+      expect(tester.getSize(teks).width, greaterThan(80));
+      await _pompa(tester, 1600);
+      await tester.pumpAndSettle();
+      expect(find.byType(TampilanLogo), findsNothing);
+      expect(find.text('isi-aplikasi'), findsOneWidget);
     });
 
     testWidgets('menahan ketukan selama tampil', (tester) async {

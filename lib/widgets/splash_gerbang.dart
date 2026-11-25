@@ -17,16 +17,27 @@ import '../core/theme.dart';
 ///
 /// Agar animasinya benar-benar terlihat di HP yang lambat saat memulai:
 /// - Frame pertama hanya berisi splash (murah), jadi peralihan dari splash
-///   native langsung mulus. [child] yang berat baru dipasang di frame
-///   berikutnya.
-/// - Jam animasi baru mulai setelah frame pertama, dan loncatan waktu akibat
-///   frame yang tersendat dibatasi ([maksLangkah]); tanpa itu, frame lambat
-///   memakan seluruh animasi dan teks tidak sempat terlihat.
+///   native langsung mulus dan tidak menunggu inisialisasi berat.
+/// - [child] yang berat baru dipasang setelah [siapkan] selesai. Selama itu
+///   hanya logo yang diam; animasi teks ditahan di ujung fase logo dan baru
+///   jalan setelah [child] selesai dibangun, supaya geseran teks tidak
+///   tersendat oleh pembangunan aplikasi.
+/// - Loncatan waktu akibat frame tersendat dibatasi ([maksLangkah]), supaya
+///   frame lambat tidak memakan seluruh animasi.
 class SplashGerbang extends StatefulWidget {
-  const SplashGerbang({super.key, required this.child, this.aktif = true});
+  const SplashGerbang({
+    super.key,
+    required this.child,
+    this.aktif = true,
+    this.siapkan,
+  });
 
   final Widget child;
   final bool aktif;
+
+  /// Pekerjaan awal yang harus selesai sebelum [child] dipasang (mis. muat
+  /// shader kaca). Berjalan selagi splash tampil.
+  final Future<void>? siapkan;
 
   /// Warna latar splash native (harus sama dengan res/values/colors.xml).
   static const warnaAwal = Color(0xFF0B2552);
@@ -36,7 +47,7 @@ class SplashGerbang extends StatefulWidget {
   static const lebarLogo = 128.0;
 
   /// Lama splash saat semua frame mulus.
-  static const durasi = Duration(milliseconds: 2000);
+  static const durasi = Duration(milliseconds: 1600);
 
   /// Batas waktu yang dihitung per frame. Frame yang tersendat lebih lama dari
   /// ini hanya memajukan animasi sebesar batas ini.
@@ -54,6 +65,10 @@ class _SplashGerbangState extends State<SplashGerbang>
   Duration _terkumpul = Duration.zero;
   bool _selesai = false;
   bool _anakSiap = false;
+  bool _anakDibangun = false;
+
+  // Animasi ditahan di sini (akhir fase logo) sampai [child] selesai dibangun.
+  static const _titikTahan = .10;
 
   @override
   void initState() {
@@ -62,11 +77,18 @@ class _SplashGerbangState extends State<SplashGerbang>
     _anakSiap = !widget.aktif;
     _ticker = createTicker(_tik);
     if (!_selesai) {
-      // Frame pertama: hanya splash. Sesudahnya pasang [child] dan mulai jam.
+      // Frame pertama: hanya splash. Sesudahnya jam mulai, dan [child]
+      // dipasang begitu pekerjaan awal selesai.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        setState(() => _anakSiap = true);
         _ticker.start();
+        (widget.siapkan ?? Future<void>.value()).whenComplete(() {
+          if (!mounted) return;
+          setState(() => _anakSiap = true);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _anakDibangun = true;
+          });
+        });
       });
     }
   }
@@ -74,6 +96,8 @@ class _SplashGerbangState extends State<SplashGerbang>
   void _tik(Duration elapsed) {
     final langkah = elapsed - _terakhir;
     _terakhir = elapsed;
+    final titikTahan = SplashGerbang.durasi * _titikTahan;
+    if (!_anakDibangun && _terkumpul >= titikTahan) return;
     _terkumpul += langkah > SplashGerbang.maksLangkah
         ? SplashGerbang.maksLangkah
         : langkah;

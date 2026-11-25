@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,12 +52,15 @@ Future<void> main() async {
     }
   });
 
-  // Firebase + handler pesan latar belakang harus siap sebelum runApp.
   // Riwayat gempa disiapkan lebih dulu agar notifikasi yang membuka
-  // aplikasi (diketuk saat tertutup) langsung tercatat.
+  // aplikasi (diketuk saat tertutup) langsung tercatat. Firebase dan
+  // notifikasi diinisialisasi di latar belakang, TIDAK ditunggu: itu
+  // pekerjaan terberat saat mulai, dan menunggunya menahan frame pertama.
+  // Notifikasi yang membuka aplikasi disimpan dulu lalu diproses saat
+  // navigator siap, jadi tidak ada yang hilang. mulai() tidak melempar error.
   final riwayatGempa = RiwayatGempaRepository(buatPenyimpananRiwayat());
   final notifikasi = NotifikasiService()..riwayatGempa = riwayatGempa;
-  await notifikasi.mulai();
+  unawaited(notifikasi.mulai());
 
   // Pilihan bahasa/tema dimuat sebelum frame pertama agar tidak berkedip.
   final preferences = PreferencesService();
@@ -63,10 +68,15 @@ Future<void> main() async {
   await pengaturan.muat();
   final sudahOnboarding = await preferences.sudahOnboarding();
 
-  // Kaca cair: muat shader lebih dulu agar tidak ada kedip. Dilewati bila
-  // pengguna mematikan efek kaca cair (hemat memori dan waktu mulai); bila
-  // dinyalakan lagi, shader dimuat saat pertama dipakai.
-  if (pengaturan.kacaCair) await LiquidGlassWidgets.initialize();
+  // Kaca cair: shader dimuat selagi splash tampil (aplikasi di bawahnya baru
+  // dipasang setelah selesai, jadi tidak ada kedip). Dilewati bila pengguna
+  // mematikan efek kaca cair (hemat memori dan waktu mulai); bila dinyalakan
+  // lagi, shader dimuat saat pertama dipakai.
+  final siapKaca = pengaturan.kacaCair
+      ? LiquidGlassWidgets.initialize().catchError(
+          (Object e) => debugPrint('Muat shader kaca gagal: $e'),
+        )
+      : Future<void>.value();
 
   runApp(
     LiquidGlassWidgets.wrap(
@@ -78,6 +88,7 @@ Future<void> main() async {
         pengaturan: pengaturan,
         sudahOnboarding: sudahOnboarding,
         tampilkanSplash: true,
+        siapkan: siapKaca,
       ),
     ),
   );
@@ -97,6 +108,7 @@ class SiCuacaApp extends StatelessWidget {
     this.pengaturan,
     this.sudahOnboarding = true,
     this.tampilkanSplash = false,
+    this.siapkan,
   });
 
   final ApiService? apiService;
@@ -111,6 +123,9 @@ class SiCuacaApp extends StatelessWidget {
 
   /// Splash dalam aplikasi; hanya dinyalakan dari [main] (tes mematikannya).
   final bool tampilkanSplash;
+
+  /// Pekerjaan awal yang ditunggu splash sebelum aplikasi dipasang.
+  final Future<void>? siapkan;
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +223,7 @@ class SiCuacaApp extends StatelessWidget {
       child: _Aplikasi(
         sudahOnboarding: sudahOnboarding,
         tampilkanSplash: tampilkanSplash,
+        siapkan: siapkan,
       ),
     );
   }
@@ -217,10 +233,12 @@ class _Aplikasi extends StatefulWidget {
   const _Aplikasi({
     required this.sudahOnboarding,
     required this.tampilkanSplash,
+    this.siapkan,
   });
 
   final bool sudahOnboarding;
   final bool tampilkanSplash;
+  final Future<void>? siapkan;
 
   @override
   State<_Aplikasi> createState() => _AplikasiState();
@@ -277,6 +295,7 @@ class _AplikasiState extends State<_Aplikasi> {
       ),
       home: SplashGerbang(
         aktif: widget.tampilkanSplash,
+        siapkan: widget.siapkan,
         child: _sudahOnboarding
             ? const MainShell()
             : OnboardingScreen(onSelesai: _selesaiOnboarding),
