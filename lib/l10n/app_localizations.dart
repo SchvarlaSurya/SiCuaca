@@ -2514,6 +2514,120 @@ abstract class AppLocalizations {
   /// **'Jarak pandang'**
   String get jarakPandang;
 
+  /// No description provided for @titikEmbun.
+  ///
+  /// In id, this message translates to:
+  /// **'Titik embun'**
+  String get titikEmbun;
+
+  /// No description provided for @langitJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'Matahari dan bulan'**
+  String get langitJudul;
+
+  /// No description provided for @matahari.
+  ///
+  /// In id, this message translates to:
+  /// **'Matahari'**
+  String get matahari;
+
+  /// No description provided for @bulan.
+  ///
+  /// In id, this message translates to:
+  /// **'Bulan'**
+  String get bulan;
+
+  /// No description provided for @terbit.
+  ///
+  /// In id, this message translates to:
+  /// **'Terbit'**
+  String get terbit;
+
+  /// No description provided for @terbenam.
+  ///
+  /// In id, this message translates to:
+  /// **'Terbenam'**
+  String get terbenam;
+
+  /// No description provided for @tidakAdaHariIni.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada'**
+  String get tidakAdaHariIni;
+
+  /// No description provided for @lamaSiang.
+  ///
+  /// In id, this message translates to:
+  /// **'Lama siang'**
+  String get lamaSiang;
+
+  /// No description provided for @lamaSiangNilai.
+  ///
+  /// In id, this message translates to:
+  /// **'{jam} j {menit} m'**
+  String lamaSiangNilai(int jam, int menit);
+
+  /// No description provided for @terangBulan.
+  ///
+  /// In id, this message translates to:
+  /// **'{persen}% terang'**
+  String terangBulan(int persen);
+
+  /// No description provided for @faseBaru.
+  ///
+  /// In id, this message translates to:
+  /// **'Bulan baru'**
+  String get faseBaru;
+
+  /// No description provided for @faseSabitAwal.
+  ///
+  /// In id, this message translates to:
+  /// **'Sabit awal'**
+  String get faseSabitAwal;
+
+  /// No description provided for @fasePerempatPertama.
+  ///
+  /// In id, this message translates to:
+  /// **'Perempat pertama'**
+  String get fasePerempatPertama;
+
+  /// No description provided for @faseCembungAwal.
+  ///
+  /// In id, this message translates to:
+  /// **'Cembung awal'**
+  String get faseCembungAwal;
+
+  /// No description provided for @fasePurnama.
+  ///
+  /// In id, this message translates to:
+  /// **'Purnama'**
+  String get fasePurnama;
+
+  /// No description provided for @faseCembungAkhir.
+  ///
+  /// In id, this message translates to:
+  /// **'Cembung akhir'**
+  String get faseCembungAkhir;
+
+  /// No description provided for @fasePerempatAkhir.
+  ///
+  /// In id, this message translates to:
+  /// **'Perempat akhir'**
+  String get fasePerempatAkhir;
+
+  /// No description provided for @faseSabitAkhir.
+  ///
+  /// In id, this message translates to:
+  /// **'Sabit akhir'**
+  String get faseSabitAkhir;
+
+  /// No description provided for @langitCatatan.
+  ///
+  /// In id, this message translates to:
+  /// **'Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan.'**
+  String get langitCatatan;
+
   /// No description provided for @harianJudul.
   ///
   /// In id, this message translates to:

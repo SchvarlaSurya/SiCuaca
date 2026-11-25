@@ -17,6 +17,7 @@ import '../core/ringkas_harian.dart';
 import '../widgets/deret_cuaca.dart';
 import '../widgets/grafik_suhu.dart';
 import '../widgets/kartu_kaca.dart';
+import '../widgets/kartu_langit.dart';
 import '../widgets/hero_cuaca.dart';
 import '../widgets/ikon_cuaca.dart';
 import '../widgets/lokasi_banner.dart';
@@ -397,6 +398,19 @@ class _Prakiraan extends StatelessWidget {
                   delay: const Duration(milliseconds: 90),
                   child: RingkasDetail(entri: terdekat),
                 ),
+                if (prakiraan.lokasi.lat case final lat?
+                    when prakiraan.lokasi.lon != null) ...[
+                  const SizedBox(height: 10),
+                  MasukLembut(
+                    delay: const Duration(milliseconds: 100),
+                    child: KartuMatahariBulan(
+                      lat: lat,
+                      lon: prakiraan.lokasi.lon!,
+                      hariSetempat: hariIni,
+                      selisih: selisih,
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 16),
                 MasukLembut(
                   delay: const Duration(milliseconds: 110),

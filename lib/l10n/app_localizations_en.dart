@@ -1450,6 +1450,68 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jarakPandang => 'Visibility';
 
   @override
+  String get titikEmbun => 'Dew point';
+
+  @override
+  String get langitJudul => 'Sun and moon';
+
+  @override
+  String get matahari => 'Sun';
+
+  @override
+  String get bulan => 'Moon';
+
+  @override
+  String get terbit => 'Rise';
+
+  @override
+  String get terbenam => 'Set';
+
+  @override
+  String get tidakAdaHariIni => 'None';
+
+  @override
+  String get lamaSiang => 'Daylight';
+
+  @override
+  String lamaSiangNilai(int jam, int menit) {
+    return '$jam h $menit m';
+  }
+
+  @override
+  String terangBulan(int persen) {
+    return '$persen% lit';
+  }
+
+  @override
+  String get faseBaru => 'New moon';
+
+  @override
+  String get faseSabitAwal => 'Waxing crescent';
+
+  @override
+  String get fasePerempatPertama => 'First quarter';
+
+  @override
+  String get faseCembungAwal => 'Waxing gibbous';
+
+  @override
+  String get fasePurnama => 'Full moon';
+
+  @override
+  String get faseCembungAkhir => 'Waning gibbous';
+
+  @override
+  String get fasePerempatAkhir => 'Last quarter';
+
+  @override
+  String get faseSabitAkhir => 'Waning crescent';
+
+  @override
+  String get langitCatatan =>
+      'Calculated by the app from location and date, not BMKG data. Dew point is derived from temperature and humidity.';
+
+  @override
   String get harianJudul => 'Daily forecast';
 
   @override

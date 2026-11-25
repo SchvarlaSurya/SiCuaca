@@ -32,6 +32,19 @@ abstract final class IkonApp {
   static const IconData isiAwanKabut = IconData(0xe53c, fontFamily: _isi);
   static const IconData isiAwanPetir = IconData(0xe1b2, fontFamily: _isi);
 
+  static const IconData titikEmbun = IconData(
+    0xe5c7,
+    fontFamily: _duo,
+  ); // thermometer
+  static const IconData terbitTerbenam = IconData(
+    0xe5b7,
+    fontFamily: _duo,
+  ); // sunHorizon
+  static const IconData faseBulan = IconData(
+    0xe58f,
+    fontFamily: _duo,
+  ); // moonStars
+
   static const IconData jarakPandang = IconData(
     0xe221,
     fontFamily: _duo,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core/astronomi.dart';
 import '../core/format.dart';
 import '../core/ikon.dart';
 import '../core/l10n.dart';
@@ -102,8 +103,10 @@ class _SelJam extends StatelessWidget {
   }
 }
 
-/// Ringkasan detail saat ini dalam satu kartu kaca: kelembapan, angin, dan
-/// jarak pandang (bila ada), masing-masing dengan ikon dan label teks.
+/// Ringkasan detail saat ini dalam satu kartu kaca: kelembapan, angin,
+/// jarak pandang (bila ada), dan titik embun (dihitung dari suhu dan
+/// kelembapan), masing-masing dengan ikon dan label teks. Sampai tiga sel
+/// dalam satu baris; lebih dari itu dibagi dua baris agar tidak sempit.
 class RingkasDetail extends StatelessWidget {
   const RingkasDetail({super.key, required this.entri});
 
@@ -121,25 +124,54 @@ class RingkasDetail extends StatelessWidget {
       ),
       if (entri.jarakPandang case final jarak? when jarak.trim().isNotEmpty)
         (IkonApp.jarakPandang, l.jarakPandang, jarak.trim()),
+      if (entri.suhu case final suhu? when entri.kelembapan != null)
+        (
+          IkonApp.titikEmbun,
+          l.titikEmbun,
+          Format.suhu(Astronomi.titikEmbun(suhu, entri.kelembapan!)),
+        ),
     ];
+    final garis = AppTheme.kacaTepi(Theme.of(context).brightness);
     return KartuKaca(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            for (final (i, (ikon, label, nilai)) in item.indexed) ...[
-              if (i > 0)
-                VerticalDivider(
-                  width: 1,
-                  color: AppTheme.kacaTepi(Theme.of(context).brightness),
-                ),
-              Expanded(
-                child: _SelDetail(ikon: ikon, label: label, nilai: nilai),
-              ),
-            ],
+      child: item.length <= 3
+          ? _BarisDetail(item: item, kolom: item.length)
+          : Column(
+              children: [
+                _BarisDetail(item: item.sublist(0, 2), kolom: 2),
+                Divider(height: 24, color: garis),
+                _BarisDetail(item: item.sublist(2), kolom: 2),
+              ],
+            ),
+    );
+  }
+}
+
+typedef _ItemDetail = (IconData, String, String);
+
+/// Satu baris sel detail dengan pembatas tegak. [kolom] lebih besar dari
+/// jumlah item menyisakan ruang kosong di kanan supaya lebar sel tetap sama.
+class _BarisDetail extends StatelessWidget {
+  const _BarisDetail({required this.item, required this.kolom});
+
+  final List<_ItemDetail> item;
+  final int kolom;
+
+  @override
+  Widget build(BuildContext context) {
+    final garis = AppTheme.kacaTepi(Theme.of(context).brightness);
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (i, (ikon, label, nilai)) in item.indexed) ...[
+            if (i > 0) VerticalDivider(width: 1, color: garis),
+            Expanded(
+              child: _SelDetail(ikon: ikon, label: label, nilai: nilai),
+            ),
           ],
-        ),
+          for (var i = item.length; i < kolom; i++) const Spacer(),
+        ],
       ),
     );
   }

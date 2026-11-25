@@ -1418,6 +1418,68 @@ class AppLocalizationsId extends AppLocalizations {
   String get jarakPandang => 'Jarak pandang';
 
   @override
+  String get titikEmbun => 'Titik embun';
+
+  @override
+  String get langitJudul => 'Matahari dan bulan';
+
+  @override
+  String get matahari => 'Matahari';
+
+  @override
+  String get bulan => 'Bulan';
+
+  @override
+  String get terbit => 'Terbit';
+
+  @override
+  String get terbenam => 'Terbenam';
+
+  @override
+  String get tidakAdaHariIni => 'Tidak ada';
+
+  @override
+  String get lamaSiang => 'Lama siang';
+
+  @override
+  String lamaSiangNilai(int jam, int menit) {
+    return '$jam j $menit m';
+  }
+
+  @override
+  String terangBulan(int persen) {
+    return '$persen% terang';
+  }
+
+  @override
+  String get faseBaru => 'Bulan baru';
+
+  @override
+  String get faseSabitAwal => 'Sabit awal';
+
+  @override
+  String get fasePerempatPertama => 'Perempat pertama';
+
+  @override
+  String get faseCembungAwal => 'Cembung awal';
+
+  @override
+  String get fasePurnama => 'Purnama';
+
+  @override
+  String get faseCembungAkhir => 'Cembung akhir';
+
+  @override
+  String get fasePerempatAkhir => 'Perempat akhir';
+
+  @override
+  String get faseSabitAkhir => 'Sabit akhir';
+
+  @override
+  String get langitCatatan =>
+      'Dihitung aplikasi dari lokasi dan tanggal, bukan data BMKG. Titik embun diturunkan dari suhu dan kelembapan.';
+
+  @override
   String get harianJudul => 'Prakiraan harian';
 
   @override
