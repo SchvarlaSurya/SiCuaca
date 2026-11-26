@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -9,6 +11,24 @@ plugins {
 // (notifikasi gempa nonaktif sampai berkas itu ditaruh di android/app/).
 if (file("google-services.json").exists()) {
     apply(plugin = "com.google.gms.google-services")
+}
+
+// Penandatanganan rilis: android/key.properties (TIDAK masuk git, dibuat oleh
+// tool/buat_keystore.ps1; lihat docs/RILIS_ANDROID.md). Berisi storeFile,
+// storePassword, keyAlias, keyPassword.
+val keyProps = Properties().apply {
+    val berkas = rootProject.file("key.properties")
+    if (berkas.exists()) berkas.inputStream().use { load(it) }
+}
+
+// Build rilis TANPA key.properties harus gagal dengan pesan jelas, bukan
+// diam-diam memakai kunci debug.
+if (keyProps.isEmpty && gradle.startParameter.taskNames.any { it.contains("Release", ignoreCase = true) }) {
+    throw GradleException(
+        "android/key.properties belum ada, jadi APK rilis tidak bisa ditandatangani. " +
+            "Jalankan: powershell -ExecutionPolicy Bypass -File tool/buat_keystore.ps1 " +
+            "(lihat docs/RILIS_ANDROID.md).",
+    )
 }
 
 android {
@@ -35,11 +55,27 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("release") {
+            if (!keyProps.isEmpty) {
+                keyAlias = keyProps.getProperty("keyAlias")
+                keyPassword = keyProps.getProperty("keyPassword")
+                storeFile = file(keyProps.getProperty("storeFile"))
+                storePassword = keyProps.getProperty("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
+            // Perkecil dan acak kode (R8) serta buang sumber daya tak terpakai.
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }

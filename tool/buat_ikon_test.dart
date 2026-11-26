@@ -33,11 +33,10 @@ Future<void> _tulis(
       c.drawRect(
         Rect.fromLTWH(0, 0, w, h),
         Paint()
-          ..shader = ui.Gradient.linear(
-            Offset.zero,
-            Offset(0, h),
-            const [_atas, _bawah],
-          ),
+          ..shader = ui.Gradient.linear(Offset.zero, Offset(0, h), const [
+            _atas,
+            _bawah,
+          ]),
       );
     }
     // Logo selebar bagianLogo dari lebar kanvas, rata tengah.
@@ -57,7 +56,13 @@ Future<void> _tulis(
 
 void main() {
   const res = 'android/app/src/main/res';
-  const kepadatan = {'mdpi': 1.0, 'hdpi': 1.5, 'xhdpi': 2.0, 'xxhdpi': 3.0, 'xxxhdpi': 4.0};
+  const kepadatan = {
+    'mdpi': 1.0,
+    'hdpi': 1.5,
+    'xhdpi': 2.0,
+    'xxhdpi': 3.0,
+    'xxxhdpi': 4.0,
+  };
 
   testWidgets('buat ikon dan gambar splash', (tester) async {
     for (final e in kepadatan.entries) {
@@ -96,12 +101,30 @@ void main() {
     }
     // Web.
     for (final px in [192, 512]) {
-      await _tulis(tester, 'web/icons/Icon-$px.png',
-          lebar: px, tinggi: px, bagianLogo: .62, latar: true);
-      await _tulis(tester, 'web/icons/Icon-maskable-$px.png',
-          lebar: px, tinggi: px, bagianLogo: .5, latar: true);
+      await _tulis(
+        tester,
+        'web/icons/Icon-$px.png',
+        lebar: px,
+        tinggi: px,
+        bagianLogo: .62,
+        latar: true,
+      );
+      await _tulis(
+        tester,
+        'web/icons/Icon-maskable-$px.png',
+        lebar: px,
+        tinggi: px,
+        bagianLogo: .5,
+        latar: true,
+      );
     }
-    await _tulis(tester, 'web/favicon.png',
-        lebar: 32, tinggi: 32, bagianLogo: .7, latar: true);
+    await _tulis(
+      tester,
+      'web/favicon.png',
+      lebar: 32,
+      tinggi: 32,
+      bagianLogo: .7,
+      latar: true,
+    );
   });
 }

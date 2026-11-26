@@ -54,3 +54,16 @@ android/build/
 
 # Konfigurasi Firebase per developer (berisi API key proyek)
 android/app/google-services.json
+
+# Rahasia dan kunci: jangan pernah di-commit (Fase 6B).
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+key.properties
+**/service-account*.json
+**/*adminsdk*.json
+
+# Berkas kerja alat bantu agen
+.claude-flow/
