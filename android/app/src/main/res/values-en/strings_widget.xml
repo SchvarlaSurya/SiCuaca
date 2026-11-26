@@ -7,7 +7,7 @@
     <string name="widget_sumber_udara">Source: BMKG · %1$s · air: Open-Meteo</string>
     <string name="widget_sumber_lama">Source: BMKG · %1$s · old data</string>
     <string name="widget_uv_label">UV INDEX</string>
-    <string name="widget_aqi_label">AIR QUALITY</string>
+    <string name="widget_aqi_label">AIR</string>
     <string name="widget_uv_malam">Night</string>
     <string name="widget_aqi_kosong">Loading…</string>
     <string name="widget_nilai_kategori">%1$s · %2$s</string>

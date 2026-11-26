@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
 import androidx.work.Constraints
@@ -63,11 +64,32 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
             (aqiMs == null || System.currentTimeMillis() - aqiMs > BASI_UDARA_MS)
         if (butuhUdara) jalankanSekali(context)
         for (id in appWidgetIds) {
-            appWidgetManager.updateAppWidget(id, buatTampilan(context, widgetData))
+            appWidgetManager.updateAppWidget(
+                id,
+                buatTampilan(context, widgetData, apakahBesar(appWidgetManager, id)),
+            )
         }
     }
 
+    /** Widget diubah ukurannya: pilih ulang tata letak besar atau ringkas. */
+    override fun onAppWidgetOptionsChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        newOptions: Bundle,
+    ) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        val data = context.getSharedPreferences("HomeWidgetPreferences", Context.MODE_PRIVATE)
+        appWidgetManager.updateAppWidget(
+            appWidgetId,
+            buatTampilan(context, data, apakahBesar(appWidgetManager, appWidgetId)),
+        )
+    }
+
     companion object {
+        /** Tinggi minimal (dp) untuk tata letak besar; di bawahnya ringkas. */
+        private const val TINGGI_BESAR_DP = 195
+
         const val NAMA_KERJA = "widget_cuaca_pembaruan"
         const val NAMA_KERJA_SEKALI = "widget_cuaca_pembaruan_sekali"
         private const val LAMA_BASI_MS = 6L * 60 * 60 * 1000
@@ -116,8 +138,15 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
             if (ids.isEmpty()) return
             val data = context.getSharedPreferences("HomeWidgetPreferences", Context.MODE_PRIVATE)
             for (id in ids) {
-                manager.updateAppWidget(id, buatTampilan(context, data))
+                manager.updateAppWidget(id, buatTampilan(context, data, apakahBesar(manager, id)))
             }
+        }
+
+        /** Tinggi tak diketahui (0) dianggap besar, seperti tampilan awal. */
+        private fun apakahBesar(manager: AppWidgetManager, id: Int): Boolean {
+            val tinggi = manager.getAppWidgetOptions(id)
+                .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0)
+            return tinggi == 0 || tinggi >= TINGGI_BESAR_DP
         }
 
         private fun adaBahasaInggris(data: SharedPreferences): Boolean {
@@ -161,8 +190,45 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
             },
         )
 
-        private fun buatTampilan(context: Context, data: SharedPreferences): RemoteViews {
-            val v = RemoteViews(context.packageName, R.layout.widget_cuaca)
+        /**
+         * Isi kartu: tata letak besar menaruh angka besar dan kategori di
+         * bawahnya. Tata letak ringkas memakai satu baris pendek berawalan
+         * ("UV 7 · Tinggi", "AQI 114"); [kategoriDiRingkas] menentukan apakah
+         * kategorinya ikut (titik warna tetap menandai kategori).
+         */
+        private fun isiKartu(
+            v: RemoteViews,
+            besar: Boolean,
+            idNilai: Int,
+            idKategori: Int,
+            nilai: String,
+            kategori: String,
+            awalan: String,
+            kategoriDiRingkas: Boolean,
+        ) {
+            if (besar) {
+                v.setTextViewText(idNilai, nilai)
+                v.setTextViewText(idKategori, kategori)
+                return
+            }
+            val ada = nilai != "\u2013"
+            val teks = when {
+                !ada -> "$awalan \u00B7 $kategori"
+                kategoriDiRingkas -> "$awalan $nilai \u00B7 $kategori"
+                else -> "$awalan $nilai"
+            }
+            v.setTextViewText(idNilai, teks)
+        }
+
+        private fun buatTampilan(
+            context: Context,
+            data: SharedPreferences,
+            besar: Boolean,
+        ): RemoteViews {
+            val v = RemoteViews(
+                context.packageName,
+                if (besar) R.layout.widget_cuaca else R.layout.widget_cuaca_kecil,
+            )
             v.setOnClickPendingIntent(
                 R.id.widget_akar,
                 HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java),
@@ -197,7 +263,7 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
             val detail = buildList {
                 if (lembap.isNotEmpty()) add(context.getString(R.string.widget_lembap, lembap))
                 if (angin.isNotEmpty()) add(context.getString(R.string.widget_angin, angin))
-            }.joinToString(" · ")
+            }.joinToString(if (besar) "\n" else " · ")
             v.setTextViewText(R.id.widget_detail, detail)
 
             // Indeks UV: dihitung dari posisi matahari dan tutupan awan BMKG.
@@ -210,13 +276,16 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
                 )
                 if (uvi < 0.5) {
                     v.setTextColor(R.id.widget_uv_titik, Color.parseColor("#9FB8DC"))
-                    v.setTextViewText(R.id.widget_uv_nilai, context.getString(R.string.widget_uv_malam))
+                    isiKartu(
+                        v, besar, R.id.widget_uv_nilai, R.id.widget_uv_kategori,
+                        "\u2013", context.getString(R.string.widget_uv_malam), "UV", true,
+                    )
                 } else {
                     val k = UvHitung.kategori(uvi)
                     v.setTextColor(R.id.widget_uv_titik, WARNA_UV[k])
-                    v.setTextViewText(
-                        R.id.widget_uv_nilai,
-                        context.getString(R.string.widget_nilai_kategori, uvi.roundToInt().toString(), namaUv(context, k)),
+                    isiKartu(
+                        v, besar, R.id.widget_uv_nilai, R.id.widget_uv_kategori,
+                        uvi.roundToInt().toString(), namaUv(context, k), "UV", true,
                     )
                 }
             } else {
@@ -229,13 +298,16 @@ class WidgetCuacaProvider : HomeWidgetProvider() {
             if (aqi != null) {
                 val k = KategoriAqi.indeks(aqi)
                 v.setTextColor(R.id.widget_aqi_titik, WARNA_AQI[k])
-                v.setTextViewText(
-                    R.id.widget_aqi_nilai,
-                    context.getString(R.string.widget_nilai_kategori, aqi.toString(), namaAqi(context, k)),
+                isiKartu(
+                    v, besar, R.id.widget_aqi_nilai, R.id.widget_aqi_kategori,
+                    aqi.toString(), namaAqi(context, k), "AQI", false,
                 )
             } else {
                 v.setTextColor(R.id.widget_aqi_titik, Color.parseColor("#9FB8DC"))
-                v.setTextViewText(R.id.widget_aqi_nilai, context.getString(R.string.widget_aqi_kosong))
+                isiKartu(
+                    v, besar, R.id.widget_aqi_nilai, R.id.widget_aqi_kategori,
+                    "\u2013", context.getString(R.string.widget_aqi_kosong), "AQI", false,
+                )
             }
             v.setViewVisibility(
                 R.id.widget_kartu_aqi,
