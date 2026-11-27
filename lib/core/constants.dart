@@ -105,6 +105,9 @@ class PrefsKeys {
   static const String tema = 'tema';
   static const String sudahOnboarding = 'sudah_onboarding';
   static const String kacaCair = 'kaca_cair';
+
+  /// Pengguna sudah menjawab tawaran mematikan kaca cair saat lag.
+  static const String tawaranKacaLag = 'tawaran_kaca_lag';
   static const String maritimPerairan = 'maritim_perairan';
 
   /// Awalan kunci cache (lihat CacheService).

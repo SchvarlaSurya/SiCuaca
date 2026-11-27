@@ -50,6 +50,13 @@ class PengaturanProvider extends ChangeNotifier {
   /// Mati = kaca sederhana tanpa shader, untuk HP yang kurang kuat.
   bool get kacaCair => _kacaCair;
 
+  bool _tawaranKacaDijawab = false;
+
+  /// Sudah pernah ditawari mematikan kaca cair karena HP tersendat (apa pun
+  /// jawabannya). Tawaran hanya muncul sekali; sakelar di Pengaturan tetap
+  /// ada untuk mengubahnya kapan saja.
+  bool get tawaranKacaDijawab => _tawaranKacaDijawab;
+
   /// Urutan bagian Beranda; selalu berisi semua bagian tepat sekali.
   List<SeksiBeranda> get urutanBeranda => _urutanBeranda;
 
@@ -86,7 +93,16 @@ class PengaturanProvider extends ChangeNotifier {
     );
     _urutanBeranda = normalkanUrutan(await _prefs.urutanBeranda());
     _kacaCair = await _prefs.bacaTeks(PrefsKeys.kacaCair) != 'tidak';
+    _tawaranKacaDijawab =
+        await _prefs.bacaTeks(PrefsKeys.tawaranKacaLag) == 'ya';
     notifyListeners();
+  }
+
+  /// Mencatat bahwa tawaran mematikan kaca cair sudah dijawab.
+  Future<void> catatTawaranKacaDijawab() async {
+    if (_tawaranKacaDijawab) return;
+    _tawaranKacaDijawab = true;
+    await _prefs.simpanTeks(PrefsKeys.tawaranKacaLag, 'ya');
   }
 
   Future<void> aturUrutanBeranda(List<SeksiBeranda> urutan) async {

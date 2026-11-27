@@ -5,6 +5,7 @@
 //
 // Ini render dari mesin uji Flutter pada 360 x 780 dp (2x), bukan dari HP:
 // tampilan kaca/blur dan font bisa sedikit beda dari perangkat sungguhan.
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -24,6 +25,7 @@ import 'package:app/screens/udara_uv_screen.dart';
 import 'package:app/screens/urutan_beranda_screen.dart';
 import 'package:app/services/gps_service.dart';
 import 'package:app/widgets/aset_bulan.dart';
+import 'package:app/widgets/pantau_lag_kaca.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -146,6 +148,15 @@ void main() {
 
     await _cobaAmbil(tester, 'beranda_atas', () async {});
     await _cobaAmbil(tester, 'beranda_bawah', () => _gulir(tester, 3000));
+
+    await _cobaAmbil(tester, 'popup_lag_kaca', () async {
+      unawaited(bukaTawaranKacaLag(Navigasi.navigatorKey.currentContext!));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    });
+    if (find.byKey(const ValueKey('kacaLag.tetap')).evaluate().isNotEmpty) {
+      await tester.tap(find.byKey(const ValueKey('kacaLag.tetap')));
+      await tester.pumpAndSettle(const Duration(milliseconds: 100));
+    }
 
     await _cobaAmbil(tester, 'cuaca_atas', () async {
       await tester.tap(navTab('cuaca'));

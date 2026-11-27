@@ -1283,6 +1283,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Glass refraction and jelly button animation. Turn off if your phone feels slow; the navbar and buttons stay, with simple glass.';
 
   @override
+  String get kacaLagJudul => 'Phone feels slow?';
+
+  @override
+  String get kacaLagIsi =>
+      'The display seems to be stuttering. The liquid glass effect uses a lot of graphics power. Turn it off for smoother scrolling? The navbar and buttons stay, with simple glass. You can turn it back on anytime in Settings.';
+
+  @override
+  String get kacaLagMatikan => 'Turn off glass effect';
+
+  @override
+  String get kacaLagTetap => 'Keep it on';
+
+  @override
   String get lainnya => 'More';
 
   @override

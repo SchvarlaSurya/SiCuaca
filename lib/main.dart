@@ -35,6 +35,7 @@ import 'services/riwayat_gempa_sqflite.dart';
 import 'services/widget_layar_service.dart';
 import 'services/wilayah_service.dart';
 import 'widgets/aset_bulan.dart';
+import 'widgets/pantau_lag_kaca.dart';
 import 'widgets/sinkron_widget_layar.dart';
 import 'widgets/splash_gerbang.dart';
 
@@ -319,11 +320,13 @@ class _AplikasiState extends State<_Aplikasi> {
       // shader (GlassQuality.minimal). Pembungkusnya selalu ada supaya
       // berganti mode tidak membangun ulang seluruh aplikasi.
       builder: (context, anak) => SinkronWidgetLayar(
-        child: GlassTheme(
-          data: pengaturan.kacaCair
-              ? const GlassThemeData()
-              : const GlassThemeData.minimal(),
-          child: anak!,
+        child: PantauLagKaca(
+          child: GlassTheme(
+            data: pengaturan.kacaCair
+                ? const GlassThemeData()
+                : const GlassThemeData.minimal(),
+            child: anak!,
+          ),
         ),
       ),
       home: SplashGerbang(

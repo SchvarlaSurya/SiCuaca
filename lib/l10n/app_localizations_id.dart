@@ -1252,6 +1252,19 @@ class AppLocalizationsId extends AppLocalizations {
       'Pembiasan kaca dan animasi tombol jeli. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.';
 
   @override
+  String get kacaLagJudul => 'HP terasa berat?';
+
+  @override
+  String get kacaLagIsi =>
+      'Tampilan terdeteksi tersendat. Efek kaca cair memakai banyak tenaga grafis. Matikan agar lebih lancar? Navbar dan tombol tetap ada dengan kaca sederhana. Bisa dinyalakan lagi kapan saja di Pengaturan.';
+
+  @override
+  String get kacaLagMatikan => 'Matikan efek kaca';
+
+  @override
+  String get kacaLagTetap => 'Tetap nyalakan';
+
+  @override
   String get lainnya => 'Lainnya';
 
   @override

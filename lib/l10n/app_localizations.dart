@@ -2226,6 +2226,30 @@ abstract class AppLocalizations {
   /// **'Pembiasan kaca dan animasi tombol jeli. Matikan bila HP terasa berat; navbar dan tombol tetap ada dengan kaca sederhana.'**
   String get kacaCairKeterangan;
 
+  /// No description provided for @kacaLagJudul.
+  ///
+  /// In id, this message translates to:
+  /// **'HP terasa berat?'**
+  String get kacaLagJudul;
+
+  /// No description provided for @kacaLagIsi.
+  ///
+  /// In id, this message translates to:
+  /// **'Tampilan terdeteksi tersendat. Efek kaca cair memakai banyak tenaga grafis. Matikan agar lebih lancar? Navbar dan tombol tetap ada dengan kaca sederhana. Bisa dinyalakan lagi kapan saja di Pengaturan.'**
+  String get kacaLagIsi;
+
+  /// No description provided for @kacaLagMatikan.
+  ///
+  /// In id, this message translates to:
+  /// **'Matikan efek kaca'**
+  String get kacaLagMatikan;
+
+  /// No description provided for @kacaLagTetap.
+  ///
+  /// In id, this message translates to:
+  /// **'Tetap nyalakan'**
+  String get kacaLagTetap;
+
   /// No description provided for @lainnya.
   ///
   /// In id, this message translates to:
